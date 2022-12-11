@@ -8,7 +8,7 @@
 <body>
     <nav>
         <h1>Please introduce a single search word in the box</h1>
-        <form action="/searched_word/">
+        <form action="/searched_word" , method="POST">
             <label for="search_box">Search Box</label><br>
             <input type="text" id="search_term" name="search_term">
             <input type="submit" value="Search">
@@ -18,7 +18,7 @@
     <section class="displayed_results">
         <h1> Results for "searched word": </h1> <!-- add block for the actual "searched word" -->
         <!-- Add block for displayed results -->
-        <p1> You searched for {% block searched_word %}{% endblock%}</p1>
+        <p1> {% block searched_word %}{% endblock%}</p1>
     </section>
 
 </body>

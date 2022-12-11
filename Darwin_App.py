@@ -1,14 +1,14 @@
-from flask import Flask, render_template, jsonify, redirect, url_for, request
+from flask import Flask, render_template, request
 
 app = Flask(__name__)
 
 
-@app.route("/")
+@app.route("/", methods=("GET", "POST"))
 def search_page():
     return render_template("search_page.html")
 
 
-@app.route("/searched_word/")
+@app.route("/searched_word", methods=["POST"])
 def searched_word():
-    searched_word = request.form["search_box"]
-    return render_template("searched_word.html", searched=searched_word)
+    s_word = request.form.get("search_term", "default")
+    return render_template("searched_word.html", searched=s_word)
