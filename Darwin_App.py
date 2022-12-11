@@ -8,6 +8,7 @@ def search_page():
     return render_template("search_page.html")
 
 
-@app.route("/searched_word/<searched_word>")
-def searched_word(searched_word):
+@app.route("/searched_word/")
+def searched_word():
+    searched_word = request.form["search_box"]
     return render_template("searched_word.html", searched=searched_word)
