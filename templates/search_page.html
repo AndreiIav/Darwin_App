@@ -1,7 +1,9 @@
 {% extends 'base.html' %}
 
 {% block searched_word %}
+
 {% if searched %}
 You searched for {{ searched }}.
+{{searched}} appears {{ res }} times.
 {% endif %}
 {% endblock %}
