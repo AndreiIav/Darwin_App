@@ -9,4 +9,4 @@ def search_page():
         return render_template("search_page.html")
     if request.method == "POST":
         s_word = request.form.get("search_term", "default")
-        return render_template("searched_word.html", searched=s_word)
+        return render_template("search_page.html", searched=s_word)
