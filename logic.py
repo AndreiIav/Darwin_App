@@ -12,7 +12,7 @@ def get_count(s_word):
     return res
 
 
-def get_details_for_searched_term(s_word):
+def get_json_details_for_searched_term(s_word):
 
     db = get_db()
     all_res = db.execute(
@@ -23,8 +23,21 @@ def get_details_for_searched_term(s_word):
           INNER JOIN magazine_number mn ON ma.id = mn.magazine_year_id
           INNER JOIN magazine_number_content mnc ON mn.id = mnc.magazine_number_id
           WHERE mnc.magazine_content LIKE :word
+          ORDER BY m.name
         """,
         {"word": "%" + s_word + "%"},
     ).fetchall()
 
-    return all_res
+    response = []
+    for res in all_res:
+
+        partial_values = {}
+        partial_values["magazine_name"] = res[0]
+        partial_values["magazine_year"] = res[1]
+        partial_values["magazine_number"] = res[2]
+        partial_values["page"] = res[3]
+        partial_values["link"] = res[4]
+
+        response.append(partial_values)
+
+    return response
