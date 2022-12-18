@@ -1,12 +1,7 @@
 import sqlite3
 
 
-# def get_searched_term_from_form():
-#     return request.form.get("search_term", "default")
-
-
 def get_count(s_word):
-    # s_word = request.form.get("search_term", "default")
 
     conn = sqlite3.connect("test.db")
     c = conn.cursor()
