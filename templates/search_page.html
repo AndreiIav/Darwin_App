@@ -1,9 +1,19 @@
 {% extends 'base.html' %}
 
-{% block searched_word %}
+{% block searched_term %}
+<nav>
+    {% if searched_term %}
+    <p>The searched term is {{searched_term }}.</p>
+    {% endif %}
+</nav>
+{% endblock %}
 
-{% if searched %}
-You searched for {{ searched }}.
-{{searched}} appears {{ res }} times.
-{% endif %}
+{% block search_results %}
+<nav>
+    <p>Magazine Name: "Magazine Name"</p>
+    <p>Magazine Year: "Magazine Year"</p>
+    <p>Magazine Number: "Magazine Number"</p>
+    <p>Magazine Page: "Magazine Page"</p>
+    <p>Magazine Link: "Magazine Link"</p>
+</nav>
 {% endblock %}
