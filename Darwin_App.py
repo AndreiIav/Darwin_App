@@ -17,9 +17,12 @@ def search_for_term():
         return render_template("base.html")
 
     s_word = request.form.get("search_term", "default")
-
     result_list = get_json_details_for_searched_term(s_word=s_word)
+    results_count = len(result_list)
 
     return render_template(
-        "search_page.html", result_list=result_list, searched_term=s_word
+        "search_page.html",
+        result_list=result_list,
+        searched_term=s_word,
+        results_count=results_count,
     )
