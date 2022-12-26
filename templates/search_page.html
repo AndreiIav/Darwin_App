@@ -10,10 +10,11 @@
 
 {% block search_results %}
 <nav>
-    <p>Magazine Name: "Magazine Name"</p>
-    <p>Magazine Year: "Magazine Year"</p>
-    <p>Magazine Number: "Magazine Number"</p>
-    <p>Magazine Page: "Magazine Page"</p>
-    <p>Magazine Link: "Magazine Link"</p>
+    <h1>Results for "{{ searched_term }}" : </h1>
+    <ul>
+        {% for res in result_list %}
+        <li> {{res}} </li>
+        {% endfor %}
+    </ul>
 </nav>
 {% endblock %}
