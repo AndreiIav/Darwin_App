@@ -12,9 +12,36 @@
 <nav>
     <h1>Results for "{{ searched_term }}" : </h1>
     <ul>
+
         {% for res in result_list %}
-        <li> {{res}} </li>
+        <div class="results">
+            {% for key, value in res.items() %}
+
+
+            {% if key == "magazine_name"%}
+            <h1>{{ value }} </h1>
+            {% endif %}
+
+            {% if key == "magazine_year" %}
+            <p>Year: "{{ value }}"</p>
+            {% endif %}
+
+            {% if key == "magazine_number" %}
+            <p>Number: "{{ value }}" </p>
+            {% endif %}
+
+            {% if key == "page" %}
+            <p>Page: {{ value }}</p>
+            {% endif %}
+
+            {% if key == "link" %}
+            <p>Link: <a href="{{value}}" target="_blank">{{value}}</a></p>
+            {% endif %}
+
+            {% endfor %}
+        </div>
         {% endfor %}
+
     </ul>
 </nav>
 {% endblock %}
