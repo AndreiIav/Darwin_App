@@ -1,6 +1,6 @@
 from flask_wtf import FlaskForm
-from wtforms import StringField, SubmitField                # field types
-from wtforms.validators import DataRequired, Length         # validators
+from wtforms import StringField, SubmitField  # field types
+from wtforms.validators import DataRequired, Length  # validators
 
 
 class SearchForm(FlaskForm):
@@ -9,8 +9,9 @@ class SearchForm(FlaskForm):
         "Search Box",
         [
             DataRequired(),
-            Length(min=4),
-            message=('The searched term must be greater than 3 characters.')
-        ]
+            Length(
+                min=4, message=("The searched term must be greater than 3 characters.")
+            ),
+        ],
     )
-    submit = SubmitField('Search')
+    submit = SubmitField("Search")
