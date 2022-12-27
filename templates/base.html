@@ -14,15 +14,18 @@
 </style>
 
 <body>
-    <nav>
-        <h1>Please introduce a search term in the box</h1>
-        <form action="/search" , method="post">
-            <label for="search_box">Search Box</label><br>
-            <input type="text" id="search_term" name="search_term">
-            <input type="submit" value="Search">
-            <input type="submit" value="Clear">
-        </form>
-    </nav>
+    <div class="form-wrapper">
+        <h2 class="title">Please introduce a search term in the box</h1>
+            <form action="/search" , method="POST">
+                <fieldset class="form-field">
+                    {{ search_form.search_box.label }}
+                    {{ search_form.search_box(size=50) }}
+                </fieldset>
+
+                {{ search_form.submit }}
+
+            </form>
+    </div>
 
     {% block search_results %}{% endblock%}
 
