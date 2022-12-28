@@ -1,36 +1,45 @@
-from flask import Flask, render_template, request, make_response
-from logic import get_json_details_for_searched_term
-from forms import SearchForm
+from flask import Flask, render_template, request
+
+# from logic import get_json_details_for_searched_term
+# from forms import SearchForm
 
 
-app = Flask(__name__)
+def init_app():
 
-app.config.from_pyfile("config.py")
+    app = Flask(__name__, instance_relative_config=False)
+    app.config.from_pyfile("config.py")
 
+    from . import db
 
-@app.route("/")
-def search_page():
-    search_form = SearchForm()
-    return render_template("base.html", search_form=search_form)
+    db.init_app(app)
 
+    from . import logic
+    from . import forms
 
-@app.route("/search", methods=["GET", "POST"])
-def search_for_term():
+    @app.route("/")
+    def search_page():
+        search_form = forms.SearchForm()
+        return render_template("base.html", search_form=search_form)
 
-    search_form = SearchForm()
+    @app.route("/search", methods=["GET", "POST"])
+    def search_for_term():
 
-    if request.method == "POST":
+        search_form = forms.SearchForm()
 
-        s_word = search_form.search_box.data
-        result_list = get_json_details_for_searched_term(s_word=s_word)
-        results_count = len(result_list)
+        if request.method == "POST":
 
-        return render_template(
-            "search_page.html",
-            result_list=result_list,
-            searched_term=s_word,
-            results_count=results_count,
-            search_form=search_form,
-        )
+            s_word = search_form.search_box.data
+            result_list = logic.get_json_details_for_searched_term(s_word=s_word)
+            results_count = len(result_list)
 
-    return render_template("base.html", search_form=search_form)
+            return render_template(
+                "search_page.html",
+                result_list=result_list,
+                searched_term=s_word,
+                results_count=results_count,
+                search_form=search_form,
+            )
+
+        return render_template("base.html", search_form=search_form)
+
+    return app
