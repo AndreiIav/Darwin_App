@@ -1,7 +1,7 @@
 {% extends 'base.html' %}
 
 {% block search_results %}
-<nav>
+<div>
     <h1>{{ results_count }} results found for "{{ searched_term }}" : </h1>
     <ul>
 
@@ -35,5 +35,5 @@
         {% endfor %}
 
     </ul>
-</nav>
+</div>
 {% endblock %}
