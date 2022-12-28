@@ -5,7 +5,7 @@ from forms import SearchForm
 
 app = Flask(__name__)
 
-app.config["SECRET_KEY"] = "random key"
+app.config.from_pyfile("config.py")
 
 
 @app.route("/")
