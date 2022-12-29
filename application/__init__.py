@@ -1,4 +1,6 @@
 from flask import Flask, render_template, request
+from os import path
+from pathlib import Path
 
 # from logic import get_json_details_for_searched_term
 # from forms import SearchForm
@@ -7,7 +9,7 @@ from flask import Flask, render_template, request
 def init_app():
 
     app = Flask(__name__, instance_relative_config=False)
-    app.config.from_pyfile("config.py")
+    app.config.from_pyfile(path.join(Path.cwd(), "config.py"))
 
     from . import db
 
