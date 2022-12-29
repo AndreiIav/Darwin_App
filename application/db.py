@@ -1,4 +1,5 @@
 import sqlite3
+import os
 
 # import os
 import click
@@ -7,8 +8,8 @@ from flask import current_app, g
 
 def get_db():
     if "db" not in g:
-        # db_path = os.path.join("D:\IT projects\Darwin_App\application", "test.db")
-        g.db = sqlite3.connect("D:\\IT projects\\Darwin_App\\test.db")
+        db_path = os.path.join("D:\IT projects\Darwin_App", "test.db")
+        g.db = sqlite3.connect(db_path)
         g.db.row_factory = sqlite3.Row
 
     return g.db
