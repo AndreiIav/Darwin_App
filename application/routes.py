@@ -8,7 +8,7 @@ from .logic import get_json_details_for_searched_term
 @app.route("/")
 def search_form():
     search_form = SearchForm()
-    return render_template("base.html", search_form=search_form)
+    return render_template("home_page.html", search_form=search_form)
 
 
 @app.route("/search", methods=["GET", "POST"])
@@ -30,4 +30,4 @@ def search_for_term():
             search_form=search_form,
         )
 
-    return render_template("base.html", search_form=search_form)
+    return render_template("home_page.html", search_form=search_form)
