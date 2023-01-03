@@ -2,13 +2,17 @@ from flask import current_app as app
 from flask import render_template, request
 
 from .forms import SearchForm
-from .logic import get_json_details_for_searched_term
+from .logic import get_json_details_for_searched_term, get_existent_magazines
 
 
 @app.route("/")
 def search_form():
     search_form = SearchForm()
-    return render_template("home_page.html", search_form=search_form)
+    existent_magazines = get_existent_magazines()
+
+    return render_template(
+        "home_page.html", search_form=search_form, existent_magazines=existent_magazines
+    )
 
 
 @app.route("/search", methods=["GET", "POST"])
@@ -30,4 +34,7 @@ def search_for_term():
             search_form=search_form,
         )
 
-    return render_template("home_page.html", search_form=search_form)
+    existent_magazines = get_existent_magazines()
+    return render_template(
+        "home_page.html", search_form=search_form, existent_magazines=existent_magazines
+    )

@@ -14,3 +14,14 @@
         </form>
 </div>
 {% endblock %}
+
+{% block existent_magazines %}
+<h1> The submited term will be searched in the following magazines: </h1>
+<ul>
+    {% for res in existent_magazines %}
+    <p1>{{ res }} </p1> <br>
+    {% endfor %}
+</ul>
+
+
+{% endblock %}

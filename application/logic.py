@@ -1,15 +1,19 @@
 from application.db import get_db
 
 
-def get_count(s_word):
+def get_existent_magazines():
+
+    existent_magazines = []
 
     db = get_db()
     res = db.execute(
-        "SELECT COUNT(*) FROM magazine_number_content WHERE magazine_content LIKE :word",
-        {"word": "%" + s_word + "%"},
-    ).fetchone()[0]
+        "SELECT name FROM magazines",
+    ).fetchall()
 
-    return res
+    for result in res:
+        existent_magazines.append(result[0])
+
+    return existent_magazines
 
 
 def get_json_details_for_searched_term(s_word):
