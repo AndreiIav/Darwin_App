@@ -1,25 +1,25 @@
 from flask import current_app as app
 from flask import render_template, request
 
-from . import forms
-from . import logic
+from .forms import SearchForm
+from .logic import get_json_details_for_searched_term
 
 
 @app.route("/")
 def search_page():
-    search_form = forms.SearchForm()
+    search_form = SearchForm()
     return render_template("base.html", search_form=search_form)
 
 
 @app.route("/search", methods=["GET", "POST"])
 def search_for_term():
 
-    search_form = forms.SearchForm()
+    search_form = SearchForm()
 
     if request.method == "POST":
 
         s_word = search_form.search_box.data
-        result_list = logic.get_json_details_for_searched_term(s_word=s_word)
+        result_list = get_json_details_for_searched_term(s_word=s_word)
         results_count = len(result_list)
 
         return render_template(
