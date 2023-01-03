@@ -5,10 +5,13 @@ from .forms import SearchForm
 from .logic import get_json_details_for_searched_term, get_existent_magazines
 
 
-@app.route("/")
+@app.route("/", methods=["GET", "POST"])
 def search_form():
     search_form = SearchForm()
     existent_magazines = get_existent_magazines()
+
+    if search_form.validate_on_submit():
+        return redirect(url_for("search_for_term"))
 
     return render_template(
         "home_page.html", search_form=search_form, existent_magazines=existent_magazines
