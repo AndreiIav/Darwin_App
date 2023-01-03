@@ -6,7 +6,7 @@ from .logic import get_json_details_for_searched_term
 
 
 @app.route("/")
-def search_page():
+def search_form():
     search_form = SearchForm()
     return render_template("base.html", search_form=search_form)
 
