@@ -5,3 +5,4 @@ test.db
 access_db.py
 config.py
 .env
+req.txt 
