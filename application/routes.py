@@ -18,23 +18,18 @@ def search_form():
     )
 
 
-@app.route("/search", methods=["GET", "POST"])
+@app.route("/search", methods=["GET"])
 def search_for_term():
 
-    search_form = SearchForm()
+    s_word = request.args["search_box"]
 
-    if request.method == "POST":
+    result_list = get_json_details_for_searched_term(s_word=s_word)
+    results_count = len(result_list)
 
-        s_word = search_form.search_box.data
-        result_list = get_json_details_for_searched_term(s_word=s_word)
-        results_count = len(result_list)
-
-        return render_template(
-            "search_page.html",
-            result_list=result_list,
-            searched_term=s_word,
-            results_count=results_count,
-            search_form=search_form,
-        )
-
-    return redirect(url_for("search_form"))
+    return render_template(
+        "search_page.html",
+        result_list=result_list,
+        searched_term=s_word,
+        results_count=results_count,
+        search_form=search_form,
+    )

@@ -3,7 +3,7 @@
 {% block search_form %}
 <div class="form-wrapper">
     <h2 class="title">Please introduce a search term in the box</h1>
-        <form action="{{ url_for('search_for_term') }}" , method="POST">
+        <form action="{{ url_for('search_for_term') }}">
             <fieldset class="form-field">
                 {{ search_form.search_box.label }}
                 {{ search_form.search_box(size=50) }}
