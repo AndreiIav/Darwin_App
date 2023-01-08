@@ -1,6 +1,4 @@
 from flask import Blueprint
-
-from flask import current_app as app
 from flask import render_template, request
 
 from .logic import get_json_details_for_searched_term
