@@ -23,5 +23,4 @@ def search_for_term():
         result_list=result_list,
         searched_term=s_word,
         results_count=results_count,
-        # search_form=search_form,
     )
