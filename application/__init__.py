@@ -14,6 +14,11 @@ def init_app():
 
         db.init_app(app)
 
-        from . import routes
+        from .home import home
+        from .search_page import search_page
+
+        # Register Blueprints
+        app.register_blueprint(home.home_bp)
+        app.register_blueprint(search_page.search_page_bp)
 
         return app
