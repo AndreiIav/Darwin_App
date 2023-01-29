@@ -1,21 +1,24 @@
-from application.db import get_db
+from ..models import Magazines, MagazineYear, MagazineNumber, MagazineNumberContent, db
 
 
 def get_json_details_for_searched_term(s_word):
 
-    db = get_db()
-    all_res = db.execute(
-        """
-          SELECT DISTINCT m.name, ma.year, mn.magazine_number, mnc.magazine_page, mn.magazine_number_link
-          FROM magazines m
-          INNER JOIN magazine_year ma ON m.id = ma.magazine_id
-          INNER JOIN magazine_number mn ON ma.id = mn.magazine_year_id
-          INNER JOIN magazine_number_content mnc ON mn.id = mnc.magazine_number_id
-          WHERE mnc.magazine_content LIKE :word
-          ORDER BY m.name
-        """,
-        {"word": "%" + s_word + "%"},
-    ).fetchall()
+    all_res = db.session.execute(
+        db.select(
+            Magazines.name,
+            MagazineYear.year,
+            MagazineNumber.magazine_number,
+            MagazineNumberContent.magazine_page,
+            MagazineNumber.magazine_number_link,
+        )
+        .join(MagazineYear, Magazines.id == MagazineYear.magazine_id)
+        .join(MagazineNumber, MagazineYear.id == MagazineNumber.magazine_year_id)
+        .join(
+            MagazineNumberContent,
+            MagazineNumber.id == MagazineNumberContent.magazine_number_id,
+        )
+        .where(MagazineNumberContent.magazine_content.like("%" + s_word + "%"))
+    ).all()
 
     response = []
     for res in all_res:
