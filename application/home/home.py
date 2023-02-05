@@ -1,4 +1,4 @@
-from flask import Blueprint
+from flask import Blueprint, request
 
 from flask import render_template, redirect, url_for
 
@@ -15,7 +15,9 @@ home_bp = Blueprint(
 @home_bp.route("/", methods=["GET", "POST"])
 def search_form():
     search_form = SearchForm()
-    existent_magazines = get_existent_magazines()
+
+    page = request.args.get("page", 1, type=int)
+    existent_magazines = get_existent_magazines(page)
 
     if search_form.validate_on_submit():
         return redirect(url_for("search_for_term"))
