@@ -3,38 +3,19 @@
 {% block search_results %}
 <div>
     <p><a href="{{ url_for('home_bp.search_form') }}">Go back to home page</a></p>
-    <h1>{{ results_count }} results found for "{{ searched_term }}" : </h1>
+    <h1>{{ results_count.total }} results found for "{{ searched_term }}" : </h1>
     <ul>
-
-        {% for res in result_list %}
+        {% for res in result_list%}
         <div class="results">
-            {% for key, value in res.items() %}
-
-
-            {% if key == "magazine_name"%}
-            <h1>{{ value }} </h1>
-            {% endif %}
-
-            {% if key == "magazine_year" %}
-            <p>Year: "{{ value }}"</p>
-            {% endif %}
-
-            {% if key == "magazine_number" %}
-            <p>Number: "{{ value }}" </p>
-            {% endif %}
-
-            {% if key == "page" %}
-            <p>Page: {{ value }}</p>
-            {% endif %}
-
-            {% if key == "link" %}
-            <p>Link: <a href="{{value}}" target="_blank">{{value}}</a></p>
-            {% endif %}
-
+            <h1>{{res[0]}}</h1>
+            <h1>{{res[1]}}</h1>
+            <h1>{{res[2]}}</h1>
+            <h1>{{res[3]}}</h1>
+            <h1>Link: <a href="{{res[4]}}" target="_blank">{{res[4]}}</a></h1>
             {% endfor %}
         </div>
-        {% endfor %}
 
     </ul>
 </div>
+
 {% endblock %}

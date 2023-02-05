@@ -13,10 +13,12 @@ search_page_bp = Blueprint(
 @search_page_bp.route("/search", methods=["GET"])
 def search_for_term():
 
-    s_word = request.args["search_box"]
+    s_word = request.args.get("search_box")
+    page = request.args.get("page", 1, type=int)
 
-    result_list = get_json_details_for_searched_term(s_word=s_word)
-    results_count = len(result_list)
+    result_list = get_json_details_for_searched_term(s_word=s_word, page=page)
+    # results_count = len(result_list)
+    results_count = result_list
 
     return render_template(
         "search_page.html",
