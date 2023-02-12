@@ -16,13 +16,11 @@ def search_for_term():
     s_word = request.args.get("search_box")
     page = request.args.get("page", 1, type=int)
 
+    # Returns a pagination object
     result_list = get_json_details_for_searched_term(s_word=s_word, page=page)
-    # results_count = len(result_list)
-    results_count = result_list
 
     return render_template(
         "search_page.html",
         result_list=result_list,
         searched_term=s_word,
-        results_count=results_count,
     )
