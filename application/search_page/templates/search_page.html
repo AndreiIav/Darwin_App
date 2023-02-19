@@ -4,6 +4,19 @@
 <div>
     <p><a href="{{ url_for('home_bp.search_form') }}">Go back to home page</a></p>
     <h1>{{ result_list.total }} results found for "{{ searched_term }}" : </h1>
+
+    <div>
+        <form>
+            <label for="distinct magazines db">Filter results by magazine name</label>
+            <select name="distinct magazines db" id="distinct magazines db">
+                {% for name in distinct_magazines %}
+                <option value="{{name[0]}}">{{name[0]}}</option>
+                {% endfor %}
+            </select>
+            <input type="submit" value="Submit">
+        </form>
+    </div>
+
     <ul>
         {% for res in result_list%}
         <div class="results">

@@ -1,7 +1,10 @@
 from flask import Blueprint
 from flask import render_template, request
 
-from .logic import get_json_details_for_searched_term
+from .logic import (
+    get_json_details_for_searched_term,
+    get_distinct_magazine_names_for_searched_term,
+)
 
 
 # Blueprint configuration
@@ -19,8 +22,11 @@ def search_for_term():
     # Returns a pagination object
     result_list = get_json_details_for_searched_term(s_word=s_word, page=page)
 
+    distinct_magazines = get_distinct_magazine_names_for_searched_term(s_word=s_word)
+
     return render_template(
         "search_page.html",
         result_list=result_list,
         searched_term=s_word,
+        distinct_magazines=distinct_magazines,
     )
