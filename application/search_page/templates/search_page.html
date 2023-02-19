@@ -7,10 +7,10 @@
 
     <div>
         <form>
-            <label for="distinct magazines db">Filter results by magazine name</label>
+            <label for="distinct magazines db">Filter Results by Magazine Name</label>
             <select name="distinct magazines db" id="distinct magazines db">
                 {% for name in distinct_magazines %}
-                <option value="{{name[0]}}">{{name[0]}}</option>
+                <option value="{{name[0]}}">{{name[0]}}, results: {{name[1]}}</option>
                 {% endfor %}
             </select>
             <input type="submit" value="Submit">

@@ -1,4 +1,5 @@
 from ..models import Magazines, MagazineYear, MagazineNumber, MagazineNumberContent, db
+from sqlalchemy import func
 
 
 def get_json_details_for_searched_term(s_word, page):
@@ -30,19 +31,18 @@ def get_json_details_for_searched_term(s_word, page):
     return response
 
 
-def get_distinct_magazine_names_for_searched_term(s_word):
+def get_distinct_magazine_names_and_count_for_searched_term(s_word):
 
-    distinct_magazine_names_for_searched_term = (
-        db.session.query(Magazines.name)
+    distinct_magazine_names_and_count_for_searched_term = (
+        db.session.query(Magazines.name, func.count(Magazines.name))
         .join(MagazineYear, Magazines.id == MagazineYear.magazine_id)
         .join(MagazineNumber, MagazineYear.id == MagazineNumber.magazine_year_id)
         .join(
             MagazineNumberContent,
             MagazineNumber.id == MagazineNumberContent.magazine_number_id,
         )
-        .distinct()
         .filter(MagazineNumberContent.magazine_content.like("%" + s_word + "%"))
-        .order_by(Magazines.name)
+        .group_by(Magazines.name)
     )
 
-    return distinct_magazine_names_for_searched_term
+    return distinct_magazine_names_and_count_for_searched_term
