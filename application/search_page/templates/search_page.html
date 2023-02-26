@@ -6,9 +6,9 @@
     <h1>{{ result_list.total }} results found for "{{ searched_term }}" : </h1>
 
     <div>
-        <form>
-            <label for="distinct magazines db">Filter Results by Magazine Name</label>
-            <select name="distinct magazines db" id="distinct magazines db">
+        <form action="{{url_for('search_page_bp.search_for_term')}}">
+            <label for="magazine_filter">Filter Results by Magazine Name</label>
+            <select name="magazine_filter" id="magazine_filter">
                 {% for name in distinct_magazines %}
                 <option value="{{name[0]}}">{{name[0]}}, results: {{name[1]}}</option>
                 {% endfor %}

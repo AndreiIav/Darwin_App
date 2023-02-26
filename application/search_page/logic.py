@@ -2,29 +2,54 @@ from ..models import Magazines, MagazineYear, MagazineNumber, MagazineNumberCont
 from sqlalchemy import func
 
 
-def get_json_details_for_searched_term(s_word, page):
+def get_json_details_for_searched_term(s_word, page, magazine_filter):
     """
     A function that returns a sqlAlchemy pagination object containing the Magazines.name,
     MagazineYear.year, MagazineNumber.magazine_number, MagazineNumberContent.magazine_page,
     MagazineNumber.magazine_number_link
     """
 
-    all_details_for_searched_term = (
-        db.session.query(
-            Magazines.name,
-            MagazineYear.year,
-            MagazineNumber.magazine_number,
-            MagazineNumberContent.magazine_page,
-            MagazineNumber.magazine_number_link,
+    if magazine_filter is None:
+
+        all_details_for_searched_term = (
+            db.session.query(
+                Magazines.name,
+                MagazineYear.year,
+                MagazineNumber.magazine_number,
+                MagazineNumberContent.magazine_page,
+                MagazineNumber.magazine_number_link,
+            )
+            .join(MagazineYear, Magazines.id == MagazineYear.magazine_id)
+            .join(MagazineNumber, MagazineYear.id == MagazineNumber.magazine_year_id)
+            .join(
+                MagazineNumberContent,
+                MagazineNumber.id == MagazineNumberContent.magazine_number_id,
+            )
+            .filter(MagazineNumberContent.magazine_content.like("%" + s_word + "%"))
         )
-        .join(MagazineYear, Magazines.id == MagazineYear.magazine_id)
-        .join(MagazineNumber, MagazineYear.id == MagazineNumber.magazine_year_id)
-        .join(
-            MagazineNumberContent,
-            MagazineNumber.id == MagazineNumberContent.magazine_number_id,
-        )
-        .filter(MagazineNumberContent.magazine_content.like("%" + s_word + "%"))
-    )
+
+        response = all_details_for_searched_term.paginate(page=page, per_page=10)
+
+        return response
+
+    else:
+
+        all_details_for_searched_term = (
+            db.session.query(
+                Magazines.name,
+                MagazineYear.year,
+                MagazineNumber.magazine_number,
+                MagazineNumberContent.magazine_page,
+                MagazineNumber.magazine_number_link,
+            )
+            .join(MagazineYear, Magazines.id == MagazineYear.magazine_id)
+            .join(MagazineNumber, MagazineYear.id == MagazineNumber.magazine_year_id)
+            .join(
+                MagazineNumberContent,
+                MagazineNumber.id == MagazineNumberContent.magazine_number_id,
+            )
+            .filter(MagazineNumberContent.magazine_content.like("%" + s_word + "%"))
+        ).filter(Magazines.name == magazine_filter)
 
     response = all_details_for_searched_term.paginate(page=page, per_page=10)
 
