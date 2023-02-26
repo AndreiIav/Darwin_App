@@ -33,7 +33,8 @@
 
 {% for page_num in result_list.iter_pages(left_edge=1, right_edge=1, left_current=1, right_current=1) %}
 {% if page_num %}
-<a href="{{ url_for('search_page_bp.search_for_term',search_box=searched_term, page=page_num)}}">{{
+<a
+    href="{{ url_for('search_page_bp.search_for_term',search_box=searched_term, page=page_num, magazine_filter=magazine_filter)}}">{{
     page_num}}</a>
 {% else %}
 ...

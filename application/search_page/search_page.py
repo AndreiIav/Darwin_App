@@ -45,4 +45,5 @@ def search_for_term():
         result_list=result_list,
         searched_term=s_word,
         distinct_magazines=distinct_magazines,
+        magazine_filter=magazine_filter,
     )
