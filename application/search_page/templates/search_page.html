@@ -3,7 +3,11 @@
 {% block search_results %}
 <div>
     <p><a href="{{ url_for('home_bp.search_form') }}">Go back to home page</a></p>
+    {% if magazine_filter %}
+    <h1>{{ result_list.total }} results found for "{{ searched_term }}" in "{{ magazine_filter }}": </h1>
+    {% else %}
     <h1>{{ result_list.total }} results found for "{{ searched_term }}" : </h1>
+    {% endif %}
 
     <div>
         <form action="{{url_for('search_page_bp.search_for_term')}}">
