@@ -12,7 +12,7 @@ home_bp = Blueprint(
 )
 
 
-@home_bp.route("/", methods=["GET", "POST"])
+@home_bp.route("/", methods=["GET"])
 def search_form():
     search_form = SearchForm()
 

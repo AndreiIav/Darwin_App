@@ -2,7 +2,7 @@ from ..models import Magazines, MagazineYear, MagazineNumber, MagazineNumberCont
 from sqlalchemy import func
 
 
-def get_json_details_for_searched_term(s_word, page, magazine_filter):
+def get_details_for_searched_term(s_word, page, magazine_filter):
     """
     A function that returns a sqlAlchemy pagination object containing the Magazines.name,
     MagazineYear.year, MagazineNumber.magazine_number, MagazineNumberContent.magazine_page,
@@ -28,10 +28,6 @@ def get_json_details_for_searched_term(s_word, page, magazine_filter):
             .filter(MagazineNumberContent.magazine_content.like("%" + s_word + "%"))
         )
 
-        response = all_details_for_searched_term.paginate(page=page, per_page=10)
-
-        return response
-
     else:
 
         all_details_for_searched_term = (
@@ -52,7 +48,6 @@ def get_json_details_for_searched_term(s_word, page, magazine_filter):
         ).filter(Magazines.name == magazine_filter)
 
     response = all_details_for_searched_term.paginate(page=page, per_page=10)
-
     return response
 
 
