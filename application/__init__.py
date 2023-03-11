@@ -20,6 +20,8 @@ def init_app():
 
         # Register Blueprints
         app.register_blueprint(home.home_bp)
-        app.register_blueprint(search_page.search_page_bp)
+        app.register_blueprint(
+            search_page.search_page_bp, url_prefix="/search_page.search_page_bp"
+        )
 
         return app
