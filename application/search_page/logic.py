@@ -2,14 +2,13 @@ from ..models import (
     Magazines,
     MagazineYear,
     MagazineNumber,
-    MagazineNumberContent,
     MagazineNumberContentFTS,
     db,
 )
 from sqlalchemy import func
 
 
-def get_details_for_searched_term(s_word, page, magazine_filter):
+def get_details_for_searched_term(formated_s_word, page, magazine_filter):
     """
     A function that returns a sqlAlchemy pagination object containing the Magazines.name,
     MagazineYear.year, MagazineNumber.magazine_number, MagazineNumberContent.magazine_page,
@@ -32,7 +31,9 @@ def get_details_for_searched_term(s_word, page, magazine_filter):
                 MagazineNumberContentFTS,
                 MagazineNumber.id == MagazineNumberContentFTS.magazine_number_id,
             )
-            .filter(MagazineNumberContentFTS.magazine_content.match(f"{s_word}*"))
+            .filter(
+                MagazineNumberContentFTS.magazine_content.match(f"{formated_s_word}*")
+            )
         )
 
     else:
@@ -51,14 +52,16 @@ def get_details_for_searched_term(s_word, page, magazine_filter):
                 MagazineNumberContentFTS,
                 MagazineNumber.id == MagazineNumberContentFTS.magazine_number_id,
             )
-            .filter(MagazineNumberContentFTS.magazine_content.match(f"{s_word}*"))
+            .filter(
+                MagazineNumberContentFTS.magazine_content.match(f"{formated_s_word}*")
+            )
         ).filter(Magazines.name == magazine_filter)
 
     response = all_details_for_searched_term.paginate(page=page, per_page=10)
     return response
 
 
-def get_distinct_magazine_names_and_count_for_searched_term(s_word):
+def get_distinct_magazine_names_and_count_for_searched_term(formated_s_word):
 
     distinct_magazine_names_and_count_for_searched_term = (
         db.session.query(Magazines.name, func.count(Magazines.name))
@@ -68,8 +71,20 @@ def get_distinct_magazine_names_and_count_for_searched_term(s_word):
             MagazineNumberContentFTS,
             MagazineNumber.id == MagazineNumberContentFTS.magazine_number_id,
         )
-        .filter(MagazineNumberContentFTS.magazine_content.match(f"{s_word}*"))
+        .filter(MagazineNumberContentFTS.magazine_content.match(f"{formated_s_word}*"))
         .group_by(Magazines.name)
     )
 
     return distinct_magazine_names_and_count_for_searched_term
+
+
+def format_search_word(s_word):
+
+    s_word_list = s_word.split()
+
+    if len(s_word_list) == 1:
+        formated_s_word = s_word
+    else:
+        formated_s_word = "+".join(s_word_list)
+
+    return formated_s_word
