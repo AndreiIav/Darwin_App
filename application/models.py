@@ -75,3 +75,13 @@ class MagazineNumberContent(db.Model):
 
     def __repr__(self):
         return f"Magazine Content: {self.magazine_content}, Magazine Page: {self.magazine_page}"
+
+
+class MagazineNumberContentFTS(db.Model):
+
+    __tablename__ = "magazine_number_content_fts"
+
+    rowid = db.Column(db.Integer, primary_key=True)
+    magazine_number_id = db.Column(db.Integer, db.ForeignKey("magazine_number.id"))
+    magazine_content = db.Column(db.Text)
+    magazine_page = db.Column(db.Text)
