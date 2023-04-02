@@ -32,7 +32,7 @@ def get_details_for_searched_term(formated_s_word, page, magazine_filter):
                 MagazineNumber.id == MagazineNumberContentFTS.magazine_number_id,
             )
             .filter(
-                MagazineNumberContentFTS.magazine_content.match(f"{formated_s_word}*")
+                MagazineNumberContentFTS.magazine_content.match(f'"{formated_s_word}"*')
             )
         )
 
@@ -53,7 +53,7 @@ def get_details_for_searched_term(formated_s_word, page, magazine_filter):
                 MagazineNumber.id == MagazineNumberContentFTS.magazine_number_id,
             )
             .filter(
-                MagazineNumberContentFTS.magazine_content.match(f"{formated_s_word}*")
+                MagazineNumberContentFTS.magazine_content.match(f'"{formated_s_word}"*')
             )
         ).filter(Magazines.name == magazine_filter)
 
@@ -71,7 +71,9 @@ def get_distinct_magazine_names_and_count_for_searched_term(formated_s_word):
             MagazineNumberContentFTS,
             MagazineNumber.id == MagazineNumberContentFTS.magazine_number_id,
         )
-        .filter(MagazineNumberContentFTS.magazine_content.match(f"{formated_s_word}*"))
+        .filter(
+            MagazineNumberContentFTS.magazine_content.match(f'"{formated_s_word}"*')
+        )
         .group_by(Magazines.name)
     )
 
