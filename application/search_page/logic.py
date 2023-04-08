@@ -24,6 +24,7 @@ def get_details_for_searched_term(formated_s_word, page, magazine_filter):
                 MagazineNumber.magazine_number,
                 MagazineNumberContentFTS.magazine_page,
                 MagazineNumber.magazine_number_link,
+                MagazineNumberContentFTS.rowid,
             )
             .join(MagazineYear, Magazines.id == MagazineYear.magazine_id)
             .join(MagazineNumber, MagazineYear.id == MagazineNumber.magazine_year_id)
@@ -45,6 +46,7 @@ def get_details_for_searched_term(formated_s_word, page, magazine_filter):
                 MagazineNumber.magazine_number,
                 MagazineNumberContentFTS.magazine_page,
                 MagazineNumber.magazine_number_link,
+                MagazineNumberContentFTS.rowid,
             )
             .join(MagazineYear, Magazines.id == MagazineYear.magazine_id)
             .join(MagazineNumber, MagazineYear.id == MagazineNumber.magazine_year_id)
@@ -90,3 +92,12 @@ def format_search_word(s_word):
         formated_s_word = "+".join(s_word_list)
 
     return formated_s_word
+
+
+def get_magazine_content_details(page_id):
+
+    magazine_content_details = db.session.query(
+        MagazineNumberContentFTS.magazine_content
+    ).filter(MagazineNumberContentFTS.rowid == page_id)
+
+    return magazine_content_details[0][0]

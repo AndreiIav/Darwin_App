@@ -28,13 +28,18 @@
 
     <ul>
         {% for res in result_list%}
-        <div class="results">
-            <h1>{{res[0]}}</h1>
-            <h1>{{res[1]}}</h1>
-            <h1>{{res[2]}}</h1>
-            <h1>Page {{res[3]}}</h1>
-            <h1>Link: <a href="{{res[4]}}" target="_blank">{{res[4]}}</a></h1>
-        </div>
+        <form action="{{url_for('search_page_bp.display_magazine_content')}}" target="_blank">
+            <div class="results">
+                <button>
+                    <h1>{{res[0]}}</h1>
+                    <h1>{{res[1]}}</h1>
+                    <h1>{{res[2]}}</h1>
+                    <h1>Page {{res[3]}}</h1>
+                    <h1>Link: <a href="{{res[4]}}" target="_blank">{{res[4]}}</a></h1>
+                    <input type="hidden" id="page_id" name="page_id" value={{res[5]}}>
+                </button type="submit">
+            </div>
+        </form>
         {% endfor %}
 
     </ul>
