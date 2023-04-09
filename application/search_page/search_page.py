@@ -1,5 +1,6 @@
 from flask import Blueprint
 from flask import render_template, request, session
+from markupsafe import Markup
 
 from .logic import (
     get_details_for_searched_term,
@@ -52,8 +53,38 @@ def search_for_term():
 @search_page_bp.route("/show_page", methods=["GET"])
 def display_magazine_content():
 
+    s_word = session.get("s_word")
     page_id = request.args.get("page_id")
 
     content = get_magazine_content_details(page_id)
+
+    convert_romanian_characters_to_english_dict = {
+        259: 97,  # ă -> a
+        226: 97,  # â -> a
+        238: 105,  # î -> i
+        351: 115,  # ş -> s
+        537: 115,  # ș -> s
+        539: 116,  # ț -> t
+        355: 116,  # ţ -> t
+    }
+
+    content_string_length = len(s_word)
+    formated_content_string = content.lower().translate(
+        convert_romanian_characters_to_english_dict
+    )
+    find_s_word = formated_content_string.find(
+        s_word.lower().translate(convert_romanian_characters_to_english_dict)
+    )
+
+    if find_s_word > -1:
+        substring_to_be_highlighted = content[
+            find_s_word : find_s_word + content_string_length
+        ]
+        content = Markup(
+            content.replace(
+                substring_to_be_highlighted,
+                "<mark>" + substring_to_be_highlighted + "</mark>",
+            )
+        )
 
     return content
