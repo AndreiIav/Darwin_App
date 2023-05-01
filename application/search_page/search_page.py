@@ -68,8 +68,8 @@ def display_magazine_content():
     distinct_s_words_variants = get_distinct_s_words_variants(
         indexes_for_highlighting_s_word, content, content_string_length
     )
-    content = add_html_mark_tags_to_the_searched_term(
-        distinct_s_words_variants, content
+    content = Markup(
+        add_html_mark_tags_to_the_searched_term(distinct_s_words_variants, content)
     )
 
-    return Markup(content)
+    return render_template("show_page.html", content=content)
