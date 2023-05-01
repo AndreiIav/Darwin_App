@@ -111,14 +111,13 @@ def get_content_string_length(s_word):
     return len(s_word)
 
 
-def get_indexes_for_highlighting_s_word(s_word, content, content_string_length):
+def convert_romanian_diacritics_to_english(string_to_convert):
     """
-    A function that accepts the searched term (s_word, string) and the content of show_page view
-    as string (content, string).
-    It returns a list of all the start indexes (int) where the searched term is found in content.
+    A function that accepts a string and returns the string with the romanian diacritics
+    replaced by english characters.
     """
 
-    convert_romanian_characters_to_english_dict = {
+    convert_romanian_diacritics_to_english_dict = {
         259: 97,  # ă -> a
         226: 97,  # â -> a
         238: 105,  # î -> i
@@ -128,13 +127,22 @@ def get_indexes_for_highlighting_s_word(s_word, content, content_string_length):
         355: 116,  # ţ -> t
     }
 
-    content_string_length = content_string_length
-    formated_content_string = content.lower().translate(
-        convert_romanian_characters_to_english_dict
+    converted_string = string_to_convert.lower().translate(
+        convert_romanian_diacritics_to_english_dict
     )
-    formated_s_word = s_word.lower().translate(
-        convert_romanian_characters_to_english_dict
-    )
+
+    return converted_string
+
+
+def get_indexes_for_highlighting_s_word(s_word, content, content_string_length):
+    """
+    A function that accepts the searched term (s_word, string) and the content of
+    show_page view as string (content, string).
+    It returns a list of all the start indexes (int) where the searched term is found in content.
+    """
+
+    formated_content_string = convert_romanian_diacritics_to_english(content)
+    formated_s_word = convert_romanian_diacritics_to_english(s_word)
 
     indexes_for_highlighting_s_word = []
     find_s_word = formated_content_string.find(formated_s_word)
@@ -160,8 +168,8 @@ def get_distinct_s_words_variants(
     A function that accepts a list of indexes (indexes_for_highlighting_s_word, int), the
     content of show_page view as string (content, string) and the length of the searched term
     (content_string_length, int).
-    It returns a list of distinct versions (list of strings) (i, e.: "Darwin", "darwin" or 'Babeș', 'babeș')
-    of the searched term.
+    It returns a list of distinct versions (list of strings) (i, e.: "Darwin", "darwin" or 'Babeș',
+    'babeș') of the searched term.
     """
 
     distinct_s_words_variants = []
@@ -179,12 +187,11 @@ def add_html_mark_tags_to_the_searched_term(distinct_s_words_variants, content):
     A function that accepts a list of distinct versions of the searched term (list of strings)
     and the content of show_page view as string (content, string).
     It returns the content of show_page view as string with <mark> tags around all versions of
-    the searched term
+    the searched term.
     """
 
     while len(distinct_s_words_variants) > 0:
         word = distinct_s_words_variants.pop()
-
         content = content.replace(word, "<mark>" + word + "</mark>")
 
     return content
