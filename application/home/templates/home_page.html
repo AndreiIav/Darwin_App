@@ -19,7 +19,14 @@
 <h1> The submited term will be searched in the following magazines: </h1>
 <ul>
     {% for res in existent_magazines %}
-    <p1>{{ res[0] }} </p1> <br>
+    <form action="{{url_for('home_bp.show_magazine_details')}}" target="_blank">
+        <div class="results">
+            <button>
+                <p1>{{ res[0] }} </p1><br>
+                <input type="hidden" id="magazine_id" name="magazine_id" value={{res[1]}}>
+            </button type="submit">
+        </div>
+    </form>
     {% endfor %}
 </ul>
 

@@ -3,7 +3,7 @@ from flask import Blueprint, request
 from flask import render_template, redirect, url_for
 
 from application.forms import SearchForm
-from .logic import get_existent_magazines
+from .logic import get_existent_magazines, get_magazine_details
 
 
 # Blueprint Configuration
@@ -26,3 +26,12 @@ def search_form():
         search_form=search_form,
         existent_magazines=existent_magazines,
     )
+
+
+@home_bp.route("/magazine_details")
+def show_magazine_details():
+
+    magazine_id = request.args.get("magazine_id")
+    magazine_details = get_magazine_details(magazine_id)
+
+    return render_template("magazine_details.html", magazine_details=magazine_details)

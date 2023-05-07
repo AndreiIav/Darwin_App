@@ -1,0 +1,16 @@
+{% extends 'base.html' %}
+
+{% block existent_magazines %}
+<div>
+    <h1> For "{{magazine_details[0][0]}}" there are:</h1>
+    {% for res in magazine_details %}
+
+    {% if res[2] == 1 %}
+    <p1>{{ res[2] }} number for "{{ res[1] }}"</p1><br>
+    {% else %}
+    <p1>{{ res[2] }} numbers for "{{ res[1] }}"</p1><br>
+    {% endif %}
+
+    {% endfor %}
+</div>
+{% endblock %}
