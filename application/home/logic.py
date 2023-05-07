@@ -1,8 +1,8 @@
 from ..models import Magazines, db
 
 
-def get_existent_magazines(page):
+def get_existent_magazines():
 
-    res = db.paginate(db.select(Magazines), page=page, per_page=20)
+    res = db.session.query(Magazines.name)
 
     return res

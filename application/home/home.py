@@ -16,8 +16,7 @@ home_bp = Blueprint(
 def search_form():
     search_form = SearchForm()
 
-    page = request.args.get("page", 1, type=int)
-    existent_magazines = get_existent_magazines(page)
+    existent_magazines = get_existent_magazines()
 
     if search_form.validate_on_submit():
         return redirect(url_for("search_for_term"))
