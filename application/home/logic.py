@@ -24,14 +24,21 @@ def get_magazine_details(magazine_id):
             func.count(MagazineNumber.id.distinct()),
             func.count(MagazineNumberContentFTS.rowid.distinct()),
         )
-        .join(MagazineYear, Magazines.id == MagazineYear.magazine_id)
-        .join(MagazineNumber, MagazineYear.id == MagazineNumber.magazine_year_id)
+        .select_from(Magazines)
+        .join(
+            MagazineYear,
+            MagazineYear.magazine_id == magazine_id,
+        )
+        .join(
+            MagazineNumber,
+            MagazineYear.id == MagazineNumber.magazine_year_id,
+        )
         .join(
             MagazineNumberContentFTS,
             MagazineNumber.id == MagazineNumberContentFTS.magazine_number_id,
         )
-        .group_by(Magazines.id, MagazineYear.id)
         .filter(Magazines.id == magazine_id)
+        .group_by(Magazines.id, MagazineYear.id)
     )
 
     return magazine_details
