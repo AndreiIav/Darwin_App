@@ -125,6 +125,9 @@ def convert_romanian_diacritics_to_english(string_to_convert):
         537: 115,  # ș -> s
         539: 116,  # ț -> t
         355: 116,  # ţ -> t
+        233: 101,  # é -> e
+        234: 101,  # ê -> e
+        232: 101,  # è -> e
     }
 
     converted_string = string_to_convert.lower().translate(
