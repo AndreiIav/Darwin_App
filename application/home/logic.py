@@ -1,4 +1,10 @@
-from ..models import Magazines, MagazineYear, MagazineNumber, db
+from ..models import (
+    Magazines,
+    MagazineYear,
+    MagazineNumber,
+    MagazineNumberContentFTS,
+    db,
+)
 from sqlalchemy import func
 
 
@@ -15,10 +21,15 @@ def get_magazine_details(magazine_id):
         db.session.query(
             Magazines.name,
             MagazineYear.year,
-            func.count(MagazineNumber.magazine_number),
+            func.count(MagazineNumber.id.distinct()),
+            func.count(MagazineNumberContentFTS.rowid.distinct()),
         )
         .join(MagazineYear, Magazines.id == MagazineYear.magazine_id)
         .join(MagazineNumber, MagazineYear.id == MagazineNumber.magazine_year_id)
+        .join(
+            MagazineNumberContentFTS,
+            MagazineNumber.id == MagazineNumberContentFTS.magazine_number_id,
+        )
         .group_by(Magazines.id, MagazineYear.id)
         .filter(Magazines.id == magazine_id)
     )

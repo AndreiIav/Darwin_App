@@ -6,9 +6,9 @@
     {% for res in magazine_details %}
 
     {% if res[2] == 1 %}
-    <p1>{{ res[2] }} number for "{{ res[1] }}"</p1><br>
+    <p1>{{ res[2] }} number for "{{ res[1] }}" year ({{res[3]}} total pages).</p1><br>
     {% else %}
-    <p1>{{ res[2] }} numbers for "{{ res[1] }}"</p1><br>
+    <p1>{{ res[2] }} numbers for "{{ res[1] }}" year ({{res[3]}} total pages).</p1><br>
     {% endif %}
 
     {% endfor %}
