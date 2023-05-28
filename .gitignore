@@ -2,6 +2,7 @@ venv
 requirements.txt
 __pycache__
 test.db
+app.db
 access_db.py
 config.py
 .env
