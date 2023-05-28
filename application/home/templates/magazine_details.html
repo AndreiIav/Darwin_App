@@ -2,13 +2,13 @@
 
 {% block existent_magazines %}
 <div>
-    <h1> For "{{magazine_details[0][0]}}" there are:</h1>
+    <h1> For "{{magazine_name}}" there are:</h1>
     {% for res in magazine_details %}
 
-    {% if res[2] == 1 %}
-    <p1>{{ res[2] }} number for "{{ res[1] }}" year ({{res[3]}} total pages).</p1><br>
+    {% if res[1] == 1 %}
+    <p1>{{ res[1] }} number for "{{ res[0] }}" year ({{res[2]}} total pages).</p1><br>
     {% else %}
-    <p1>{{ res[2] }} numbers for "{{ res[1] }}" year ({{res[3]}} total pages).</p1><br>
+    <p1>{{ res[1] }} numbers for "{{ res[0] }}" year ({{res[2]}} total pages).</p1><br>
     {% endif %}
 
     {% endfor %}
