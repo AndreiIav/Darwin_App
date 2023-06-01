@@ -14,7 +14,7 @@ def get_existent_magazines():
     return existent_magazines
 
 
-def get_magazine_name(magazine_id):
+def get_magazine_name(magazine_id=0):
     """
     Returns the magazine name if a Magazines.name with id = magazine_id can be retrieved.
     Else it returns None.
