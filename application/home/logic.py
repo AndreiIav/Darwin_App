@@ -15,9 +15,14 @@ def get_existent_magazines():
 
 
 def get_magazine_name(magazine_id):
+    """
+    Returns the magazine name if a Magazines.name with id = magazine_id can be retrieved.
+    Else it returns None.
+    """
 
     magazine_name = db.session.get(Magazines, magazine_id)
-    return magazine_name.name
+    if magazine_name is not None:
+        return magazine_name.name
 
 
 def get_magazine_details(magazine_id):

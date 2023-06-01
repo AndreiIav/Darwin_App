@@ -33,6 +33,10 @@ def show_magazine_details():
 
     magazine_id = request.args.get("magazine_id")
     magazine_name = get_magazine_name(magazine_id)
+
+    if magazine_name is None:
+        return "Page doesn't exist"
+
     magazine_details = get_magazine_details(magazine_id)
 
     return render_template(
