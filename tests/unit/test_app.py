@@ -22,19 +22,12 @@ def test_length_of_get_existent_magazines(test_client, existent_magazines):
 # Tests for get_magazine_name()
 def test_magazine_name_with_existent_magazine_id(test_client, magazine_name):
     assert magazine_name(33)
+    assert magazine_name("33")
 
 
 def test_magazine_name_with_non_existent_magazine_id(test_client, magazine_name):
-    assert magazine_name(999)
-
-
-def test_magazine_name_with_invalid_data_types(test_client, magazine_name):
-    assert magazine_name(True)
-    assert magazine_name("a")
-    assert magazine_name([])
-    assert magazine_name(())
-    assert magazine_name(None)
+    assert magazine_name(999) is None
 
 
 def test_magazine_name_with_no_parameter_passed(test_client, magazine_name):
-    assert magazine_name()
+    assert magazine_name() is None
