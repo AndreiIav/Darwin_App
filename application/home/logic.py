@@ -10,8 +10,8 @@ from sqlalchemy import func
 
 def get_existent_magazines():
 
-    res = db.session.query(Magazines.name, Magazines.id)
-    return res
+    existent_magazines = db.session.query(Magazines.name, Magazines.id)
+    return existent_magazines
 
 
 def get_magazine_name(magazine_id):
