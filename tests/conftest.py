@@ -9,7 +9,11 @@ from application.models import (
     MagazineNumberContent,
     MagazineNumberContentFTS,
 )
-from application.home.logic import get_existent_magazines, get_magazine_name
+from application.home.logic import (
+    get_existent_magazines,
+    get_magazine_name,
+    get_magazine_details,
+)
 
 
 @pytest.fixture
@@ -34,3 +38,8 @@ def existent_magazines():
 @pytest.fixture
 def magazine_name():
     return get_magazine_name
+
+
+@pytest.fixture
+def magazine_details():
+    return get_magazine_details

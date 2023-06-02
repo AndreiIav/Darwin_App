@@ -1,6 +1,9 @@
 import pytest
 import flask_sqlalchemy
 
+# Test Data for parametrized tests
+invalid_magazine_id_input = ["a", True, 1.23, None]
+
 
 # Tests for get_existent_magazines()
 def test_content_of_get_existent_magazines(test_client, existent_magazines):
@@ -20,23 +23,53 @@ def test_length_of_get_existent_magazines(test_client, existent_magazines):
 
 
 # Tests for get_magazine_name()
-def test_magazine_name_with_existent_magazine_id(test_client, magazine_name):
-    assert magazine_name(33)
-    assert magazine_name("33")
+def test_get_magazine_name_with_existent_magazine_id(test_client, magazine_name):
+    test_magazine = "Buletinul eugenic şi biopolitic (1927-1947)"
+
+    assert test_magazine == magazine_name(33)
+    assert test_magazine == magazine_name("33")
 
 
-def test_magazine_name_with_non_existent_magazine_id(test_client, magazine_name):
+def test_get_magazine_name_with_non_existent_magazine_id(test_client, magazine_name):
     assert magazine_name(999) is None
     assert magazine_name("999") is None
 
 
-def test_magazine_name_with_no_parameter_passed(test_client, magazine_name):
+def test_get_magazine_name_with_no_parameter_passed(test_client, magazine_name):
     assert magazine_name() is None
 
 
-def test_magazine_name_with_invalid_data_types_parameters(test_client, magazine_name):
-    assert magazine_name("a") is None
-    assert magazine_name(True) is None
-    assert magazine_name([]) is None
-    assert magazine_name(1.23) is None
-    assert magazine_name(None) is None
+@pytest.mark.parametrize("invalid_magazine_id", invalid_magazine_id_input)
+def test_get_magazine_name_with_invalid_data_types_parameters(
+    test_client, magazine_name, invalid_magazine_id
+):
+    assert magazine_name(invalid_magazine_id) is None
+
+
+# Tests for get_magazine_details()
+@pytest.mark.parametrize("magazine_id", [13, "13"])
+def test_get_magazine_details_with_existent_magazine_id(
+    test_client, magazine_details, magazine_id
+):
+    test_magazine_details = [("ANUL 1 1868", 24, 759), ("ANUL 2 1871", 2, 72)]
+
+    for index, magazine_detail in enumerate(magazine_details(magazine_id)):
+        assert test_magazine_details[index] == magazine_detail
+
+
+def test_get_magazine_details_with_not_existent_magazine_id(
+    test_client, magazine_details
+):
+
+    assert len(list(magazine_details(999))) == 0
+
+
+def test_get_magazine_details_with_no_parameter_passed(test_client, magazine_details):
+    assert len(list(magazine_details())) == 0
+
+
+@pytest.mark.parametrize("invalid_magazine_id", invalid_magazine_id_input)
+def test_get_magazine_details_with_invalid_data_types_parameters(
+    test_client, magazine_details, invalid_magazine_id
+):
+    assert len(list(magazine_details(invalid_magazine_id))) == 0
