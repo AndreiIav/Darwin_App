@@ -9,6 +9,11 @@ from sqlalchemy import func
 
 
 def get_existent_magazines():
+    """
+    This function returns a SQLAlchemy Query object that retrieves the names and ids of magazines
+    from the Magazines table.
+    The Query object can be iterated to access the results.
+    """
 
     existent_magazines = db.session.query(Magazines.name, Magazines.id)
     return existent_magazines
@@ -16,9 +21,11 @@ def get_existent_magazines():
 
 def get_magazine_name(magazine_id=0):
     """
-    Returns the magazine name if a Magazines.name with id = magazine_id can be retrieved.
-    Else it returns None.
+    "This function retrieves the name of a magazine from the Magazines table using the provided magazine_id.
+    If a magazine with the specified id exists, it returns the corresponding magazine name as a string.
+    If the magazine_id is not found or is of an invalid data type, it returns None."
     """
+
     try:
         magazine_id = int(magazine_id)
     except ValueError:
@@ -34,7 +41,13 @@ def get_magazine_name(magazine_id=0):
     return
 
 
-def get_magazine_details(magazine_id):
+def get_magazine_details(magazine_id=0):
+    """
+    This function returns a SQLAlchemy Query object that retrieves MagazineYear instances for a given magazine_id.
+    Each MagazineYear instance includes the distinct count of magazine numbers and pages associated with that year.
+    The Query object can be iterated to access the results.
+    If the magazine_id is not found or is of an invalid data type, the Query object will be empty.
+    """
 
     magazine_details = (
         db.session.query(
