@@ -19,10 +19,19 @@ def get_magazine_name(magazine_id=0):
     Returns the magazine name if a Magazines.name with id = magazine_id can be retrieved.
     Else it returns None.
     """
+    try:
+        magazine_id = int(magazine_id)
+    except ValueError:
+        return
+    except TypeError:
+        return
 
     magazine_name = db.session.get(Magazines, magazine_id)
+
     if magazine_name is not None:
         return magazine_name.name
+
+    return
 
 
 def get_magazine_details(magazine_id):

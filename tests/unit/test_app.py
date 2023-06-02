@@ -27,7 +27,16 @@ def test_magazine_name_with_existent_magazine_id(test_client, magazine_name):
 
 def test_magazine_name_with_non_existent_magazine_id(test_client, magazine_name):
     assert magazine_name(999) is None
+    assert magazine_name("999") is None
 
 
 def test_magazine_name_with_no_parameter_passed(test_client, magazine_name):
     assert magazine_name() is None
+
+
+def test_magazine_name_with_invalid_data_types_parameters(test_client, magazine_name):
+    assert magazine_name("a") is None
+    assert magazine_name(True) is None
+    assert magazine_name([]) is None
+    assert magazine_name(1.23) is None
+    assert magazine_name(None) is None
