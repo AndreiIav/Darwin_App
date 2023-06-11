@@ -9,9 +9,9 @@
 <div>
     <p><a href="{{ url_for('home_bp.search_form') }}">Go back to home page</a></p>
     {% if magazine_filter %}
-    <h1>{{ result_list.total }} results found for "{{ searched_term }}" in "{{ magazine_filter }}": </h1>
+    <h1>{{ details_for_searched_term.total }} results found for "{{ searched_term }}" in "{{ magazine_filter }}": </h1>
     {% else %}
-    <h1>{{ result_list.total }} results found for "{{ searched_term }}" : </h1>
+    <h1>{{ details_for_searched_term.total }} results found for "{{ searched_term }}" : </h1>
     {% endif %}
 
     <div>
@@ -27,7 +27,7 @@
     </div>
 
     <ul>
-        {% for res in result_list%}
+        {% for res in details_for_searched_term%}
         <form action="{{url_for('search_page_bp.display_magazine_content')}}" target="_blank">
             <div class="results">
                 <button>
@@ -45,7 +45,7 @@
     </ul>
 </div>
 
-{% for page_num in result_list.iter_pages(left_edge=1, right_edge=1, left_current=1, right_current=1) %}
+{% for page_num in details_for_searched_term.iter_pages(left_edge=1, right_edge=1, left_current=1, right_current=1) %}
 {% if page_num %}
 <a
     href="{{ url_for('search_page_bp.search_for_term',search_box=searched_term, page=page_num, magazine_filter=magazine_filter)}}">{{

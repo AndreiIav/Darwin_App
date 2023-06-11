@@ -4,7 +4,9 @@ from markupsafe import Markup
 
 from .logic import (
     get_details_for_searched_term,
+    get_details_for_searched_term_for_specific_magazine,
     get_distinct_magazine_names_and_count_for_searched_term,
+    paginate_results,
     format_search_word,
     get_magazine_content_details,
     get_indexes_for_highlighting_s_word,
@@ -34,20 +36,26 @@ def search_for_term():
 
     page = request.args.get("page", 1, type=int)
 
-    magazine_filter = request.args.get("magazine_filter")
-
-    # Returns a pagination object
-    result_list = get_details_for_searched_term(
-        formated_s_word=formated_s_word, page=page, magazine_filter=magazine_filter
-    )
-
     distinct_magazines = get_distinct_magazine_names_and_count_for_searched_term(
         formated_s_word=formated_s_word
     )
 
+    magazine_filter = request.args.get("magazine_filter")
+
+    details_for_searched_term = get_details_for_searched_term(
+        formated_s_word=formated_s_word
+    )
+
+    if magazine_filter:
+        details_for_searched_term = get_details_for_searched_term_for_specific_magazine(
+            details_for_searched_term, magazine_filter
+        )
+
+    details_for_searched_term = paginate_results(details_for_searched_term, page)
+
     return render_template(
         "search_page.html",
-        result_list=result_list,
+        details_for_searched_term=details_for_searched_term,
         searched_term=s_word,
         distinct_magazines=distinct_magazines,
         magazine_filter=magazine_filter,

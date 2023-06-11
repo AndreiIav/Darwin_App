@@ -8,59 +8,49 @@ from ..models import (
 from sqlalchemy import func
 
 
-def get_details_for_searched_term(formated_s_word, page, magazine_filter):
+def get_details_for_searched_term(formated_s_word):
     """
     A function that returns a sqlAlchemy pagination object containing the Magazines.name,
     MagazineYear.year, MagazineNumber.magazine_number, MagazineNumberContent.magazine_page,
     MagazineNumber.magazine_number_link
     """
 
-    if magazine_filter is None:
-
-        all_details_for_searched_term = (
-            db.session.query(
-                Magazines.name,
-                MagazineYear.year,
-                MagazineNumber.magazine_number,
-                MagazineNumberContentFTS.magazine_page,
-                MagazineNumber.magazine_number_link,
-                MagazineNumberContentFTS.rowid,
-            )
-            .join(MagazineYear, Magazines.id == MagazineYear.magazine_id)
-            .join(MagazineNumber, MagazineYear.id == MagazineNumber.magazine_year_id)
-            .join(
-                MagazineNumberContentFTS,
-                MagazineNumber.id == MagazineNumberContentFTS.magazine_number_id,
-            )
-            .filter(
-                MagazineNumberContentFTS.magazine_content.match(f'"{formated_s_word}"*')
-            )
+    all_details_for_searched_term = (
+        db.session.query(
+            Magazines.name,
+            MagazineYear.year,
+            MagazineNumber.magazine_number,
+            MagazineNumberContentFTS.magazine_page,
+            MagazineNumber.magazine_number_link,
+            MagazineNumberContentFTS.rowid,
         )
+        .join(MagazineYear, Magazines.id == MagazineYear.magazine_id)
+        .join(MagazineNumber, MagazineYear.id == MagazineNumber.magazine_year_id)
+        .join(
+            MagazineNumberContentFTS,
+            MagazineNumber.id == MagazineNumberContentFTS.magazine_number_id,
+        )
+        .filter(
+            MagazineNumberContentFTS.magazine_content.match(f'"{formated_s_word}"*')
+        )
+    )
 
-    else:
+    return all_details_for_searched_term
 
-        all_details_for_searched_term = (
-            db.session.query(
-                Magazines.name,
-                MagazineYear.year,
-                MagazineNumber.magazine_number,
-                MagazineNumberContentFTS.magazine_page,
-                MagazineNumber.magazine_number_link,
-                MagazineNumberContentFTS.rowid,
-            )
-            .join(MagazineYear, Magazines.id == MagazineYear.magazine_id)
-            .join(MagazineNumber, MagazineYear.id == MagazineNumber.magazine_year_id)
-            .join(
-                MagazineNumberContentFTS,
-                MagazineNumber.id == MagazineNumberContentFTS.magazine_number_id,
-            )
-            .filter(
-                MagazineNumberContentFTS.magazine_content.match(f'"{formated_s_word}"*')
-            )
-        ).filter(Magazines.name == magazine_filter)
 
-    response = all_details_for_searched_term.paginate(page=page, per_page=10)
-    return response
+def get_details_for_searched_term_for_specific_magazine(
+    details_for_searched_term, magazine_filter
+):
+
+    details_for_specific_magazine = details_for_searched_term.filter(
+        Magazines.name == magazine_filter
+    )
+
+    return details_for_specific_magazine
+
+
+def paginate_results(details_for_searched_term, page):
+    return details_for_searched_term.paginate(page=page, per_page=10)
 
 
 def get_distinct_magazine_names_and_count_for_searched_term(formated_s_word):
