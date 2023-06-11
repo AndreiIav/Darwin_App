@@ -8,12 +8,12 @@ from ..models import (
 from sqlalchemy import func
 
 
-def get_details_for_searched_term(formated_s_word):
+def get_details_for_searched_term(formatted_s_word):
     """
     Retrieve specific columns from multiple tables based on a provided search term.
 
     Args:
-        formated_s_word (str): The search term used for retrieval.
+        formatted_s_word (str): The search term used for retrieval.
 
     Returns:
         all_details_for_searched_term (flask_sqlalchemy.query.Query): A Query object
@@ -44,7 +44,7 @@ def get_details_for_searched_term(formated_s_word):
             MagazineNumber.id == MagazineNumberContentFTS.magazine_number_id,
         )
         .filter(
-            MagazineNumberContentFTS.magazine_content.match(f'"{formated_s_word}"*')
+            MagazineNumberContentFTS.magazine_content.match(f'"{formatted_s_word}"*')
         )
     )
 
@@ -89,7 +89,7 @@ def paginate_results(details_for_searched_term, page):
     return details_for_searched_term.paginate(page=page, per_page=10)
 
 
-def get_distinct_magazine_names_and_count_for_searched_term(formated_s_word):
+def get_distinct_magazine_names_and_count_for_searched_term(formatted_s_word):
 
     distinct_magazine_names_and_count_for_searched_term = (
         db.session.query(Magazines.name, func.count(Magazines.name))
@@ -100,7 +100,7 @@ def get_distinct_magazine_names_and_count_for_searched_term(formated_s_word):
             MagazineNumber.id == MagazineNumberContentFTS.magazine_number_id,
         )
         .filter(
-            MagazineNumberContentFTS.magazine_content.match(f'"{formated_s_word}"*')
+            MagazineNumberContentFTS.magazine_content.match(f'"{formatted_s_word}"*')
         )
         .group_by(Magazines.name)
     )
@@ -113,11 +113,11 @@ def format_search_word(s_word):
     s_word_list = s_word.split()
 
     if len(s_word_list) == 1:
-        formated_s_word = s_word
+        formatted_s_word = s_word
     else:
-        formated_s_word = "+".join(s_word_list)
+        formatted_s_word = "+".join(s_word_list)
 
-    return formated_s_word
+    return formatted_s_word
 
 
 def get_magazine_content_details(page_id):
@@ -170,20 +170,20 @@ def get_indexes_for_highlighting_s_word(s_word, content, content_string_length):
     It returns a list of all the start indexes (int) where the searched term is found in content.
     """
 
-    formated_content_string = convert_romanian_diacritics_to_english(content)
-    formated_s_word = convert_romanian_diacritics_to_english(s_word)
+    formatted_content_string = convert_romanian_diacritics_to_english(content)
+    formatted_s_word = convert_romanian_diacritics_to_english(s_word)
 
     indexes_for_highlighting_s_word = []
-    find_s_word = formated_content_string.find(formated_s_word)
+    find_s_word = formatted_content_string.find(formatted_s_word)
 
     while find_s_word > -1:
         indexes_for_highlighting_s_word.append(find_s_word)
         current_last_index = indexes_for_highlighting_s_word[-1]
-        index_content_string = formated_content_string[
+        index_content_string = formatted_content_string[
             current_last_index + content_string_length :
         ]
 
-        find_s_word = index_content_string.find(formated_s_word)
+        find_s_word = index_content_string.find(formatted_s_word)
         if find_s_word > -1:
             find_s_word = current_last_index + content_string_length + find_s_word
 

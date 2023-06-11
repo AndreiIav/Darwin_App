@@ -32,18 +32,18 @@ def search_for_term():
         session["s_word"] = request.args.get("search_box")
     s_word = session.get("s_word")
 
-    formated_s_word = format_search_word(s_word)
+    formatted_s_word = format_search_word(s_word)
 
     page = request.args.get("page", 1, type=int)
 
     distinct_magazines = get_distinct_magazine_names_and_count_for_searched_term(
-        formated_s_word=formated_s_word
+        formatted_s_word=formatted_s_word
     )
 
     magazine_filter = request.args.get("magazine_filter")
 
     details_for_searched_term = get_details_for_searched_term(
-        formated_s_word=formated_s_word
+        formatted_s_word=formatted_s_word
     )
 
     if magazine_filter:
