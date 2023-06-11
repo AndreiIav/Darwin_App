@@ -10,8 +10,12 @@ from sqlalchemy import func
 
 def get_existent_magazines():
     """
-    This function returns a SQLAlchemy Query object that retrieves the names and ids of magazines
-    from the Magazines table.
+    Retrieve the names and ids of magazines from the Magazines table.
+
+    Returns:
+        existent_magazines (flask_sqlalchemy.query.Query): A Query object containing
+        the retrieved names and ids.
+
     The Query object can be iterated to access the results.
     """
 
@@ -21,9 +25,14 @@ def get_existent_magazines():
 
 def get_magazine_name(magazine_id=0):
     """
-    "This function retrieves the name of a magazine from the Magazines table using the provided magazine_id.
-    If a magazine with the specified id exists, it returns the corresponding magazine name as a string.
-    If the magazine_id is not found or is of an invalid data type, it returns None."
+    Retrieve the name of a magazine from the Magazines table based on the provided magazine_id.
+
+    Args:
+        magazine_id (int, optional): The ID of the magazine to retrieve the name for. Defaults to 0.
+
+    Returns:
+        magazine_name.name (str) or None: The name of the magazine if found, or None if the
+        magazine_id is not found or is of an invalid data type.
     """
 
     try:
@@ -43,6 +52,15 @@ def get_magazine_name(magazine_id=0):
 
 def get_magazine_details(magazine_id=0):
     """
+    Retrieve MagazineYear instances for a given magazine_id.
+
+    Args:
+        magazine_id (int, optional): The ID of the magazine to retrieve details for. Defaults to 0.
+
+    Returns:
+        magazine_details (flask_sqlalchemy.query.Query): A Query object containing MagazineYear
+        instances with associated counts.
+
     This function returns a SQLAlchemy Query object that retrieves MagazineYear instances for a given magazine_id.
     Each MagazineYear instance includes the distinct count of magazine numbers and pages associated with that year.
     The Query object can be iterated to access the results.
