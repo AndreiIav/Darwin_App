@@ -10,9 +10,22 @@ from sqlalchemy import func
 
 def get_details_for_searched_term(formated_s_word):
     """
-    A function that returns a sqlAlchemy pagination object containing the Magazines.name,
-    MagazineYear.year, MagazineNumber.magazine_number, MagazineNumberContent.magazine_page,
-    MagazineNumber.magazine_number_link
+    Retrieve specific columns from multiple tables based on a provided search term.
+
+    Args:
+        formated_s_word (str): The search term used for retrieval.
+
+    Returns:
+        all_details_for_searched_term (flask_sqlalchemy.query.Query): A Query object
+        containing the retrieved results.
+
+    This function returns a SQLAlchemy Query object that retrieves specific columns
+    (Magazines.name, MagazineYear.year, MagazineNumber.magazine_number,
+    MagazineNumberContentFTS.magazine_page, MagazineNumber.magazine_number_link,
+    and MagazineNumberContentFTS.rowid) from multiple tables based on a provided search
+    term.
+    The search is performed on an FTS5 table, which enables fast text search capabilities.
+    The Query object can be iterated to access the results.
     """
 
     all_details_for_searched_term = (
@@ -41,6 +54,18 @@ def get_details_for_searched_term(formated_s_word):
 def get_details_for_searched_term_for_specific_magazine(
     details_for_searched_term, magazine_filter
 ):
+    """
+    Filter a SQLAlchemy Query object based on a provided filter term.
+
+    Args:
+        details_for_searched_term (flask_sqlalchemy.query.Query): The Query object returned by the
+        get_details_for_searched_term function.
+        magazine_filter (str): The filter term representing Magazines.name.
+
+    Returns:
+        details_for_specific_magazine (flask_sqlalchemy.query.Query): A new Query object containing the
+        filtered results.
+    """
 
     details_for_specific_magazine = details_for_searched_term.filter(
         Magazines.name == magazine_filter
@@ -50,6 +75,17 @@ def get_details_for_searched_term_for_specific_magazine(
 
 
 def paginate_results(details_for_searched_term, page):
+    """
+    Generate a SQLAlchemy Pagination object for the provided Query.
+
+    Args:
+        details_for_searched_term (flask_sqlalchemy.query.Query): The SQLAlchemy Query object to paginate.
+        page (int): The page number to retrieve.
+
+    Returns:
+        flask_sqlalchemy.pagination.QueryPagination: A Pagination object representing the subset of query
+        results for the requested page.
+    """
     return details_for_searched_term.paginate(page=page, per_page=10)
 
 
