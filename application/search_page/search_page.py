@@ -26,13 +26,6 @@ search_page_bp = Blueprint(
 @search_page_bp.route("/search", methods=["GET"])
 def search_for_term():
 
-    # if session.get("s_word") is None or (
-    #     request.args.get("search_box") is not None
-    #     and request.args.get("search_box") != session.get("s_word")
-    # ):
-    #     session["s_word"] = request.args.get("search_box")
-    # s_word = session.get("s_word")
-
     session_s_word = session.get("s_word")
     request_s_word = request.args.get("search_box")
     s_word = store_s_word_in_session(session_s_word, request_s_word)

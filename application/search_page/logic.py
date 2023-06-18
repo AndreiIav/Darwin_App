@@ -228,6 +228,22 @@ def add_html_mark_tags_to_the_searched_term(distinct_s_words_variants, content):
 
 
 def store_s_word_in_session(session_s_word, request_s_word):
+    """
+    Update the value of s_word in the session with the value from the current request.
+
+    Args:
+        session_s_word (str): The current value of s_word stored in the session.
+        request_s_word (str): The value of s_word from the current request.
+
+    Returns:
+        str or None: The updated value of s_word in the session, or None if no current or request
+        value is provided.
+
+    This function replaces the current value of s_word in the session with the value from the
+    current request. It returns the updated value of s_word in the session, or None if no current
+    value or request value is provided.
+    """
+
     if session_s_word is None or (
         request_s_word is not None and request_s_word != session_s_word
     ):

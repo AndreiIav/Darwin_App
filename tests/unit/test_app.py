@@ -1,5 +1,6 @@
 import pytest
 import flask_sqlalchemy
+from flask import request
 
 # Test Data for parametrized tests
 invalid_magazine_id_input = ["a", True, 1.23, None]
@@ -73,3 +74,45 @@ def test_get_magazine_details_with_invalid_data_types_parameters(
     test_client, magazine_details, invalid_magazine_id
 ):
     assert len(list(magazine_details(invalid_magazine_id))) == 0
+
+
+# Tests for store_s_word_in_session()
+def test_store_s_word_in_session_when_s_word_not_in_session_and_a_request_s_word_is_provided(
+    s_word_in_session,
+):
+    session_s_word = None
+    request_s_word = request.args.get("search_box")
+    s_word = s_word_in_session(session_s_word, request_s_word)
+
+    assert s_word == "fotbal"
+
+
+def test_store_s_word_in_session_when_s_word_not_in_session_and_a_request_s_word_is_not_provided(
+    s_word_in_session,
+):
+    session_s_word = None
+    request_s_word = None
+    s_word = s_word_in_session(session_s_word, request_s_word)
+
+    assert s_word is None
+
+
+def test_store_s_word_in_session_with_s_word_alredy_stored_in_session_and_same_request_s_word_provided(
+    s_word_in_session,
+):
+    request_s_word = request.args.get("search_box")
+    session_s_word = s_word_in_session(None, request_s_word)
+    s_word = s_word_in_session(session_s_word, request_s_word)
+
+    assert s_word == "fotbal"
+
+
+def test_store_s_word_in_session_with_s_word_alredy_stored_in_session_and_diferent_request_s_word_provided(
+    s_word_in_session,
+):
+    request_s_word = request.args.get("search_box")
+    session_s_word = s_word_in_session(None, request_s_word)
+    request_s_word = "tennis"
+    s_word = s_word_in_session(session_s_word, request_s_word)
+
+    assert s_word == "tennis"
