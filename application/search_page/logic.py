@@ -6,6 +6,7 @@ from ..models import (
     db,
 )
 from sqlalchemy import func
+from flask import session
 
 
 def get_details_for_searched_term(formatted_s_word):
@@ -224,3 +225,12 @@ def add_html_mark_tags_to_the_searched_term(distinct_s_words_variants, content):
         content = content.replace(word, "<mark>" + word + "</mark>")
 
     return content
+
+
+def store_s_word_in_session(session_s_word, request_s_word):
+    if session_s_word is None or (
+        request_s_word is not None and request_s_word != session_s_word
+    ):
+        session["s_word"] = request_s_word
+
+    return session.get("s_word")
