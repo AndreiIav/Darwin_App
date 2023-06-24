@@ -2,10 +2,6 @@ import pytest
 import flask_sqlalchemy
 from flask import request
 
-# Test Data for parametrized tests
-invalid_magazine_id_input = ["a", True, 1.23, None]
-
-
 # Tests for get_existent_magazines()
 def test_content_of_get_existent_magazines(test_client, existent_magazines):
     existent_magazine = ("Viaţa Noastră (1936-1937)", 153)
@@ -38,6 +34,9 @@ def test_get_magazine_name_with_non_existent_magazine_id(test_client, magazine_n
 
 def test_get_magazine_name_with_no_parameter_passed(test_client, magazine_name):
     assert magazine_name() is None
+
+
+invalid_magazine_id_input = ["a", True, 1.23, None]
 
 
 @pytest.mark.parametrize("invalid_magazine_id", invalid_magazine_id_input)
@@ -116,3 +115,19 @@ def test_store_s_word_in_session_with_s_word_alredy_stored_in_session_and_difere
     s_word = s_word_in_session(session_s_word, request_s_word)
 
     assert s_word == "tennis"
+
+
+# Tests for format_search_word
+def test_format_s_word_with_one_word_as_input(test_client, format_word):
+
+    formatted_s_word = format_word("darwin")
+    assert formatted_s_word == "darwin"
+
+
+def test_format_s_word_with_multiple_words_as_input(test_client, format_word):
+
+    formatted_s_word = format_word("Victor Babeș")
+    assert formatted_s_word == "Victor+Babeș"
+
+    formatted_s_word = format_word("ala bala portocala")
+    assert formatted_s_word == "ala+bala+portocala"

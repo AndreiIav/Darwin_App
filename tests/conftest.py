@@ -10,7 +10,7 @@ from application.home.logic import (
     get_magazine_details,
 )
 
-from application.search_page.logic import store_s_word_in_session
+from application.search_page.logic import store_s_word_in_session, format_search_word
 
 
 @pytest.fixture
@@ -24,6 +24,18 @@ def test_client():
         # Establish an application context
         with app.app_context():
             yield testing_client
+
+
+@pytest.fixture
+def s_word_in_session():
+    # Set the Testing configuration prior to creating the Flask application
+    os.environ["CONFIG_TYPE"] = "config.TestingConfig"
+    app = init_app()
+
+    with app.test_request_context(
+        "/search_page.search_page_bp/search", query_string={"search_box": "fotbal"}
+    ):
+        yield store_s_word_in_session
 
 
 @pytest.fixture
@@ -43,12 +55,5 @@ def magazine_details():
 
 
 @pytest.fixture
-def s_word_in_session():
-    # Set the Testing configuration prior to creating the Flask application
-    os.environ["CONFIG_TYPE"] = "config.TestingConfig"
-    app = init_app()
-
-    with app.test_request_context(
-        "/search_page.search_page_bp/search", query_string={"search_box": "fotbal"}
-    ):
-        yield store_s_word_in_session
+def format_word():
+    return format_search_word
