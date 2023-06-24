@@ -91,6 +91,17 @@ def paginate_results(details_for_searched_term, page):
 
 
 def get_distinct_magazine_names_and_count_for_searched_term(formatted_s_word):
+    """
+    Retrieve distinct magazine names and search term counts based on the formatted_s_word.
+
+    Args:
+        formatted_s_word (str): The formatted search word obtained from format_search_word function.
+
+    Returns:
+        flask_sqlalchemy.query.Query: A Query object containing tuples of magazine names and search term counts.
+
+    The Query object can be iterated to access the magazine names and their respective search term counts.
+    """
 
     distinct_magazine_names_and_count_for_searched_term = (
         db.session.query(Magazines.name, func.count(Magazines.name))

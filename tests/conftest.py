@@ -10,7 +10,11 @@ from application.home.logic import (
     get_magazine_details,
 )
 
-from application.search_page.logic import store_s_word_in_session, format_search_word
+from application.search_page.logic import (
+    store_s_word_in_session,
+    format_search_word,
+    get_distinct_magazine_names_and_count_for_searched_term,
+)
 
 
 @pytest.fixture
@@ -57,3 +61,8 @@ def magazine_details():
 @pytest.fixture
 def format_word():
     return format_search_word
+
+
+@pytest.fixture
+def distinct_magazine_names_and_count_for_searched_term():
+    return get_distinct_magazine_names_and_count_for_searched_term

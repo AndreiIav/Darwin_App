@@ -131,3 +131,30 @@ def test_format_s_word_with_multiple_words_as_input(test_client, format_word):
 
     formatted_s_word = format_word("ala bala portocala")
     assert formatted_s_word == "ala+bala+portocala"
+
+
+# Tests for get_distinct_magazine_names_and_count_for_searched_term
+def test_instance_of_get_distinct_magazine_names_and_count_for_searched_term(
+    test_client, distinct_magazine_names_and_count_for_searched_term
+):
+
+    magazine_names_and_count = distinct_magazine_names_and_count_for_searched_term(
+        "fotbal"
+    )
+    assert isinstance(magazine_names_and_count, flask_sqlalchemy.query.Query)
+
+
+def test_response_details_of_get_distinct_magazine_names_and_count_for_searched_term(
+    test_client, distinct_magazine_names_and_count_for_searched_term
+):
+
+    magazine_names_and_count = distinct_magazine_names_and_count_for_searched_term(
+        "fotbal"
+    )
+
+    for row in magazine_names_and_count:
+        assert len(row) == 2
+
+    for name, count in magazine_names_and_count:
+        assert isinstance(name, str)
+        assert isinstance(count, int)
