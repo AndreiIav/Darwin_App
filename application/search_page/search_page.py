@@ -34,8 +34,10 @@ def search_for_term():
 
     page = request.args.get("page", 1, type=int)
 
-    distinct_magazines = get_distinct_magazine_names_and_count_for_searched_term(
-        formatted_s_word=formatted_s_word
+    distinct_magazines_and_count = (
+        get_distinct_magazine_names_and_count_for_searched_term(
+            formatted_s_word=formatted_s_word
+        )
     )
 
     magazine_filter = request.args.get("magazine_filter")
@@ -55,7 +57,7 @@ def search_for_term():
         "search_page.html",
         details_for_searched_term=details_for_searched_term,
         searched_term=s_word,
-        distinct_magazines=distinct_magazines,
+        distinct_magazines_and_count=distinct_magazines_and_count,
         magazine_filter=magazine_filter,
     )
 
