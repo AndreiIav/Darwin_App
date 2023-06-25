@@ -188,3 +188,80 @@ def test_response_details_of_get_details_for_searched_term(
         assert isinstance(page, int)
         assert isinstance(link, str)
         assert isinstance(rowid, int)
+
+
+# Tests for get_details_for_searched_term_for_specific_magazine
+def test_instance_of_get_details_for_searched_term_for_specific_magazine(
+    test_client,
+    format_word,
+    details_for_searched_term,
+    details_for_searched_term_for_specific_magazine,
+):
+
+    s_word = format_word("Constantin Esarcu")
+    details_for_searched_term = details_for_searched_term(s_word)
+    magazine_filter = "Tribuna poporului(1897-1912)"
+    details_for_searched_term_specific_magazine = (
+        details_for_searched_term_for_specific_magazine(
+            details_for_searched_term, magazine_filter
+        )
+    )
+
+    assert isinstance(
+        details_for_searched_term_specific_magazine, flask_sqlalchemy.query.Query
+    )
+
+
+def test_response_details_of_get_details_for_searched_term_for_specific_magazine(
+    test_client,
+    format_word,
+    details_for_searched_term,
+    details_for_searched_term_for_specific_magazine,
+):
+
+    s_word = format_word("Constantin Esarcu")
+    details_for_searched_term = details_for_searched_term(s_word)
+    magazine_filter = "Tribuna poporului(1897-1912)"
+    details_for_searched_term_specific_magazine = (
+        details_for_searched_term_for_specific_magazine(
+            details_for_searched_term, magazine_filter
+        )
+    )
+
+    for row in details_for_searched_term_specific_magazine:
+        assert len(row) == 6
+
+    for (
+        name,
+        year,
+        number,
+        page,
+        link,
+        rowid,
+    ) in details_for_searched_term_specific_magazine:
+        assert isinstance(name, str)
+        assert isinstance(year, str)
+        assert isinstance(number, str)
+        assert isinstance(page, int)
+        assert isinstance(link, str)
+        assert isinstance(rowid, int)
+
+
+def test_filtering_works_for_get_details_for_searched_term_for_specific_magazine(
+    test_client,
+    format_word,
+    details_for_searched_term,
+    details_for_searched_term_for_specific_magazine,
+):
+
+    s_word = format_word("Constantin Esarcu")
+    details_for_searched_term = details_for_searched_term(s_word)
+    magazine_filter = "Gazeta de Transilvania (1838-1914)"
+    details_for_searched_term_specific_magazine = (
+        details_for_searched_term_for_specific_magazine(
+            details_for_searched_term, magazine_filter
+        )
+    )
+
+    for row in details_for_searched_term_specific_magazine:
+        assert row[0] == magazine_filter
