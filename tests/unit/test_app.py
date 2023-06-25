@@ -275,7 +275,11 @@ def test_instance_of_paginate_results(
     s_word = format_word("Victor Babeș")
     details_for_searched_term = details_for_searched_term(s_word)
     page = 1
-    paginated_details_for_searched_word = paginate(details_for_searched_term, page)
+    per_page = 10
+    error_out = False
+    paginated_details_for_searched_word = paginate(
+        details_for_searched_term, page, per_page, error_out
+    )
 
     assert isinstance(
         paginated_details_for_searched_word, flask_sqlalchemy.pagination.QueryPagination
