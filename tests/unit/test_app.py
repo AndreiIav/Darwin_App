@@ -158,3 +158,33 @@ def test_response_details_of_get_distinct_magazine_names_and_count_for_searched_
     for name, count in magazine_names_and_count:
         assert isinstance(name, str)
         assert isinstance(count, int)
+
+
+# Tests for get_details_for_searched_term
+def test_instance_of_get_details_for_searched_term(
+    test_client, format_word, details_for_searched_term
+):
+
+    s_word = format_word("Constantin Esarcu")
+    details_for_searched_term = details_for_searched_term(s_word)
+
+    assert isinstance(details_for_searched_term, flask_sqlalchemy.query.Query)
+
+
+def test_response_details_of_get_details_for_searched_term(
+    test_client, format_word, details_for_searched_term
+):
+
+    s_word = format_word("Constantin Esarcu")
+    details_for_searched_term = details_for_searched_term(s_word)
+
+    for row in details_for_searched_term:
+        assert len(row) == 6
+
+    for name, year, number, page, link, rowid in details_for_searched_term:
+        assert isinstance(name, str)
+        assert isinstance(year, str)
+        assert isinstance(number, str)
+        assert isinstance(page, int)
+        assert isinstance(link, str)
+        assert isinstance(rowid, int)
