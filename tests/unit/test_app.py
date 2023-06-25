@@ -265,3 +265,18 @@ def test_filtering_works_for_get_details_for_searched_term_for_specific_magazine
 
     for row in details_for_searched_term_specific_magazine:
         assert row[0] == magazine_filter
+
+
+# Tests for paginate_results
+def test_instance_of_paginate_results(
+    test_client, format_word, details_for_searched_term, paginate
+):
+
+    s_word = format_word("Victor Babeș")
+    details_for_searched_term = details_for_searched_term(s_word)
+    page = 1
+    paginated_details_for_searched_word = paginate(details_for_searched_term, page)
+
+    assert isinstance(
+        paginated_details_for_searched_word, flask_sqlalchemy.pagination.QueryPagination
+    )

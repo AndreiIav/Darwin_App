@@ -16,6 +16,7 @@ from application.search_page.logic import (
     get_distinct_magazine_names_and_count_for_searched_term,
     get_details_for_searched_term,
     get_details_for_searched_term_for_specific_magazine,
+    paginate_results,
 )
 
 
@@ -78,3 +79,8 @@ def details_for_searched_term():
 @pytest.fixture
 def details_for_searched_term_for_specific_magazine():
     return get_details_for_searched_term_for_specific_magazine
+
+
+@pytest.fixture
+def paginate():
+    return paginate_results
