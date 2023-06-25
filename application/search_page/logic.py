@@ -75,19 +75,23 @@ def get_details_for_searched_term_for_specific_magazine(
     return details_for_specific_magazine
 
 
-def paginate_results(details_for_searched_term, page):
+def paginate_results(details_for_searched_term, page, per_page, error_out):
     """
     Generate a SQLAlchemy Pagination object for the provided Query.
 
     Args:
         details_for_searched_term (flask_sqlalchemy.query.Query): The SQLAlchemy Query object to paginate.
         page (int): The page number to retrieve.
+        per_page (int): The number of results to be displayed on a page.
+        error_out (bool): The error flag for the error_out argument for the pagination object.
 
     Returns:
         flask_sqlalchemy.pagination.QueryPagination: A Pagination object representing the subset of query
         results for the requested page.
     """
-    return details_for_searched_term.paginate(page=page, per_page=10)
+    return details_for_searched_term.paginate(
+        page=page, per_page=per_page, error_out=error_out
+    )
 
 
 def get_distinct_magazine_names_and_count_for_searched_term(formatted_s_word):

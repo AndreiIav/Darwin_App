@@ -1,5 +1,5 @@
 from flask import Blueprint
-from flask import render_template, request, session
+from flask import render_template, request, session, current_app
 from markupsafe import Markup
 
 from .logic import (
@@ -51,7 +51,12 @@ def search_for_term():
             details_for_searched_term, magazine_filter
         )
 
-    details_for_searched_term = paginate_results(details_for_searched_term, page)
+    details_for_searched_term = paginate_results(
+        details_for_searched_term,
+        page,
+        per_page=current_app.config["RESULTS_PER_PAGE"],
+        error_out=current_app.config["ERROR_OUT"],
+    )
 
     return render_template(
         "search_page.html",
