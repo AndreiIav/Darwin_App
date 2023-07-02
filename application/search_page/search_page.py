@@ -19,7 +19,11 @@ from .logic import (
 
 # Blueprint configuration
 search_page_bp = Blueprint(
-    "search_page_bp", __name__, template_folder="templates", static_folder="static"
+    "search_page_bp",
+    __name__,
+    template_folder="templates",
+    static_folder="static",
+    url_prefix="/results",
 )
 
 

@@ -40,7 +40,7 @@ def s_word_in_session():
     app = init_app()
 
     with app.test_request_context(
-        "/search_page.search_page_bp/search", query_string={"search_box": "fotbal"}
+        "/results/search", query_string={"search_box": "fotbal"}
     ):
         yield store_s_word_in_session
 
