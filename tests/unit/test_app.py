@@ -1,6 +1,7 @@
 import pytest
 import flask_sqlalchemy
-from flask import request
+import werkzeug
+from flask import request, current_app
 
 # Tests for get_existent_magazines()
 def test_content_of_get_existent_magazines(test_client, existent_magazines):
@@ -275,7 +276,7 @@ def test_instance_of_paginate_results(
     s_word = format_word("Victor Babeș")
     details_for_searched_term = details_for_searched_term(s_word)
     page = 1
-    per_page = 10
+    per_page = current_app.config["RESULTS_PER_PAGE"]
     error_out = False
     paginated_details_for_searched_word = paginate(
         details_for_searched_term, page, per_page, error_out
@@ -284,3 +285,77 @@ def test_instance_of_paginate_results(
     assert isinstance(
         paginated_details_for_searched_word, flask_sqlalchemy.pagination.QueryPagination
     )
+
+
+pages = [1, 23]
+
+
+@pytest.mark.parametrize("pages", pages)
+def test_paginate_results_returns_correct_page(
+    test_client, format_word, details_for_searched_term, paginate, pages
+):
+
+    s_word = format_word("Victor Babeș")
+    details_for_searched_term = details_for_searched_term(s_word)
+    page = pages
+    per_page = current_app.config["RESULTS_PER_PAGE"]
+    error_out = False
+    paginated_details_for_searched_word = paginate(
+        details_for_searched_term, page, per_page, error_out
+    )
+
+    assert paginated_details_for_searched_word.page == page
+
+
+results_per_page = [1, 10, 11, 200]
+
+
+@pytest.mark.parametrize("per_page", results_per_page)
+def test_paginate_results_returns_correct_number_of_results_per_page(
+    test_client, format_word, details_for_searched_term, paginate, per_page
+):
+
+    s_word = format_word("Victor Babeș")
+    details_for_searched_term = details_for_searched_term(s_word)
+    page = 1
+    per_page = per_page
+    error_out = False
+    paginated_details_for_searched_word = paginate(
+        details_for_searched_term, page, per_page, error_out
+    )
+
+    assert len(paginated_details_for_searched_word.items) == per_page
+
+
+def test_paginate_results_error_out_true(
+    test_client, format_word, details_for_searched_term, paginate
+):
+
+    s_word = format_word("Victor Babeș")
+    details_for_searched_term = details_for_searched_term(s_word)
+    page = 2000
+    per_page = 10
+    error_out = True
+
+    with pytest.raises(werkzeug.exceptions.NotFound) as err:
+        paginated_details_for_searched_word = paginate(
+            details_for_searched_term, page, per_page, error_out
+        )
+        assert paginated_details_for_searched_word == err
+
+
+def test_paginate_results_error_out_false(
+    test_client, format_word, details_for_searched_term, paginate
+):
+
+    s_word = format_word("Victor Babeș")
+    details_for_searched_term = details_for_searched_term(s_word)
+    page = 2000
+    per_page = 10
+    error_out = False
+
+    paginated_details_for_searched_word = paginate(
+        details_for_searched_term, page, per_page, error_out
+    )
+
+    assert paginated_details_for_searched_word
