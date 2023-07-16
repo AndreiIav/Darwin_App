@@ -20,7 +20,7 @@ from application.search_page.logic import (
 )
 
 
-@pytest.fixture
+@pytest.fixture(scope="module")
 def test_client():
     # Set the Testing configuration prior to creating the Flask application
     os.environ["CONFIG_TYPE"] = "config.TestingConfig"
