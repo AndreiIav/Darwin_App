@@ -124,18 +124,19 @@ def get_distinct_magazine_names_and_count_for_searched_term(formatted_s_word):
     return distinct_magazine_names_and_count_for_searched_term
 
 
-def format_search_word(s_word):
+def format_search_word(s_word, separator=" "):
     """
     Format the search word for querying.
 
     Args:
         s_word (str): The input search word.
+        separator (str): The separator used in case there are multiple words. Default is " ".
 
     Returns:
         formatted_s_word (str): The formatted search word.
 
     This function returns the inputted search word if it is a single word, or the inputted
-    search word concatenated with the "+" sign if there are more than one term in s_word.
+    search word concatenated with the separator sign if there are more than one term in s_word.
     """
 
     s_word_list = s_word.split()
@@ -143,7 +144,7 @@ def format_search_word(s_word):
     if len(s_word_list) == 1:
         formatted_s_word = s_word
     else:
-        formatted_s_word = "+".join(s_word_list)
+        formatted_s_word = separator.join(s_word_list)
 
     return formatted_s_word
 

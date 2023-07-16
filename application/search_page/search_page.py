@@ -32,9 +32,10 @@ def search_for_term():
 
     session_s_word = session.get("s_word")
     request_s_word = request.args.get("search_box")
+    request_s_word = format_search_word(request_s_word)
     s_word = store_s_word_in_session(session_s_word, request_s_word)
 
-    formatted_s_word = format_search_word(s_word)
+    formatted_s_word = format_search_word(s_word, "+")
 
     page = request.args.get("page", 1, type=int)
 

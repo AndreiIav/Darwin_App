@@ -119,18 +119,31 @@ def test_store_s_word_in_session_with_s_word_alredy_stored_in_session_and_difere
 
 
 # Tests for format_search_word
-def test_format_s_word_with_one_word_as_input(test_client, format_word):
+def test_format_search_word_with_one_word_as_input(test_client, format_word):
 
     formatted_s_word = format_word("darwin")
     assert formatted_s_word == "darwin"
 
 
-def test_format_s_word_with_multiple_words_as_input(test_client, format_word):
+def test_format_search_word_with_multiple_words_as_input_and_default_separator(
+    test_client, format_word
+):
 
     formatted_s_word = format_word("Victor Babeș")
-    assert formatted_s_word == "Victor+Babeș"
+    assert formatted_s_word == "Victor Babeș"
 
     formatted_s_word = format_word("ala bala portocala")
+    assert formatted_s_word == "ala bala portocala"
+
+
+def test_format_search_word_with_multiple_words_as_input_and_passed_separator(
+    test_client, format_word
+):
+
+    formatted_s_word = format_word("Victor Babeș", "+")
+    assert formatted_s_word == "Victor+Babeș"
+
+    formatted_s_word = format_word("ala bala portocala", "+")
     assert formatted_s_word == "ala+bala+portocala"
 
 
