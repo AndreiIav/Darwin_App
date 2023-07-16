@@ -1,3 +1,4 @@
+import re
 from ..models import (
     Magazines,
     MagazineYear,
@@ -156,6 +157,24 @@ def get_magazine_content_details(page_id):
     ).filter(MagazineNumberContentFTS.rowid == page_id)
 
     return magazine_content_details[0][0]
+
+
+def replace_multiple_extra_white_spaces_with_just_one(text=""):
+
+    """
+    Replace multiple consecutive whitespace characters with a single space.
+
+    Args:
+        text (str): The input text string. Default is empty string: "".
+
+    Returns:
+        str: The modified text string with multiple consecutive spaces replaced by a single space.
+    """
+
+    pattern = r"\s{2,}"
+    replaced_text = re.sub(pattern, " ", text)
+
+    return replaced_text
 
 
 def get_content_string_length(s_word):

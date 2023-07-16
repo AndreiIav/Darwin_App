@@ -375,3 +375,20 @@ class TestPaginateResults:
         )
 
         assert paginated_details_for_searched_word
+
+
+# Tests for replace_multiple_extra_white_spaces_with_just_one
+class TestReplaceMultipleExtraWhiteSpacesWithJustOne:
+    def test_replace_multiple_extra_white_spaces_with_just_one_with_multiple_consecutive_spaces(
+        self, test_client, replace_white_spaces
+    ):
+
+        text = "Charles  Darwin      was        a               great  scientist"
+
+        assert replace_white_spaces(text) == "Charles Darwin was a great scientist"
+
+    def test_replace_multiple_extra_white_spaces_with_no_argument_passed(
+        self, test_client, replace_white_spaces
+    ):
+
+        assert replace_white_spaces() == ""

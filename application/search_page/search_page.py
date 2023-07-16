@@ -14,6 +14,7 @@ from .logic import (
     get_distinct_s_words_variants,
     add_html_mark_tags_to_the_searched_term,
     store_s_word_in_session,
+    replace_multiple_extra_white_spaces_with_just_one,
 )
 
 
@@ -79,6 +80,8 @@ def display_magazine_content():
     page_id = request.args.get("page_id")
 
     content = get_magazine_content_details(page_id)
+    content = replace_multiple_extra_white_spaces_with_just_one(content)
+
     content_string_length = get_content_string_length(s_word)
     indexes_for_highlighting_s_word = get_indexes_for_highlighting_s_word(
         s_word, content, content_string_length
