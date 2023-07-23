@@ -177,12 +177,17 @@ def replace_multiple_extra_white_spaces_with_just_one(text=""):
     return replaced_text
 
 
-def get_content_string_length(s_word):
+def get_s_word_string_length(s_word):
     """
     A function that accepts the searched term (s_word) and returns its length.
     """
 
     return len(s_word)
+
+
+def get_length_of_content_string(content):
+
+    return len(content)
 
 
 def convert_romanian_diacritics_to_english(string_to_convert):
@@ -211,7 +216,7 @@ def convert_romanian_diacritics_to_english(string_to_convert):
     return converted_string
 
 
-def get_indexes_for_highlighting_s_word(s_word, content, content_string_length):
+def get_indexes_for_highlighting_s_word(s_word, content, s_word_string_length):
     """
     A function that accepts the searched term (s_word, string) and the content of
     show_page view as string (content, string).
@@ -228,18 +233,18 @@ def get_indexes_for_highlighting_s_word(s_word, content, content_string_length):
         indexes_for_highlighting_s_word.append(find_s_word)
         current_last_index = indexes_for_highlighting_s_word[-1]
         index_content_string = formatted_content_string[
-            current_last_index + content_string_length :
+            current_last_index + s_word_string_length :
         ]
 
         find_s_word = index_content_string.find(formatted_s_word)
         if find_s_word > -1:
-            find_s_word = current_last_index + content_string_length + find_s_word
+            find_s_word = current_last_index + s_word_string_length + find_s_word
 
     return indexes_for_highlighting_s_word
 
 
 def get_distinct_s_words_variants(
-    indexes_for_highlighting_s_word, content, content_string_length
+    indexes_for_highlighting_s_word, content, s_word_string_length
 ):
     """
     A function that accepts a list of indexes (indexes_for_highlighting_s_word, int), the
@@ -252,7 +257,7 @@ def get_distinct_s_words_variants(
     distinct_s_words_variants = []
 
     for index in indexes_for_highlighting_s_word:
-        string_to_search = content[index : index + content_string_length]
+        string_to_search = content[index : index + s_word_string_length]
         if string_to_search not in distinct_s_words_variants:
             distinct_s_words_variants.append(string_to_search)
 
@@ -272,6 +277,101 @@ def add_html_mark_tags_to_the_searched_term(distinct_s_words_variants, content):
         content = content.replace(word, "<mark>" + word + "</mark>")
 
     return content
+
+
+def add_html_tags_around_preview_string_parantheses(content):
+
+    content = content.replace("[...]", "<b><i>" + "[...]" + "</b></i>")
+    return content
+
+
+def get_all_start_and_end_indexes_for_preview_substrings(
+    content, content_length, preview_length, s_word_string_length, indexes
+):
+
+    start, end = 0, 0
+    preview_substrings_start_end_indexes = []
+
+    for index in indexes:
+
+        if index <= preview_length:
+            start = index - index
+            end = index + preview_length + s_word_string_length
+            while end <= content_length and content[end].isalnum():
+                end += 1
+
+        else:
+            start = index - preview_length
+            while start >= 0 and content[start].isalnum():
+                start -= 1
+            end = index + preview_length + s_word_string_length
+            while end < content_length and content[end].isalnum():
+                end += 1
+
+        if not content[start].isalnum():
+            start += 1
+
+        preview_substrings_start_end_indexes.append([start, end])
+
+    return preview_substrings_start_end_indexes
+
+
+def merge_overlapping_preview_substrings(preview_substrings_start_end_indexes):
+
+    preview_substrings_indexes = []
+
+    pointer = 0
+    while pointer <= len(preview_substrings_start_end_indexes) - 1:
+        new_start = preview_substrings_start_end_indexes[pointer][0]
+        new_end = preview_substrings_start_end_indexes[pointer][1]
+
+        if pointer < len(preview_substrings_start_end_indexes) - 1:
+
+            while (
+                preview_substrings_start_end_indexes[pointer + 1][0]
+                <= preview_substrings_start_end_indexes[pointer][1]
+            ):
+                new_end = preview_substrings_start_end_indexes[pointer + 1][1]
+                pointer += 1
+                if pointer == len(preview_substrings_start_end_indexes) - 1:
+                    break
+
+        interval = [new_start, new_end]
+        preview_substrings_indexes.append(interval)
+        pointer += 1
+
+    return preview_substrings_indexes
+
+
+def get_preview_string(preview_substrings_indexes, content, content_length):
+
+    substrings = []
+
+    for substring_indexes in preview_substrings_indexes:
+        start_index, end_index = substring_indexes[0], substring_indexes[1]
+        substring = content[start_index:end_index]
+        substrings.append(substring)
+
+    preview_string = " [...] ".join(substrings)
+
+    if not (
+        preview_substrings_indexes[0][0] == 0
+        and preview_substrings_indexes[-1][1] >= content_length
+    ):
+        if (
+            preview_substrings_indexes[0][0] == 0
+            and preview_substrings_indexes[-1][1] < content_length
+        ):
+            preview_string = preview_string + " [...]"
+        elif (
+            preview_substrings_indexes[0][0] > 0
+            and preview_substrings_indexes[-1][1] >= content_length
+        ):
+            preview_string = "[...] " + preview_string
+        else:
+            preview_string = "[...] " + preview_string + " [...]"
+
+    return preview_string
 
 
 def store_s_word_in_session(session_s_word, request_s_word):
