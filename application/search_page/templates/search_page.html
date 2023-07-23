@@ -26,26 +26,23 @@
             <input type="hidden" id="search_box" name="search_box" value="{{session['s_word']}}">
         </form>
     </div>
-
     <ul>
-        {% for res in details_for_searched_term%}
+        {% for name, year, magazine_number, magazine_page, magazine_number_link, rowid in details_for_searched_term%}
         <div class="results">
-            <h1>{{res[0]}}</h1>
-            <h1>{{res[1]}}</h1>
-            <h1>{{res[2]}}</h1>
-            <h1>Page {{res[3]}}</h1>
-            <h1>Link: <a href="{{res[4]}}" target="_blank">{{res[4]}}</a></h1>
+            <h1>{{name}}</h1>
+            <h1>{{year}}</h1>
+            <h1>{{magazine_number}}</h1>
+            <h1>Page {{magazine_page}}</h1>
+            <h1>Link: <a href="{{magazine_number_link}}" target="_blank">{{magazine_number_link}}</a></h1>
             <div>
-                {% for preview in previews %}
-                {% if preview[0] == res[5]%}
-                {{preview[1]}}
+                {% for preview_rowid, preview_content in previews %}
+                {% if preview_rowid == rowid%}
+                {{preview_content}}
                 {% endif %}
                 {% endfor %}
             </div>
         </div>
-
         {% endfor %}
-
     </ul>
 </div>
 
