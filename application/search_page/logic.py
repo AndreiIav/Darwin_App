@@ -347,33 +347,37 @@ def merge_overlapping_preview_substrings(preview_substrings_start_end_indexes):
 
 def get_preview_string(preview_substrings_indexes, content, content_length):
 
-    substrings = []
+    if preview_substrings_indexes:
 
-    for substring_indexes in preview_substrings_indexes:
-        start_index, end_index = substring_indexes[0], substring_indexes[1]
-        substring = content[start_index:end_index]
-        substrings.append(substring)
+        substrings = []
 
-    preview_string = " [...] ".join(substrings)
+        for substring_indexes in preview_substrings_indexes:
+            start_index, end_index = substring_indexes[0], substring_indexes[1]
+            substring = content[start_index:end_index]
+            substrings.append(substring)
 
-    if not (
-        preview_substrings_indexes[0][0] == 0
-        and preview_substrings_indexes[-1][1] >= content_length
-    ):
-        if (
+        preview_string = " [...] ".join(substrings)
+
+        if not (
             preview_substrings_indexes[0][0] == 0
-            and preview_substrings_indexes[-1][1] < content_length
-        ):
-            preview_string = preview_string + " [...]"
-        elif (
-            preview_substrings_indexes[0][0] > 0
             and preview_substrings_indexes[-1][1] >= content_length
         ):
-            preview_string = "[...] " + preview_string
-        else:
-            preview_string = "[...] " + preview_string + " [...]"
+            if (
+                preview_substrings_indexes[0][0] == 0
+                and preview_substrings_indexes[-1][1] < content_length
+            ):
+                preview_string = preview_string + " [...]"
+            elif (
+                preview_substrings_indexes[0][0] > 0
+                and preview_substrings_indexes[-1][1] >= content_length
+            ):
+                preview_string = "[...] " + preview_string
+            else:
+                preview_string = "[...] " + preview_string + " [...]"
 
-    return preview_string
+        return preview_string
+
+    return "preview not available"
 
 
 def get_previews_for_page_id(
