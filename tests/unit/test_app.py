@@ -399,7 +399,7 @@ class TestGetMagazineContentDetails:
     def test_get_magazine_content_details_with_no_parameter_passed(
         self, test_client, magazine_content_details
     ):
-        assert magazine_content_details() is None
+        assert magazine_content_details() == ""
 
     invalid_parameters = ["a", False, 3.14]
 
@@ -407,12 +407,12 @@ class TestGetMagazineContentDetails:
     def test_get_magazine_content_details_with_invalid_parameters_type(
         self, test_client, magazine_content_details, invalid_parameters
     ):
-        assert magazine_content_details(invalid_parameters) is None
+        assert magazine_content_details(invalid_parameters) == ""
 
     def test_get_magazine_content_details_with_inexistent_rowid(
         self, test_client, magazine_content_details
     ):
-        assert magazine_content_details(0) is None
+        assert magazine_content_details(0) == ""
 
     def test_get_magazine_content_details_with_existent_rowid(
         self, test_client, magazine_content_details
