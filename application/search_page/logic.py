@@ -194,19 +194,6 @@ def replace_multiple_extra_white_spaces_with_just_one(text=""):
     return replaced_text
 
 
-def get_s_word_string_length(s_word):
-    """
-    A function that accepts the searched term (s_word) and returns its length.
-    """
-
-    return len(s_word)
-
-
-def get_length_of_content_string(content):
-
-    return len(content)
-
-
 def convert_romanian_diacritics_to_english(string_to_convert):
     """
     A function that accepts a string and returns the string with the romanian diacritics
@@ -407,8 +394,8 @@ def get_previews_for_page_id(
         content = get_magazine_content_details(page_id)
         content = replace_multiple_extra_white_spaces_with_just_one(content)
 
-        s_word_string_length = get_s_word_string_length(s_word)
-        content_length = get_length_of_content_string(content)
+        s_word_string_length = len(s_word)
+        content_length = len(content)
 
         indexes_for_highlighting_s_word = get_indexes_for_highlighting_s_word(
             s_word, content, s_word_string_length
