@@ -152,13 +152,27 @@ def format_search_word(s_word, separator=" "):
     return formatted_s_word
 
 
-def get_magazine_content_details(page_id):
+def get_magazine_content_details(page_id=0):
+    """
+    Retrieve the content of a magazine page from the MagazineNumberContentFTS table based on the provided page_id.
+
+    Args:
+        page_id (int): The rowid of the page to retrieve the content for. Defaults to 0.
+
+    Returns:
+        magazine_content_details (str) or None: The content of the magazine page if found, or None if the
+        rowid is not found or is of an invalid data type.
+    """
 
     magazine_content_details = db.session.query(
         MagazineNumberContentFTS.magazine_content
     ).filter(MagazineNumberContentFTS.rowid == page_id)
 
-    return magazine_content_details[0][0]
+    # Check that the Query object is not empty
+    if magazine_content_details.first():
+        return magazine_content_details[0][0]
+
+    return None
 
 
 def replace_multiple_extra_white_spaces_with_just_one(text=""):

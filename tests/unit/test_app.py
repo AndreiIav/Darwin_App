@@ -392,3 +392,35 @@ class TestReplaceMultipleExtraWhiteSpacesWithJustOne:
     ):
 
         assert replace_white_spaces() == ""
+
+
+# Tests for get_magazine_content_details
+class TestGetMagazineContentDetails:
+    def test_get_magazine_content_details_with_no_parameter_passed(
+        self, test_client, magazine_content_details
+    ):
+        assert magazine_content_details() is None
+
+    invalid_parameters = ["a", False, 3.14]
+
+    @pytest.mark.parametrize("invalid_parameters", invalid_parameters)
+    def test_get_magazine_content_details_with_invalid_parameters_type(
+        self, test_client, magazine_content_details, invalid_parameters
+    ):
+        assert magazine_content_details(invalid_parameters) is None
+
+    def test_get_magazine_content_details_with_inexistent_rowid(
+        self, test_client, magazine_content_details
+    ):
+        assert magazine_content_details(0) is None
+
+    def test_get_magazine_content_details_with_existent_rowid(
+        self, test_client, magazine_content_details
+    ):
+        content_details = magazine_content_details(1)
+
+        assert len(content_details) == 5180
+        assert (
+            "hiar mândri de a colabora la o asemenea operă de degradare a simţului literar şi moral. Ei"
+            in content_details
+        )

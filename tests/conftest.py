@@ -18,6 +18,7 @@ from application.search_page.logic import (
     get_details_for_searched_term_for_specific_magazine,
     paginate_results,
     replace_multiple_extra_white_spaces_with_just_one,
+    get_magazine_content_details,
 )
 
 
@@ -90,3 +91,8 @@ def paginate():
 @pytest.fixture
 def replace_white_spaces():
     return replace_multiple_extra_white_spaces_with_just_one
+
+
+@pytest.fixture
+def magazine_content_details():
+    return get_magazine_content_details
