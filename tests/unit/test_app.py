@@ -562,8 +562,33 @@ class TestGetDistinctSWordsVariants:
     ):
         content = "Babeș Babes Babeș Babes"
         s_word_string_length = 5
-        indexes_for_highlighting_s_word = [0, 6]
+        indexes_for_highlighting_s_word = [0, 6, 12, 18]
 
         assert get_distinct_word_variants(
             indexes_for_highlighting_s_word, content, s_word_string_length
         ) == ["Babeș", "Babes"]
+
+
+# Tests for add_html_mark_tags_to_the_searched_term
+class TestAddHtmlMarkTagsToTheSearchedTerm:
+    def test_add_html_mark_tags_to_the_searched_term_with_a_single_variant(
+        self, add_html_mark_tags_around_term
+    ):
+        distinct_s_word_variants = ["Darwin"]
+        content = "Charles Darwin was a great scientist"
+
+        assert (
+            add_html_mark_tags_around_term(distinct_s_word_variants, content)
+            == "Charles <mark>Darwin</mark> was a great scientist"
+        )
+
+    def test_add_html_mark_tags_to_the_searched_term_with_a_multiple_variants(
+        self, add_html_mark_tags_around_term
+    ):
+        distinct_s_word_variants = ["Babeș", "BABEȘ", "Babes"]
+        content = "Different versions of Babeș name: Babeș, BABEȘ, Babes."
+
+        assert (
+            add_html_mark_tags_around_term(distinct_s_word_variants, content)
+            == "Different versions of <mark>Babeș</mark> name: <mark>Babeș</mark>, <mark>BABEȘ</mark>, <mark>Babes</mark>."
+        )

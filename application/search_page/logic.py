@@ -318,26 +318,30 @@ def get_distinct_s_word_variants(
     (i, e.: "Darwin", "darwin" or "Babeș","Babes").
     """
 
-    distinct_s_words_variants = []
+    distinct_s_word_variants = []
 
     for index in indexes_for_highlighting_s_word:
         string_to_search = content[index : index + s_word_string_length]
-        if string_to_search not in distinct_s_words_variants:
-            distinct_s_words_variants.append(string_to_search)
+        if string_to_search not in distinct_s_word_variants:
+            distinct_s_word_variants.append(string_to_search)
 
-    return distinct_s_words_variants
+    return distinct_s_word_variants
 
 
-def add_html_mark_tags_to_the_searched_term(distinct_s_words_variants, content):
+def add_html_mark_tags_to_the_searched_term(distinct_s_word_variants, content):
     """
-    A function that accepts a list of distinct versions of the searched term (list of strings)
-    and the content of show_page view as string (content, string).
-    It returns the content of show_page view as string with <mark> tags around all versions of
-    the searched term.
+    Add HTML <mark> tags around every variant of a term in the content.
+
+    Args:
+        distinct_s_word_variants (list of str): A list of distinct variants for a term.
+        content (str): The content string to modify.
+
+    Returns:
+        content (str): The modified content with HTML <mark> tags around each variant of the term.
     """
 
-    while len(distinct_s_words_variants) > 0:
-        word = distinct_s_words_variants.pop()
+    while len(distinct_s_word_variants) > 0:
+        word = distinct_s_word_variants.pop()
         content = content.replace(word, "<mark>" + word + "</mark>")
 
     return content
@@ -460,7 +464,7 @@ def get_previews_for_page_id(
         indexes_for_highlighting_s_word = get_indexes_for_highlighting_s_word(
             s_word, content
         )
-        distinct_s_words_variants = get_distinct_s_word_variants(
+        distinct_s_word_variants = get_distinct_s_word_variants(
             indexes_for_highlighting_s_word, content, s_word_string_length
         )
 
@@ -484,7 +488,7 @@ def get_previews_for_page_id(
             (
                 add_html_tags_around_preview_string_parantheses(
                     add_html_mark_tags_to_the_searched_term(
-                        distinct_s_words_variants, preview_string
+                        distinct_s_word_variants, preview_string
                     )
                 )
             )

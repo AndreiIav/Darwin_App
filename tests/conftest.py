@@ -22,6 +22,7 @@ from application.search_page.logic import (
     convert_diacritics_to_basic_latin_characters,
     get_indexes_for_highlighting_s_word,
     get_distinct_s_word_variants,
+    add_html_mark_tags_to_the_searched_term,
 )
 
 
@@ -114,3 +115,8 @@ def get_indexes_for_highlighting_word():
 @pytest.fixture
 def get_distinct_word_variants():
     return get_distinct_s_word_variants
+
+
+@pytest.fixture
+def add_html_mark_tags_around_term():
+    return add_html_mark_tags_to_the_searched_term
