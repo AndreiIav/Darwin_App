@@ -268,7 +268,7 @@ def get_indexes_for_highlighting_s_word(s_word, content):
     """
     Find all starting indices of a specified term in the given content.
 
-    Parameters:
+    Args:
         s_word (str): The term to search for.
         content (str): The text to search within.
 
