@@ -19,6 +19,7 @@ from application.search_page.logic import (
     paginate_results,
     replace_multiple_extra_white_spaces_with_just_one,
     get_magazine_content_details,
+    convert_diacritics_to_basic_latin_characters,
 )
 
 
@@ -96,3 +97,8 @@ def replace_white_spaces():
 @pytest.fixture
 def magazine_content_details():
     return get_magazine_content_details
+
+
+@pytest.fixture
+def convert_diacritics_to_basic_characters():
+    return convert_diacritics_to_basic_latin_characters

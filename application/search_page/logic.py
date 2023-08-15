@@ -194,27 +194,71 @@ def replace_multiple_extra_white_spaces_with_just_one(text=""):
     return replaced_text
 
 
-def convert_romanian_diacritics_to_english(string_to_convert):
+def convert_diacritics_to_basic_latin_characters(string_to_convert=""):
     """
-    A function that accepts a string and returns the string with the romanian diacritics
-    replaced by english characters.
+    Convert diacritics in a string to basic Latin characters.
+
+    Args:
+        string_to_convert (str, optional): The input string containing diacritics. Defaults to an empty string.
+
+    Returns:
+        str: The input string with Romanian and Hungarian diacritics replaced by basic Latin characters,
+        or an empty string if no argument is provided or an argument of invalid type is given.
     """
 
-    convert_romanian_diacritics_to_english_dict = {
-        259: 97,  # ă -> a
+    if not isinstance(string_to_convert, str):
+        return ""
+
+    convert_diacritics_to_basic_latin_characters_dict = {
+        192: 65,  # À -> A
+        193: 65,  # Á -> A
+        194: 65,  # Â -> A
+        195: 65,  # Ã -> A
+        196: 65,  # Ä -> A
+        197: 65,  # Å -> A
+        258: 65,  # Ă -> A
+        224: 97,  # à -> a
+        225: 97,  # á -> a
         226: 97,  # â -> a
-        238: 105,  # î -> i
-        351: 115,  # ş -> s
-        537: 115,  # ș -> s
-        539: 116,  # ț -> t
-        355: 116,  # ţ -> t
+        227: 97,  # ã -> a
+        228: 97,  # ä -> a
+        259: 97,  # ă -> a
+        200: 69,  # È -> E
+        201: 69,  # É -> E
+        202: 69,  # Ê -> E
         233: 101,  # é -> e
         234: 101,  # ê -> e
         232: 101,  # è -> e
+        205: 73,  # Í -> I
+        206: 73,  # Î -> I
+        237: 105,  # í -> i
+        238: 105,  # î -> i
+        211: 79,  # Ó -> O
+        213: 79,  # Õ -> O
+        214: 79,  # Ö -> O
+        336: 79,  # Ő -> O
+        243: 111,  # ó -> o
+        245: 111,  # õ -> o
+        246: 111,  # ö -> o
+        337: 111,  # ő -> o
+        218: 85,  # Ú -> U
+        220: 85,  # Ü -> U
+        368: 85,  # Ű -> U
+        250: 117,  # ú -> u
+        252: 117,  # ü -> u
+        369: 117,  # ű -> u
+        350: 83,  # Ş -> S
+        536: 83,  # Ș -> S
+        351: 115,  # ş -> s
+        537: 115,  # ș -> s
+        538: 84,  # Ț -> T
+        354: 84,  # Ţ -> T
+        539: 116,  # ț -> t
+        355: 116,  # ţ -> t
     }
 
-    converted_string = string_to_convert.lower().translate(
-        convert_romanian_diacritics_to_english_dict
+    converted_string = string_to_convert.translate(
+        convert_diacritics_to_basic_latin_characters_dict
     )
 
     return converted_string
@@ -227,8 +271,12 @@ def get_indexes_for_highlighting_s_word(s_word, content, s_word_string_length):
     It returns a list of all the start indexes (int) where the searched term is found in content.
     """
 
-    formatted_content_string = convert_romanian_diacritics_to_english(content)
-    formatted_s_word = convert_romanian_diacritics_to_english(s_word)
+    formatted_content_string = convert_diacritics_to_basic_latin_characters(
+        content
+    )  # add lower()
+    formatted_s_word = convert_diacritics_to_basic_latin_characters(
+        s_word
+    )  # add lower()
 
     indexes_for_highlighting_s_word = []
     find_s_word = formatted_content_string.find(formatted_s_word)

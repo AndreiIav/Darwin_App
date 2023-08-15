@@ -424,3 +424,99 @@ class TestGetMagazineContentDetails:
             "hiar mândri de a colabora la o asemenea operă de degradare a simţului literar şi moral. Ei"
             in content_details
         )
+
+
+# Tests for convert_diacritics_to_basic_latin_characters
+class TestConvertDiacriticsToBasicLatinCharacters:
+    def test_convert_diacritics_to_basic_latin_characters_with_no_argument_passed(
+        self, convert_diacritics_to_basic_characters
+    ):
+
+        assert convert_diacritics_to_basic_characters() == ""
+
+    invalid_parameters = [1, False, 3.14]
+
+    @pytest.mark.parametrize("invalid_parameters", invalid_parameters)
+    def test_convert_diacritics_to_basic_latin_characters_with_invalid_parameters(
+        self, convert_diacritics_to_basic_characters, invalid_parameters
+    ):
+
+        assert convert_diacritics_to_basic_characters(invalid_parameters) == ""
+
+    diacritics_to_basic_characters = [
+        ("À", "A"),
+        ("Á", "A"),
+        ("Â", "A"),
+        ("Ã", "A"),
+        ("Ä", "A"),
+        ("Å", "A"),
+        ("Ă", "A"),
+        ("à", "a"),
+        ("á", "a"),
+        ("â", "a"),
+        ("ã", "a"),
+        ("ä", "a"),
+        ("ă", "a"),
+        ("È", "E"),
+        ("É", "E"),
+        ("Ê", "E"),
+        ("é", "e"),
+        ("ê", "e"),
+        ("è", "e"),
+        ("Í", "I"),
+        ("Î", "I"),
+        ("í", "i"),
+        ("î", "i"),
+        ("Ó", "O"),
+        ("Õ", "O"),
+        ("Ö", "O"),
+        ("Ő", "O"),
+        ("ó", "o"),
+        ("õ", "o"),
+        ("ö", "o"),
+        ("ő", "o"),
+        ("Ú", "U"),
+        ("Ü", "U"),
+        ("Ű", "U"),
+        ("ú", "u"),
+        ("ü", "u"),
+        ("ű", "u"),
+        ("Ş", "S"),
+        ("Ș", "S"),
+        ("ş", "s"),
+        ("ș", "s"),
+        ("Ț", "T"),
+        ("Ţ", "T"),
+        ("ț", "t"),
+        ("ţ", "t"),
+    ]
+
+    @pytest.mark.parametrize(
+        "diacritics, basic_character", diacritics_to_basic_characters
+    )
+    def test_convert_diacritics_to_basic_latin_characters_converts_all_romanian_and_hungarian_diacritics(
+        self, convert_diacritics_to_basic_characters, diacritics, basic_character
+    ):
+        assert convert_diacritics_to_basic_characters(diacritics) == basic_character
+
+    words_with_diacritics_to_words_without_diacritics = [
+        ("árvíztűrő tükörfúrógép", "arvizturo tukorfurogep"),
+        ("ÁRVÍZTŰRŐ TÜKÖRFÚRÓGÉP", "ARVIZTURO TUKORFUROGEP"),
+        ("vânătoare bărbați pietriș", "vanatoare barbati pietris"),
+        ("VÂNĂTOARE BĂRBAȚI PIETRIȘ", "VANATOARE BARBATI PIETRIS"),
+    ]
+
+    @pytest.mark.parametrize(
+        "words_with_diacritics, words_without_diacritics",
+        words_with_diacritics_to_words_without_diacritics,
+    )
+    def test_convert_diacritics_to_basic_latin_characters_with_words_with_diacritics(
+        self,
+        convert_diacritics_to_basic_characters,
+        words_with_diacritics,
+        words_without_diacritics,
+    ):
+        assert (
+            convert_diacritics_to_basic_characters(words_with_diacritics)
+            == words_without_diacritics
+        )
