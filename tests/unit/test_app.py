@@ -542,3 +542,28 @@ class TestGetIndexesForHighlightingSWord:
         content = """cumpărând mărţişorul elaborat de Liga Apărării contra Atacurilor Aeriene, preţul fiind de 10 lei bucata,
                 mărţişor ce-1 vinde cu ocazia zilei de 1 Martie 1935. Acest mărţişor, însă cu panglicuţă"""
         assert get_indexes_for_highlighting_word(s_word, content) == [10, 121, 181]
+
+
+# Tests for get_distinct_s_word_variants
+class TestGetDistinctSWordsVariants:
+    def test_get_distinct_s_word_variants_with_term_differing_in_letter_case(
+        self, get_distinct_word_variants
+    ):
+        content = "Darwin darwin Darwin DARWIN"
+        s_word_string_length = 6
+        indexes_for_highlighting_s_word = [0, 7, 14, 21]
+
+        assert get_distinct_word_variants(
+            indexes_for_highlighting_s_word, content, s_word_string_length
+        ) == ["Darwin", "darwin", "DARWIN"]
+
+    def test_get_distinct_s_word_variants_with_term_differing_in_diacritics(
+        self, get_distinct_word_variants
+    ):
+        content = "Babeș Babes Babeș Babes"
+        s_word_string_length = 5
+        indexes_for_highlighting_s_word = [0, 6]
+
+        assert get_distinct_word_variants(
+            indexes_for_highlighting_s_word, content, s_word_string_length
+        ) == ["Babeș", "Babes"]

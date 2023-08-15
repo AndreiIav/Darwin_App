@@ -21,6 +21,7 @@ from application.search_page.logic import (
     get_magazine_content_details,
     convert_diacritics_to_basic_latin_characters,
     get_indexes_for_highlighting_s_word,
+    get_distinct_s_word_variants,
 )
 
 
@@ -108,3 +109,8 @@ def convert_diacritics_to_basic_characters():
 @pytest.fixture
 def get_indexes_for_highlighting_word():
     return get_indexes_for_highlighting_s_word
+
+
+@pytest.fixture
+def get_distinct_word_variants():
+    return get_distinct_s_word_variants

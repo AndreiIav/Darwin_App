@@ -273,7 +273,7 @@ def get_indexes_for_highlighting_s_word(s_word, content):
         content (str): The text to search within.
 
     Returns:
-        indexes_for_highlighting_s_word (list): A list of integers representing the starting indices of
+        indexes_for_highlighting_s_word (list): A list of integers representing the starting indexes of
         each occurrence of the searched term.
     """
 
@@ -300,15 +300,22 @@ def get_indexes_for_highlighting_s_word(s_word, content):
     return indexes_for_highlighting_s_word
 
 
-def get_distinct_s_words_variants(
+def get_distinct_s_word_variants(
     indexes_for_highlighting_s_word, content, s_word_string_length
 ):
     """
-    A function that accepts a list of indexes (indexes_for_highlighting_s_word, int), the
-    content of show_page view as string (content, string) and the length of the searched term
-    (content_string_length, int).
-    It returns a list of distinct versions (list of strings) (i, e.: "Darwin", "darwin" or 'Babeș',
-    'babeș') of the searched term.
+    Find distinct versions of the searched term in the given content.
+
+    Args:
+        indexes_for_highlighting_s_word (list of int): A list of integers representing string indexes.
+        content (str): The string in which to search for the term.
+        s_word_string_length (int): The length of the searched term.
+
+    Returns:
+        distinct_s_words_variants (list of str): A list of distinct variants of the searched term.
+
+    The function returns variations caused by different case letters or the use of diacritics for a term
+    (i, e.: "Darwin", "darwin" or "Babeș","Babes").
     """
 
     distinct_s_words_variants = []
@@ -453,7 +460,7 @@ def get_previews_for_page_id(
         indexes_for_highlighting_s_word = get_indexes_for_highlighting_s_word(
             s_word, content
         )
-        distinct_s_words_variants = get_distinct_s_words_variants(
+        distinct_s_words_variants = get_distinct_s_word_variants(
             indexes_for_highlighting_s_word, content, s_word_string_length
         )
 
