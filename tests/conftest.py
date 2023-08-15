@@ -20,6 +20,7 @@ from application.search_page.logic import (
     replace_multiple_extra_white_spaces_with_just_one,
     get_magazine_content_details,
     convert_diacritics_to_basic_latin_characters,
+    get_indexes_for_highlighting_s_word,
 )
 
 
@@ -102,3 +103,8 @@ def magazine_content_details():
 @pytest.fixture
 def convert_diacritics_to_basic_characters():
     return convert_diacritics_to_basic_latin_characters
+
+
+@pytest.fixture
+def get_indexes_for_highlighting_word():
+    return get_indexes_for_highlighting_s_word

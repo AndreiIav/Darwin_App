@@ -520,3 +520,25 @@ class TestConvertDiacriticsToBasicLatinCharacters:
             convert_diacritics_to_basic_characters(words_with_diacritics)
             == words_without_diacritics
         )
+
+
+# Tests for get_indexes_for_highlighting_s_word
+class TestGetIndexesForHighlightingSWord:
+    def test_get_indexes_for_highlighting_s_word_with_a_single_letter(
+        self, get_indexes_for_highlighting_word
+    ):
+        assert get_indexes_for_highlighting_word("a", "Ana are mere si banane") == [
+            0,
+            2,
+            4,
+            17,
+            19,
+        ]
+
+    def test_get_indexes_for_highlighting_s_word_with_a_word_with_diacritics(
+        self, get_indexes_for_highlighting_word
+    ):
+        s_word = "Mărţişor"
+        content = """cumpărând mărţişorul elaborat de Liga Apărării contra Atacurilor Aeriene, preţul fiind de 10 lei bucata,
+                mărţişor ce-1 vinde cu ocazia zilei de 1 Martie 1935. Acest mărţişor, însă cu panglicuţă"""
+        assert get_indexes_for_highlighting_word(s_word, content) == [10, 121, 181]

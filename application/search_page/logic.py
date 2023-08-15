@@ -264,19 +264,24 @@ def convert_diacritics_to_basic_latin_characters(string_to_convert=""):
     return converted_string
 
 
-def get_indexes_for_highlighting_s_word(s_word, content, s_word_string_length):
+def get_indexes_for_highlighting_s_word(s_word, content):
     """
-    A function that accepts the searched term (s_word, string) and the content of
-    show_page view as string (content, string).
-    It returns a list of all the start indexes (int) where the searched term is found in content.
+    Find all starting indices of a specified term in the given content.
+
+    Parameters:
+        s_word (str): The term to search for.
+        content (str): The text to search within.
+
+    Returns:
+        indexes_for_highlighting_s_word (list): A list of integers representing the starting indices of
+        each occurrence of the searched term.
     """
 
     formatted_content_string = convert_diacritics_to_basic_latin_characters(
         content
-    )  # add lower()
-    formatted_s_word = convert_diacritics_to_basic_latin_characters(
-        s_word
-    )  # add lower()
+    ).lower()
+    formatted_s_word = convert_diacritics_to_basic_latin_characters(s_word).lower()
+    s_word_string_length = len(s_word)
 
     indexes_for_highlighting_s_word = []
     find_s_word = formatted_content_string.find(formatted_s_word)
@@ -446,7 +451,7 @@ def get_previews_for_page_id(
         content_length = len(content)
 
         indexes_for_highlighting_s_word = get_indexes_for_highlighting_s_word(
-            s_word, content, s_word_string_length
+            s_word, content
         )
         distinct_s_words_variants = get_distinct_s_words_variants(
             indexes_for_highlighting_s_word, content, s_word_string_length
