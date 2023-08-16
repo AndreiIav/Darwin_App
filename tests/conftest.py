@@ -23,6 +23,7 @@ from application.search_page.logic import (
     get_indexes_for_highlighting_s_word,
     get_distinct_s_word_variants,
     add_html_mark_tags_to_the_searched_term,
+    get_all_start_and_end_indexes_for_preview_substrings,
 )
 
 
@@ -120,3 +121,8 @@ def get_distinct_word_variants():
 @pytest.fixture
 def add_html_mark_tags_around_term():
     return add_html_mark_tags_to_the_searched_term
+
+
+@pytest.fixture
+def get_start_end_indexes_for_preview():
+    return get_all_start_and_end_indexes_for_preview_substrings

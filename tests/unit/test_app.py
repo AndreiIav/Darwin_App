@@ -592,3 +592,136 @@ class TestAddHtmlMarkTagsToTheSearchedTerm:
             add_html_mark_tags_around_term(distinct_s_word_variants, content)
             == "Different versions of <mark>Babeș</mark> name: <mark>Babeș</mark>, <mark>BABEȘ</mark>, <mark>Babes</mark>."
         )
+
+
+# Tests for get_all_start_and_end_indexes_for_preview_substrings
+class TestGetAllStartAndEndIndexesForPreviewSubstrings:
+    def test_get_all_start_and_end_indexes_for_preview_substrings_with_searched_term_at_index_0(
+        self, get_start_end_indexes_for_preview
+    ):
+        content = "Darwin as an emi nent geologist, whose observations"
+        preview_length = 10
+        s_word_string_length = len("Darwin")
+        indexes = [0]
+
+        expected_result = [[0, 16]]
+
+        assert (
+            get_start_end_indexes_for_preview(
+                content, preview_length, s_word_string_length, indexes
+            )
+            == expected_result
+        )
+
+    def test_get_all_start_and_end_indexes_for_preview_substrings_with_searched_term_at_last_index(
+        self, get_start_end_indexes_for_preview
+    ):
+        content = "Publication of his journal of the vo yage made Darwin"
+        preview_length = 10
+        s_word_string_lenth = len("Darwin")
+        indexes = [47]
+
+        expected_result = [[indexes[0] - preview_length, len(content) + preview_length]]
+
+        assert (
+            get_start_end_indexes_for_preview(
+                content, preview_length, s_word_string_lenth, indexes
+            )
+            == expected_result
+        )
+
+    def test_get_all_start_and_end_indexes_for_preview_substrings_with_searched_term_in_the_middle(
+        self, get_start_end_indexes_for_preview
+    ):
+        content = "Publication of his journal of the yage made Darwin famous as a popular author"
+        preview_length = 10
+        s_word_string_length = len("Darwin")
+        indexes = [44]
+
+        expected_result = [
+            [
+                indexes[0] - preview_length,
+                indexes[0] + s_word_string_length + preview_length,
+            ]
+        ]
+
+        assert (
+            get_start_end_indexes_for_preview(
+                content, preview_length, s_word_string_length, indexes
+            )
+            == expected_result
+        )
+
+    def test_get_all_start_and_end_indexes_for_preview_substrings_with_preview_length_start_in_the_middle_of_word(
+        self, get_start_end_indexes_for_preview
+    ):
+        content = "Publication of his journal of the voyage made Darwin famous as a popular author"
+        preview_length = 10
+        s_word_string_length = len("Darwin")
+        indexes = [46]
+
+        expected_result = [[34, indexes[0] + s_word_string_length + preview_length]]
+
+        assert (
+            get_start_end_indexes_for_preview(
+                content, preview_length, s_word_string_length, indexes
+            )
+            == expected_result
+        )
+
+    def test_get_all_start_and_end_indexes_for_preview_substrings_with_preview_length_end_in_the_middle_of_word(
+        self, get_start_end_indexes_for_preview
+    ):
+        content = "Publication of his journal of the vo yage made Darwin famous popular author"
+        preview_length = 10
+        s_word_string_length = len("Darwin")
+        indexes = [47]
+
+        expected_result = [[indexes[0] - preview_length, 68]]
+
+        assert (
+            get_start_end_indexes_for_preview(
+                content, preview_length, s_word_string_length, indexes
+            )
+            == expected_result
+        )
+
+    def test_get_all_start_and_end_indexes_for_preview_substrings_with_multiple_indexes(
+        self, get_start_end_indexes_for_preview
+    ):
+        content = """Darwin as an eminent geologist, whose observations and Darwin theories supported Charles Lyell's concept of Darwin gradual geological change. Publication of his journal of the voyage made Darwin famous as a popular author"""
+        preview_length = 10
+        s_word_string_length = len("Darwin")
+        indexes = [0, 55, 108, 188]
+
+        expected_result = [[0, 20], [38, 80], [97, 133], [176, 204]]
+
+        assert (
+            get_start_end_indexes_for_preview(
+                content, preview_length, s_word_string_length, indexes
+            )
+            == expected_result
+        )
+
+    preview_lengths = [
+        (5, [[0, 12], [51, 70], [97, 122], [183, 201]]),
+        (15, [[0, 30], [38, 80], [89, 133], [172, 214]]),
+        (25, [[0, 31], [31, 88], [81, 140], [161, 221]]),
+        (100, [[0, 107], [0, 168], [7, 214], [89, 294]]),
+        (200, [[0, 206], [0, 261], [0, 314], [0, 394]]),
+    ]
+
+    @pytest.mark.parametrize("preview_length, expected_result", preview_lengths)
+    def test_get_all_start_and_end_indexes_for_preview_substrings_with_multiple_preview_length_values(
+        self, get_start_end_indexes_for_preview, preview_length, expected_result
+    ):
+        content = """Darwin as an eminent geologist, whose observations and Darwin theories supported Charles Lyell's concept of Darwin gradual geological change. Publication of his journal of the voyage made Darwin famous as a popular author"""
+        s_word_string_length = len("Darwin")
+        indexes = [0, 55, 108, 188]
+
+        assert (
+            get_start_end_indexes_for_preview(
+                content, preview_length, s_word_string_length, indexes
+            )
+            == expected_result
+        )

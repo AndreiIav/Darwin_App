@@ -354,13 +354,39 @@ def add_html_tags_around_preview_string_parantheses(content):
 
 
 def get_all_start_and_end_indexes_for_preview_substrings(
-    content, content_length, preview_length, s_word_string_length, indexes
+    content, preview_length, s_word_string_length, indexes
 ):
+    """
+    Get start and end indexes for substrings around searched term occurrences.
 
-    start, end = 0, 0
+    Args:
+        content (str): The content string to process.
+        preview_length (int): The length before and after a searched term for the needed substring.
+        s_word_string_length (int): The length of the searched term.
+        indexes (list): A list with the start indexes of searched term occurrences.
+
+    Returns:
+        preview_substrings_start_end_indexes (list): A list containing lists with start and end indexes
+        for the substrings.
+
+    This function accepts a content string (content) and retrieves start and end indexes for substrings
+    around searched term occurrences.
+    The length of each substring is determined by the provided preview_length, with consideration for
+    maintaining complete words.
+
+    Note:
+        The lenght of the substring could be more or less than the set preview_lenght because the function
+        will try to return substrings that start and end with complete words. For example, if the preview_length
+        is set to 10 characters, the function will ensure that the returned substring includes full words and may
+        extend beyond 10 characters if necessary.
+    """
+
     preview_substrings_start_end_indexes = []
+    content_length = len(content)
 
     for index in indexes:
+
+        start, end = 0, 0
 
         if index <= preview_length:
             start = index - index
@@ -471,7 +497,6 @@ def get_previews_for_page_id(
         preview_substrings_start_end_indexes = (
             get_all_start_and_end_indexes_for_preview_substrings(
                 content,
-                content_length,
                 preview_length,
                 s_word_string_length,
                 indexes_for_highlighting_s_word,
