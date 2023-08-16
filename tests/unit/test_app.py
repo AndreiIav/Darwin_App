@@ -725,3 +725,72 @@ class TestGetAllStartAndEndIndexesForPreviewSubstrings:
             )
             == expected_result
         )
+
+
+# Tests for merge_overlapping_preview_substrings
+class TestMergeOverlappingPreviewSubstrings:
+    def test_merge_overlapping_preview_substrings_with_non_overlapping_indexes(
+        self, merge_overlapping_substrings
+    ):
+        preview_substrings_start_end_indexes = [[0, 12], [17, 28], [36, 80]]
+        expected_result = [[0, 12], [17, 28], [36, 80]]
+
+        assert (
+            merge_overlapping_substrings(preview_substrings_start_end_indexes)
+            == expected_result
+        )
+
+    def test_merge_overlapping_preview_substrings_with_overlapping_indexes(
+        self, merge_overlapping_substrings
+    ):
+        preview_substrings_start_end_indexes = [
+            [0, 18],
+            [17, 28],
+            [95, 100],
+            [96, 102],
+            [103, 110],
+            [103, 111],
+            [112, 116],
+            [116, 120],
+            [121, 126],
+            [124, 129],
+            [128, 131],
+            [130, 133],
+        ]
+        expected_result = [[0, 28], [95, 102], [103, 111], [112, 120], [121, 133]]
+
+        assert (
+            merge_overlapping_substrings(preview_substrings_start_end_indexes)
+            == expected_result
+        )
+
+    def test_merge_overlapping_preview_substrings_with_overlapping_and_non_overlapping_indexes(
+        self, merge_overlapping_substrings
+    ):
+        preview_substrings_start_end_indexes = [
+            [0, 18],
+            [17, 28],
+            [29, 35],
+            [36, 40],
+            [42, 45],
+            [42, 46],
+            [47, 70],
+            [71, 80],
+            [112, 116],
+            [116, 120],
+        ]
+
+        expected_results = [
+            [0, 28],
+            [29, 35],
+            [36, 40],
+            [42, 46],
+            [47, 70],
+            [71, 80],
+            [112, 120],
+        ]
+
+        assert (
+            merge_overlapping_substrings(preview_substrings_start_end_indexes)
+            == expected_results
+        )

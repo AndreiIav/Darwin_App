@@ -24,6 +24,7 @@ from application.search_page.logic import (
     get_distinct_s_word_variants,
     add_html_mark_tags_to_the_searched_term,
     get_all_start_and_end_indexes_for_preview_substrings,
+    merge_overlapping_preview_substrings,
 )
 
 
@@ -126,3 +127,8 @@ def add_html_mark_tags_around_term():
 @pytest.fixture
 def get_start_end_indexes_for_preview():
     return get_all_start_and_end_indexes_for_preview_substrings
+
+
+@pytest.fixture
+def merge_overlapping_substrings():
+    return merge_overlapping_preview_substrings

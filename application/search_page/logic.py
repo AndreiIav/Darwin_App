@@ -411,6 +411,20 @@ def get_all_start_and_end_indexes_for_preview_substrings(
 
 
 def merge_overlapping_preview_substrings(preview_substrings_start_end_indexes):
+    """
+    Merge overlapping intervals in a list of start and end indexes pairs.
+
+    Args:
+        preview_substrings_start_end_indexes (list): A list containing lists of start and end indexes pairs.
+
+    Returns:
+        list of list: A list containing merged lists of start and end indexes.
+
+    This function accepts a list (preview_substrings_start_end_indexes) containing lists of start and end
+    indexes pairs. It merges overlapping intervals within the lists and returns a list containing the merged
+    start and end index pairs. If there are no overlapping intervals, the function returns a list with the
+    original lists passed.
+    """
 
     preview_substrings_indexes = []
 
