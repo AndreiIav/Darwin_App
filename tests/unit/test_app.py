@@ -794,3 +794,56 @@ class TestMergeOverlappingPreviewSubstrings:
             merge_overlapping_substrings(preview_substrings_start_end_indexes)
             == expected_results
         )
+
+
+# Tests for get_preview_string
+class TestGetPreviewString:
+    def test_get_preview_string_with_no_added_brackets_at_the_start_or_end_of_preview_string(
+        self, preview_string
+    ):
+        preview_substring_indexes = [[0, 30], [38, 80], [89, 133]]
+        content = "Darwin as an eminent geologist, whose observations and Darwin theories supported Charles Lyell's concept of Darwin gradual geological"
+
+        expected_result = "Darwin as an eminent geologist [...] observations and Darwin theories supported [...] Lyell's concept of Darwin gradual geological"
+
+        assert preview_string(preview_substring_indexes, content) == expected_result
+
+    def test_get_preview_string_with_added_bracket_at_the_end_of_preview_string(
+        self, preview_string
+    ):
+        preview_substring_indexes = [[0, 30], [38, 80], [89, 133]]
+        content = "Darwin as an eminent geologist, whose observations and Darwin theories supported Charles Lyell's concept of Darwin gradual geological change."
+
+        expected_result = "Darwin as an eminent geologist [...] observations and Darwin theories supported [...] Lyell's concept of Darwin gradual geological [...]"
+
+        assert preview_string(preview_substring_indexes, content) == expected_result
+
+    def test_get_preview_string_with_added_bracket_at_the_start_of_preview_string(
+        self, preview_string
+    ):
+        preview_substring_indexes = [[6, 55], [63, 105], [114, 158]]
+        content = "as an eminent geologist. Darwin as an eminent geologist, whose observations and Darwin theories supported Charles Lyell's concept of Darwin gradual geological"
+
+        expected_result = "[...] eminent geologist. Darwin as an eminent geologist [...] observations and Darwin theories supported [...] Lyell's concept of Darwin gradual geological"
+
+        assert preview_string(preview_substring_indexes, content) == expected_result
+
+    def test_get_preview_string_with_added_brackets_at_the_start_and_end_of_preview_string(
+        self, preview_string
+    ):
+        preview_substring_indexes = [[6, 55], [63, 105], [114, 158]]
+        content = "as an eminent geologist. Darwin as an eminent geologist, whose observations and Darwin theories supported Charles Lyell's concept of Darwin gradual geological change"
+
+        expected_result = "[...] eminent geologist. Darwin as an eminent geologist [...] observations and Darwin theories supported [...] Lyell's concept of Darwin gradual geological [...]"
+
+        assert preview_string(preview_substring_indexes, content) == expected_result
+
+    def test_get_preview_string_with_empty_list_passed_for_preview_substring_indexes(
+        self, preview_string
+    ):
+        preview_substring_indexes = []
+        content = "Darwin as an eminent geologist, whose observations"
+
+        expected_result = "preview not available"
+
+        assert preview_string(preview_substring_indexes, content) == expected_result

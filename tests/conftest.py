@@ -25,6 +25,7 @@ from application.search_page.logic import (
     add_html_mark_tags_to_the_searched_term,
     get_all_start_and_end_indexes_for_preview_substrings,
     merge_overlapping_preview_substrings,
+    get_preview_string,
 )
 
 
@@ -132,3 +133,8 @@ def get_start_end_indexes_for_preview():
 @pytest.fixture
 def merge_overlapping_substrings():
     return merge_overlapping_preview_substrings
+
+
+@pytest.fixture
+def preview_string():
+    return get_preview_string

@@ -451,7 +451,25 @@ def merge_overlapping_preview_substrings(preview_substrings_start_end_indexes):
     return preview_substrings_indexes
 
 
-def get_preview_string(preview_substrings_indexes, content, content_length):
+def get_preview_string(preview_substrings_indexes, content):
+    """
+    Create a concatenated string with substrings based on provided indexes and delimited by " [...] ".
+
+    Args:
+        preview_substrings_indexes (list): A list containg lists of start and end indexes pairs.
+        content (str): The text to extract the substrings from.
+    Returns:
+        preview_string (str): A concatenated string of substrings delimited by " [...] ". If
+        preview_substrings_indexes is an empty lits, "preview not available" is returned.
+
+    If the start index of the first element in preview_substrings_indexes is zero, "[...] " is added to the beginning
+    of the preview_string.
+    If the end index of the last element in preview_substrings_indexes is equal to or greater than the length of the
+    content, " [...]" is added to the end of the preview_string.
+    """
+
+    content_length = len(content)
+    preview_string = "preview not available"
 
     if preview_substrings_indexes:
 
@@ -481,9 +499,7 @@ def get_preview_string(preview_substrings_indexes, content, content_length):
             else:
                 preview_string = "[...] " + preview_string + " [...]"
 
-        return preview_string
-
-    return "preview not available"
+    return preview_string
 
 
 def get_previews_for_page_id(
@@ -519,9 +535,7 @@ def get_previews_for_page_id(
         preview_substring_indexes = merge_overlapping_preview_substrings(
             preview_substrings_start_end_indexes
         )
-        preview_string = get_preview_string(
-            preview_substring_indexes, content, content_length
-        )
+        preview_string = get_preview_string(preview_substring_indexes, content)
 
         preview_string_with_highlighted_s_word = Markup(
             (
