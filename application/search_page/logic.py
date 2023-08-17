@@ -105,7 +105,8 @@ def get_distinct_magazine_names_and_count_for_searched_term(formatted_s_word):
         formatted_s_word (str): The formatted search word obtained from format_search_word function.
 
     Returns:
-        flask_sqlalchemy.query.Query: A Query object containing tuples of magazine names and search term counts.
+        distinct_magazine_names_and_count_for_searched_term (flask_sqlalchemy.query.Query): A Query
+        object containing tuples of magazine names and search term counts.
 
     The Query object can be iterated to access the magazine names and their respective search term counts.
     """
@@ -185,7 +186,7 @@ def replace_multiple_extra_white_spaces_with_just_one(text=""):
         text (str): The input text string. Default is empty string: "".
 
     Returns:
-        str: The modified text string with multiple consecutive spaces replaced by a single space.
+        replaced_text (str): The modified text string with multiple consecutive spaces replaced by a single space.
     """
 
     pattern = r"\s{2,}"
@@ -202,8 +203,8 @@ def convert_diacritics_to_basic_latin_characters(string_to_convert=""):
         string_to_convert (str, optional): The input string containing diacritics. Defaults to an empty string.
 
     Returns:
-        str: The input string with Romanian and Hungarian diacritics replaced by basic Latin characters,
-        or an empty string if no argument is provided or an argument of invalid type is given.
+        converted_string (str): The input string with Romanian and Hungarian diacritics replaced by basic Latin
+        characters, or an empty string if no argument is provided or an argument of invalid type is given.
     """
 
     if not isinstance(string_to_convert, str):
@@ -418,7 +419,7 @@ def merge_overlapping_preview_substrings(preview_substrings_start_end_indexes):
         preview_substrings_start_end_indexes (list): A list containing lists of start and end indexes pairs.
 
     Returns:
-        list of list: A list containing merged lists of start and end indexes.
+        preview_substrings_indexes (list): A list containing merged lists of start and end indexes.
 
     This function accepts a list (preview_substrings_start_end_indexes) containing lists of start and end
     indexes pairs. It merges overlapping intervals within the lists and returns a list containing the merged
