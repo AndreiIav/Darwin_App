@@ -506,6 +506,23 @@ def get_preview_string(preview_substrings_indexes, content):
 def get_previews_for_page_id(
     paginated_details_for_searched_term, s_word, preview_length
 ):
+    """
+    Generate preview texts for page IDs based on provided search term.
+
+    Args:
+        paginated_details_for_searched_term (flask_sqlalchemy.pagination.QueryPagination): A flask_sqlalchemy Pagination
+        object containing search results.
+        s_word (str): The term to generate preview text around.
+        preview_length (int) : The length of the preview before and after the search term.
+
+    Returns: previews_for_page_id (list): A list containing pairs of page IDs (int) and their corresponding preview texts (str).
+
+    This function generates preview texts for page IDs using a provided Flask-SQLAlchemy Pagination object
+    (paginated_details_for_searched_term) and a search term (s_word).
+    The generated previews are centered around the search term with the specified preview length.
+
+    The function employs a series of helper functions to create these previews, including text processing and formatting operations.
+    """
 
     previews_for_page_id = []
 
@@ -516,7 +533,6 @@ def get_previews_for_page_id(
         content = replace_multiple_extra_white_spaces_with_just_one(content)
 
         s_word_string_length = len(s_word)
-        content_length = len(content)
 
         indexes_for_highlighting_s_word = get_indexes_for_highlighting_s_word(
             s_word, content

@@ -80,7 +80,7 @@ def distinct_magazine_names_and_count_for_searched_term():
     return get_distinct_magazine_names_and_count_for_searched_term
 
 
-@pytest.fixture
+@pytest.fixture()
 def details_for_searched_term():
     return get_details_for_searched_term
 
@@ -90,7 +90,7 @@ def details_for_searched_term_for_specific_magazine():
     return get_details_for_searched_term_for_specific_magazine
 
 
-@pytest.fixture
+@pytest.fixture()
 def paginate():
     return paginate_results
 
@@ -138,3 +138,16 @@ def merge_overlapping_substrings():
 @pytest.fixture
 def preview_string():
     return get_preview_string
+
+
+@pytest.fixture(scope="class")
+def set_up_data_for_previews_for_page_id():
+    s_word = "stefan michailescu"
+    formatted_s_word = "stefan+michailescu"
+    details_searched_term = get_details_for_searched_term(formatted_s_word)
+    paginated_details_for_searched_term = paginate_results(
+        details_searched_term, page=1, per_page=1, error_out=False
+    )
+    page_id = list(paginated_details_for_searched_term)[0][-1]
+
+    return (s_word, page_id, paginated_details_for_searched_term)
