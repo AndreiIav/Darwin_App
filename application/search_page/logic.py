@@ -350,7 +350,17 @@ def add_html_mark_tags_to_the_searched_term(distinct_s_word_variants, content):
 
 def add_html_tags_around_preview_string_parantheses(content):
 
-    content = content.replace("[...]", "<b><i>" + "[...]" + "</b></i>")
+    """
+    Add HTML <b> and <i> tags around every occurrance of "[...]" in the content.
+
+    Args:
+        content (str): The content string to modify.
+
+    Returns:
+        content (str): The modified content with HTML <b> and <i> tags around every occurrance of "[...]" in the content.
+    """
+
+    content = content.replace("[...]", "<b><i>" + "[...]" + "</i></b>")
     return content
 
 

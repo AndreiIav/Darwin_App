@@ -2,7 +2,10 @@ import pytest
 import flask_sqlalchemy
 import werkzeug
 from flask import request, current_app
-from application.search_page.logic import get_previews_for_page_id
+from application.search_page.logic import (
+    get_previews_for_page_id,
+    add_html_tags_around_preview_string_parantheses,
+)
 
 # Tests for get_existent_magazines()
 class TestGetExistentMagazines:
@@ -850,6 +853,17 @@ class TestGetPreviewString:
         assert preview_string(preview_substring_indexes, content) == expected_result
 
 
+# Tests for add_html_tags_around_preview_string_parantheses
+class TestAddHtmlTagsAroundPreviewStringParantheses:
+    def test_add_html_tags_around_preview_string_parantheses(self):
+        content = "[...] abc[...]cbd [...] bnm[...] [...]"
+        expected_result = "<b><i>[...]</i></b> abc<b><i>[...]</i></b>cbd <b><i>[...]</i></b> bnm<b><i>[...]</i></b> <b><i>[...]</i></b>"
+
+        assert (
+            add_html_tags_around_preview_string_parantheses(content) == expected_result
+        )
+
+
 # Tests for get_previews_for_page_id
 class TestGetPreviewsForPageId:
     def test_get_previews_for_page_id_length_of_response_is_correct(
@@ -895,9 +909,9 @@ class TestGetPreviewsForPageId:
 
         expected_page_id = page_id
         expected_preview_text = (
-            "<b><i>[...]</b></i> două natură. Acum un an s'a făcut aci la Ateneu, experienţa. Intr'o conferinţă de un merit real,"
+            "<b><i>[...]</i></b> două natură. Acum un an s'a făcut aci la Ateneu, experienţa. Intr'o conferinţă de un merit real,"
             + " d. <mark>Ştefan Michăilescu</mark>, care trata despre determinism de o dată a început să vorbească- cu mult"
-            + " emfas despre teatrul românesc <b><i>[...]</b></i>"
+            + " emfas despre teatrul românesc <b><i>[...]</i></b>"
         )
 
         res = get_previews_for_page_id(
