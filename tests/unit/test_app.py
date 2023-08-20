@@ -2,86 +2,97 @@ import pytest
 import flask_sqlalchemy
 import werkzeug
 from flask import request, current_app
+
+from application.home.logic import (
+    get_existent_magazines,
+    get_magazine_name,
+    get_magazine_details,
+)
+
 from application.search_page.logic import (
+    format_search_word,
+    get_distinct_magazine_names_and_count_for_searched_term,
+    get_details_for_searched_term,
+    get_details_for_searched_term_for_specific_magazine,
+    paginate_results,
+    replace_multiple_extra_white_spaces_with_just_one,
+    get_magazine_content_details,
+    convert_diacritics_to_basic_latin_characters,
+    get_indexes_for_highlighting_s_word,
+    get_distinct_s_word_variants,
+    add_html_mark_tags_to_the_searched_term,
+    get_all_start_and_end_indexes_for_preview_substrings,
+    merge_overlapping_preview_substrings,
+    get_preview_string,
     get_previews_for_page_id,
     add_html_tags_around_preview_string_parantheses,
 )
 
 # Tests for get_existent_magazines()
 class TestGetExistentMagazines:
-    def test_content_of_get_existent_magazines(self, test_client, existent_magazines):
+    def test_content_of_get_existent_magazines(self, test_client):
         existent_magazine = ("Viaţa Noastră (1936-1937)", 153)
         non_existent_magazine = ("abc", 0)
 
-        assert existent_magazine in existent_magazines
-        assert non_existent_magazine not in existent_magazines
+        assert existent_magazine in get_existent_magazines()
+        assert non_existent_magazine not in get_existent_magazines()
 
-    def test_instance_of_get_existent_magazines(self, test_client, existent_magazines):
-        assert isinstance(existent_magazines, flask_sqlalchemy.query.Query)
+    def test_instance_of_get_existent_magazines(self, test_client):
+        assert isinstance(get_existent_magazines(), flask_sqlalchemy.query.Query)
 
-    def test_length_of_get_existent_magazines(self, test_client, existent_magazines):
-        assert len(list(existent_magazines)) == 132
+    def test_length_of_get_existent_magazines(self, test_client):
+        assert len(list(get_existent_magazines())) == 132
 
 
 # Tests for get_magazine_name()
 class TestGetMagazineName:
-    def test_get_magazine_name_with_existent_magazine_id(
-        self, test_client, magazine_name
-    ):
+    def test_get_magazine_name_with_existent_magazine_id(self, test_client):
         test_magazine = "Buletinul eugenic şi biopolitic (1927-1947)"
 
-        assert test_magazine == magazine_name(33)
-        assert test_magazine == magazine_name("33")
+        assert test_magazine == get_magazine_name(33)
+        assert test_magazine == get_magazine_name("33")
 
-    def test_get_magazine_name_with_non_existent_magazine_id(
-        self, test_client, magazine_name
-    ):
-        assert magazine_name(999) is None
-        assert magazine_name("999") is None
+    def test_get_magazine_name_with_non_existent_magazine_id(self, test_client):
+        assert get_magazine_name(999) is None
+        assert get_magazine_name("999") is None
 
-    def test_get_magazine_name_with_no_parameter_passed(
-        self, test_client, magazine_name
-    ):
-        assert magazine_name() is None
+    def test_get_magazine_name_with_no_parameter_passed(self, test_client):
+        assert get_magazine_name() is None
 
     invalid_magazine_id_input = ["a", True, 1.23, None]
 
     @pytest.mark.parametrize("invalid_magazine_id", invalid_magazine_id_input)
     def test_get_magazine_name_with_invalid_data_types_parameters(
-        self, test_client, magazine_name, invalid_magazine_id
+        self, test_client, invalid_magazine_id
     ):
-        assert magazine_name(invalid_magazine_id) is None
+        assert get_magazine_name(invalid_magazine_id) is None
 
 
 # Tests for get_magazine_details()
 class TestGetMagazineDetails:
     @pytest.mark.parametrize("magazine_id", [13, "13"])
     def test_get_magazine_details_with_existent_magazine_id(
-        self, test_client, magazine_details, magazine_id
+        self, test_client, magazine_id
     ):
         test_magazine_details = [("ANUL 1 1868", 24, 759), ("ANUL 2 1871", 2, 72)]
 
-        for index, magazine_detail in enumerate(magazine_details(magazine_id)):
+        for index, magazine_detail in enumerate(get_magazine_details(magazine_id)):
             assert test_magazine_details[index] == magazine_detail
 
-    def test_get_magazine_details_with_not_existent_magazine_id(
-        self, test_client, magazine_details
-    ):
+    def test_get_magazine_details_with_not_existent_magazine_id(self, test_client):
 
-        assert len(list(magazine_details(999))) == 0
+        assert len(list(get_magazine_details(999))) == 0
 
-    def test_get_magazine_details_with_no_parameter_passed(
-        self, test_client, magazine_details
-    ):
-        assert len(list(magazine_details())) == 0
+    def test_get_magazine_details_with_no_parameter_passed(self, test_client):
+        assert len(list(get_magazine_details())) == 0
 
     invalid_magazine_id_input = ["a", True, 1.23, None]
 
     @pytest.mark.parametrize("invalid_magazine_id", invalid_magazine_id_input)
     def test_get_magazine_details_with_invalid_data_types_parameters(
-        self, test_client, magazine_details, invalid_magazine_id
+        self, test_client, invalid_magazine_id
     ):
-        assert len(list(magazine_details(invalid_magazine_id))) == 0
+        assert len(list(get_magazine_details(invalid_magazine_id))) == 0
 
 
 # Tests for store_s_word_in_session()
@@ -130,49 +141,49 @@ class TestStoreSWordInSession:
 
 # Tests for format_search_word
 class TestFormatSearchWord:
-    def test_format_search_word_with_one_word_as_input(self, test_client, format_word):
+    def test_format_search_word_with_one_word_as_input(self, test_client):
 
-        formatted_s_word = format_word("darwin")
+        formatted_s_word = format_search_word("darwin")
         assert formatted_s_word == "darwin"
 
     def test_format_search_word_with_multiple_words_as_input_and_default_separator(
-        self, test_client, format_word
+        self, test_client
     ):
 
-        formatted_s_word = format_word("Victor Babeș")
+        formatted_s_word = format_search_word("Victor Babeș")
         assert formatted_s_word == "Victor Babeș"
 
-        formatted_s_word = format_word("ala bala portocala")
+        formatted_s_word = format_search_word("ala bala portocala")
         assert formatted_s_word == "ala bala portocala"
 
     def test_format_search_word_with_multiple_words_as_input_and_passed_separator(
-        self, test_client, format_word
+        self, test_client
     ):
 
-        formatted_s_word = format_word("Victor Babeș", "+")
+        formatted_s_word = format_search_word("Victor Babeș", "+")
         assert formatted_s_word == "Victor+Babeș"
 
-        formatted_s_word = format_word("ala bala portocala", "+")
+        formatted_s_word = format_search_word("ala bala portocala", "+")
         assert formatted_s_word == "ala+bala+portocala"
 
 
 # Tests for get_distinct_magazine_names_and_count_for_searched_term
 class TestGetDistinctMagazineNamesAndCountForSearchedTerm:
     def test_instance_of_get_distinct_magazine_names_and_count_for_searched_term(
-        self, test_client, distinct_magazine_names_and_count_for_searched_term
+        self, test_client
     ):
 
-        magazine_names_and_count = distinct_magazine_names_and_count_for_searched_term(
-            "fotbal"
+        magazine_names_and_count = (
+            get_distinct_magazine_names_and_count_for_searched_term("fotbal")
         )
         assert isinstance(magazine_names_and_count, flask_sqlalchemy.query.Query)
 
     def test_response_details_of_get_distinct_magazine_names_and_count_for_searched_term(
-        self, test_client, distinct_magazine_names_and_count_for_searched_term
+        self, test_client
     ):
 
-        magazine_names_and_count = distinct_magazine_names_and_count_for_searched_term(
-            "fotbal"
+        magazine_names_and_count = (
+            get_distinct_magazine_names_and_count_for_searched_term("fotbal")
         )
 
         for row in magazine_names_and_count:
@@ -185,21 +196,17 @@ class TestGetDistinctMagazineNamesAndCountForSearchedTerm:
 
 # Tests for get_details_for_searched_term
 class TestGetDetailsForSearchedTerm:
-    def test_instance_of_get_details_for_searched_term(
-        self, test_client, format_word, details_for_searched_term
-    ):
+    def test_instance_of_get_details_for_searched_term(self, test_client):
 
-        s_word = format_word("Constantin Esarcu")
-        details_for_searched_term = details_for_searched_term(s_word)
+        s_word = format_search_word("Constantin Esarcu")
+        details_for_searched_term = get_details_for_searched_term(s_word)
 
         assert isinstance(details_for_searched_term, flask_sqlalchemy.query.Query)
 
-    def test_response_details_of_get_details_for_searched_term(
-        self, test_client, format_word, details_for_searched_term
-    ):
+    def test_response_details_of_get_details_for_searched_term(self, test_client):
 
-        s_word = format_word("Constantin Esarcu")
-        details_for_searched_term = details_for_searched_term(s_word)
+        s_word = format_search_word("Constantin Esarcu")
+        details_for_searched_term = get_details_for_searched_term(s_word)
 
         for row in details_for_searched_term:
             assert len(row) == 6
@@ -214,20 +221,17 @@ class TestGetDetailsForSearchedTerm:
 
 
 # Tests for get_details_for_searched_term_for_specific_magazine
-class TestGetDetailsForSearchedTermForSpecificMagazine:
-    def test_instance_of_get_details_for_searched_term_for_specific_magazine(
+class TestGetDetailsForSpecificMagazineForSearchedTerm:
+    def test_instance_of_get_details_for_specific_magazinese_for_searched_term(
         self,
         test_client,
-        format_word,
-        details_for_searched_term,
-        details_for_searched_term_for_specific_magazine,
     ):
 
-        s_word = format_word("Constantin Esarcu")
-        details_for_searched_term = details_for_searched_term(s_word)
+        s_word = format_search_word("Constantin Esarcu")
+        details_for_searched_term = get_details_for_searched_term(s_word)
         magazine_filter = "Tribuna poporului(1897-1912)"
         details_for_searched_term_specific_magazine = (
-            details_for_searched_term_for_specific_magazine(
+            get_details_for_searched_term_for_specific_magazine(
                 details_for_searched_term, magazine_filter
             )
         )
@@ -236,19 +240,16 @@ class TestGetDetailsForSearchedTermForSpecificMagazine:
             details_for_searched_term_specific_magazine, flask_sqlalchemy.query.Query
         )
 
-    def test_response_details_of_get_details_for_searched_term_for_specific_magazine(
+    def test_response_details_of_get_details_for_specific_magazine_for_searched_term(
         self,
         test_client,
-        format_word,
-        details_for_searched_term,
-        details_for_searched_term_for_specific_magazine,
     ):
 
-        s_word = format_word("Constantin Esarcu")
-        details_for_searched_term = details_for_searched_term(s_word)
+        s_word = format_search_word("Constantin Esarcu")
+        details_for_searched_term = get_details_for_searched_term(s_word)
         magazine_filter = "Tribuna poporului(1897-1912)"
         details_for_searched_term_specific_magazine = (
-            details_for_searched_term_for_specific_magazine(
+            get_details_for_searched_term_for_specific_magazine(
                 details_for_searched_term, magazine_filter
             )
         )
@@ -274,16 +275,13 @@ class TestGetDetailsForSearchedTermForSpecificMagazine:
     def test_filtering_works_for_get_details_for_searched_term_for_specific_magazine(
         self,
         test_client,
-        format_word,
-        details_for_searched_term,
-        details_for_searched_term_for_specific_magazine,
     ):
 
-        s_word = format_word("Constantin Esarcu")
-        details_for_searched_term = details_for_searched_term(s_word)
+        s_word = format_search_word("Constantin Esarcu")
+        details_for_searched_term = get_details_for_searched_term(s_word)
         magazine_filter = "Gazeta de Transilvania (1838-1914)"
         details_for_searched_term_specific_magazine = (
-            details_for_searched_term_for_specific_magazine(
+            get_details_for_searched_term_for_specific_magazine(
                 details_for_searched_term, magazine_filter
             )
         )
@@ -294,16 +292,14 @@ class TestGetDetailsForSearchedTermForSpecificMagazine:
 
 # Tests for paginate_results
 class TestPaginateResults:
-    def test_instance_of_paginate_results(
-        self, test_client, format_word, details_for_searched_term, paginate
-    ):
+    def test_instance_of_paginate_results(self, test_client):
 
-        s_word = format_word("Victor Babeș")
-        details_for_searched_term = details_for_searched_term(s_word)
+        s_word = format_search_word("Victor Babeș")
+        details_for_searched_term = get_details_for_searched_term(s_word)
         page = 1
         per_page = current_app.config["RESULTS_PER_PAGE"]
         error_out = False
-        paginated_details_for_searched_word = paginate(
+        paginated_details_for_searched_word = paginate_results(
             details_for_searched_term, page, per_page, error_out
         )
 
@@ -315,16 +311,14 @@ class TestPaginateResults:
     pages = [1, 23]
 
     @pytest.mark.parametrize("pages", pages)
-    def test_paginate_results_returns_correct_page(
-        self, test_client, format_word, details_for_searched_term, paginate, pages
-    ):
+    def test_paginate_results_returns_correct_page(self, test_client, pages):
 
-        s_word = format_word("Victor Babeș")
-        details_for_searched_term = details_for_searched_term(s_word)
+        s_word = format_search_word("Victor Babeș")
+        details_for_searched_term = get_details_for_searched_term(s_word)
         page = pages
         per_page = current_app.config["RESULTS_PER_PAGE"]
         error_out = False
-        paginated_details_for_searched_word = paginate(
+        paginated_details_for_searched_word = paginate_results(
             details_for_searched_term, page, per_page, error_out
         )
 
@@ -334,47 +328,43 @@ class TestPaginateResults:
 
     @pytest.mark.parametrize("per_page", results_per_page)
     def test_paginate_results_returns_correct_number_of_results_per_page(
-        self, test_client, format_word, details_for_searched_term, paginate, per_page
+        self, test_client, per_page
     ):
 
-        s_word = format_word("Victor Babeș")
-        details_for_searched_term = details_for_searched_term(s_word)
+        s_word = format_search_word("Victor Babeș")
+        details_for_searched_term = get_details_for_searched_term(s_word)
         page = 1
         per_page = per_page
         error_out = False
-        paginated_details_for_searched_word = paginate(
+        paginated_details_for_searched_word = paginate_results(
             details_for_searched_term, page, per_page, error_out
         )
 
         assert len(paginated_details_for_searched_word.items) == per_page
 
-    def test_paginate_results_error_out_true(
-        self, test_client, format_word, details_for_searched_term, paginate
-    ):
+    def test_paginate_results_error_out_true(self, test_client):
 
-        s_word = format_word("Victor Babeș")
-        details_for_searched_term = details_for_searched_term(s_word)
+        s_word = format_search_word("Victor Babeș")
+        details_for_searched_term = get_details_for_searched_term(s_word)
         page = 2000
         per_page = 10
         error_out = True
 
         with pytest.raises(werkzeug.exceptions.NotFound) as err:
-            paginated_details_for_searched_word = paginate(
+            paginated_details_for_searched_word = paginate_results(
                 details_for_searched_term, page, per_page, error_out
             )
             assert paginated_details_for_searched_word == err
 
-    def test_paginate_results_error_out_false(
-        self, test_client, format_word, details_for_searched_term, paginate
-    ):
+    def test_paginate_results_error_out_false(self, test_client):
 
-        s_word = format_word("Victor Babeș")
-        details_for_searched_term = details_for_searched_term(s_word)
+        s_word = format_search_word("Victor Babeș")
+        details_for_searched_term = get_details_for_searched_term(s_word)
         page = 2000
         per_page = 10
         error_out = False
 
-        paginated_details_for_searched_word = paginate(
+        paginated_details_for_searched_word = paginate_results(
             details_for_searched_term, page, per_page, error_out
         )
 
@@ -384,44 +374,43 @@ class TestPaginateResults:
 # Tests for replace_multiple_extra_white_spaces_with_just_one
 class TestReplaceMultipleExtraWhiteSpacesWithJustOne:
     def test_replace_multiple_extra_white_spaces_with_just_one_with_multiple_consecutive_spaces(
-        self, test_client, replace_white_spaces
+        self,
     ):
 
         text = "Charles  Darwin      was        a               great  scientist"
 
-        assert replace_white_spaces(text) == "Charles Darwin was a great scientist"
+        assert (
+            replace_multiple_extra_white_spaces_with_just_one(text)
+            == "Charles Darwin was a great scientist"
+        )
 
     def test_replace_multiple_extra_white_spaces_with_no_argument_passed(
-        self, test_client, replace_white_spaces
+        self,
     ):
 
-        assert replace_white_spaces() == ""
+        assert replace_multiple_extra_white_spaces_with_just_one() == ""
 
 
 # Tests for get_magazine_content_details
 class TestGetMagazineContentDetails:
-    def test_get_magazine_content_details_with_no_parameter_passed(
-        self, test_client, magazine_content_details
-    ):
-        assert magazine_content_details() == ""
+    def test_get_magazine_content_details_with_no_parameter_passed(self, test_client):
+        assert get_magazine_content_details() == ""
 
     invalid_parameters = ["a", False, 3.14]
 
     @pytest.mark.parametrize("invalid_parameters", invalid_parameters)
     def test_get_magazine_content_details_with_invalid_parameters_type(
-        self, test_client, magazine_content_details, invalid_parameters
+        self,
+        test_client,
+        invalid_parameters,
     ):
-        assert magazine_content_details(invalid_parameters) == ""
+        assert get_magazine_content_details(invalid_parameters) == ""
 
-    def test_get_magazine_content_details_with_inexistent_rowid(
-        self, test_client, magazine_content_details
-    ):
-        assert magazine_content_details(0) == ""
+    def test_get_magazine_content_details_with_inexistent_rowid(self, test_client):
+        assert get_magazine_content_details(0) == ""
 
-    def test_get_magazine_content_details_with_existent_rowid(
-        self, test_client, magazine_content_details
-    ):
-        content_details = magazine_content_details(1)
+    def test_get_magazine_content_details_with_existent_rowid(self, test_client):
+        content_details = get_magazine_content_details(1)
 
         assert len(content_details) == 5180
         assert (
@@ -433,19 +422,20 @@ class TestGetMagazineContentDetails:
 # Tests for convert_diacritics_to_basic_latin_characters
 class TestConvertDiacriticsToBasicLatinCharacters:
     def test_convert_diacritics_to_basic_latin_characters_with_no_argument_passed(
-        self, convert_diacritics_to_basic_characters
+        self,
     ):
 
-        assert convert_diacritics_to_basic_characters() == ""
+        assert convert_diacritics_to_basic_latin_characters() == ""
 
     invalid_parameters = [1, False, 3.14]
 
     @pytest.mark.parametrize("invalid_parameters", invalid_parameters)
     def test_convert_diacritics_to_basic_latin_characters_with_invalid_parameters(
-        self, convert_diacritics_to_basic_characters, invalid_parameters
+        self,
+        invalid_parameters,
     ):
 
-        assert convert_diacritics_to_basic_characters(invalid_parameters) == ""
+        assert convert_diacritics_to_basic_latin_characters(invalid_parameters) == ""
 
     diacritics_to_basic_characters = [
         ("À", "A"),
@@ -499,9 +489,13 @@ class TestConvertDiacriticsToBasicLatinCharacters:
         "diacritics, basic_character", diacritics_to_basic_characters
     )
     def test_convert_diacritics_to_basic_latin_characters_converts_all_romanian_and_hungarian_diacritics(
-        self, convert_diacritics_to_basic_characters, diacritics, basic_character
+        self,
+        diacritics,
+        basic_character,
     ):
-        assert convert_diacritics_to_basic_characters(diacritics) == basic_character
+        assert (
+            convert_diacritics_to_basic_latin_characters(diacritics) == basic_character
+        )
 
     words_with_diacritics_to_words_without_diacritics = [
         ("árvíztűrő tükörfúrógép", "arvizturo tukorfurogep"),
@@ -516,12 +510,11 @@ class TestConvertDiacriticsToBasicLatinCharacters:
     )
     def test_convert_diacritics_to_basic_latin_characters_with_words_with_diacritics(
         self,
-        convert_diacritics_to_basic_characters,
         words_with_diacritics,
         words_without_diacritics,
     ):
         assert (
-            convert_diacritics_to_basic_characters(words_with_diacritics)
+            convert_diacritics_to_basic_latin_characters(words_with_diacritics)
             == words_without_diacritics
         )
 
@@ -529,9 +522,9 @@ class TestConvertDiacriticsToBasicLatinCharacters:
 # Tests for get_indexes_for_highlighting_s_word
 class TestGetIndexesForHighlightingSWord:
     def test_get_indexes_for_highlighting_s_word_with_a_single_letter(
-        self, get_indexes_for_highlighting_word
+        self,
     ):
-        assert get_indexes_for_highlighting_word("a", "Ana are mere si banane") == [
+        assert get_indexes_for_highlighting_s_word("a", "Ana are mere si banane") == [
             0,
             2,
             4,
@@ -540,7 +533,7 @@ class TestGetIndexesForHighlightingSWord:
         ]
 
     def test_get_indexes_for_highlighting_s_word_with_a_word_with_diacritics(
-        self, get_indexes_for_highlighting_word
+        self,
     ):
         s_word = "Mărţişor"
         content = (
@@ -549,30 +542,30 @@ class TestGetIndexesForHighlightingSWord:
             + " mărţişor ce-1 vinde cu ocazia zilei de 1 Martie 1935."
             + " Acest mărţişor, însă cu panglicuţă"
         )
-        assert get_indexes_for_highlighting_word(s_word, content) == [10, 105, 165]
+        assert get_indexes_for_highlighting_s_word(s_word, content) == [10, 105, 165]
 
 
 # Tests for get_distinct_s_word_variants
 class TestGetDistinctSWordsVariants:
     def test_get_distinct_s_word_variants_with_term_differing_in_letter_case(
-        self, get_distinct_word_variants
+        self,
     ):
         content = "Darwin darwin Darwin DARWIN"
         s_word_string_length = 6
         indexes_for_highlighting_s_word = [0, 7, 14, 21]
 
-        assert get_distinct_word_variants(
+        assert get_distinct_s_word_variants(
             indexes_for_highlighting_s_word, content, s_word_string_length
         ) == ["Darwin", "darwin", "DARWIN"]
 
     def test_get_distinct_s_word_variants_with_term_differing_in_diacritics(
-        self, get_distinct_word_variants
+        self,
     ):
         content = "Babeș Babes Babeș Babes"
         s_word_string_length = 5
         indexes_for_highlighting_s_word = [0, 6, 12, 18]
 
-        assert get_distinct_word_variants(
+        assert get_distinct_s_word_variants(
             indexes_for_highlighting_s_word, content, s_word_string_length
         ) == ["Babeș", "Babes"]
 
@@ -580,24 +573,24 @@ class TestGetDistinctSWordsVariants:
 # Tests for add_html_mark_tags_to_the_searched_term
 class TestAddHtmlMarkTagsToTheSearchedTerm:
     def test_add_html_mark_tags_to_the_searched_term_with_a_single_variant(
-        self, add_html_mark_tags_around_term
+        self,
     ):
         distinct_s_word_variants = ["Darwin"]
         content = "Charles Darwin was a great scientist"
 
         assert (
-            add_html_mark_tags_around_term(distinct_s_word_variants, content)
+            add_html_mark_tags_to_the_searched_term(distinct_s_word_variants, content)
             == "Charles <mark>Darwin</mark> was a great scientist"
         )
 
     def test_add_html_mark_tags_to_the_searched_term_with_a_multiple_variants(
-        self, add_html_mark_tags_around_term
+        self,
     ):
         distinct_s_word_variants = ["Babeș", "BABEȘ", "Babes"]
         content = "Different versions of Babeș name: Babeș, BABEȘ, Babes."
 
         assert (
-            add_html_mark_tags_around_term(distinct_s_word_variants, content)
+            add_html_mark_tags_to_the_searched_term(distinct_s_word_variants, content)
             == "Different versions of <mark>Babeș</mark> name: <mark>Babeș</mark>, <mark>BABEȘ</mark>, <mark>Babes</mark>."
         )
 
@@ -605,7 +598,7 @@ class TestAddHtmlMarkTagsToTheSearchedTerm:
 # Tests for get_all_start_and_end_indexes_for_preview_substrings
 class TestGetAllStartAndEndIndexesForPreviewSubstrings:
     def test_get_all_start_and_end_indexes_for_preview_substrings_with_searched_term_at_index_0(
-        self, get_start_end_indexes_for_preview
+        self,
     ):
         content = "Darwin as an emi nent geologist, whose observations"
         preview_length = 10
@@ -615,14 +608,14 @@ class TestGetAllStartAndEndIndexesForPreviewSubstrings:
         expected_result = [[0, 16]]
 
         assert (
-            get_start_end_indexes_for_preview(
+            get_all_start_and_end_indexes_for_preview_substrings(
                 content, preview_length, s_word_string_length, indexes
             )
             == expected_result
         )
 
     def test_get_all_start_and_end_indexes_for_preview_substrings_with_searched_term_at_last_index(
-        self, get_start_end_indexes_for_preview
+        self,
     ):
         content = "Publication of his journal of the vo yage made Darwin"
         preview_length = 10
@@ -632,14 +625,14 @@ class TestGetAllStartAndEndIndexesForPreviewSubstrings:
         expected_result = [[indexes[0] - preview_length, len(content) + preview_length]]
 
         assert (
-            get_start_end_indexes_for_preview(
+            get_all_start_and_end_indexes_for_preview_substrings(
                 content, preview_length, s_word_string_lenth, indexes
             )
             == expected_result
         )
 
     def test_get_all_start_and_end_indexes_for_preview_substrings_with_searched_term_in_the_middle(
-        self, get_start_end_indexes_for_preview
+        self,
     ):
         content = "Publication of his journal of the yage made Darwin famous as a popular author"
         preview_length = 10
@@ -654,14 +647,14 @@ class TestGetAllStartAndEndIndexesForPreviewSubstrings:
         ]
 
         assert (
-            get_start_end_indexes_for_preview(
+            get_all_start_and_end_indexes_for_preview_substrings(
                 content, preview_length, s_word_string_length, indexes
             )
             == expected_result
         )
 
     def test_get_all_start_and_end_indexes_for_preview_substrings_with_preview_length_start_in_the_middle_of_word(
-        self, get_start_end_indexes_for_preview
+        self,
     ):
         content = "Publication of his journal of the voyage made Darwin famous as a popular author"
         preview_length = 10
@@ -671,14 +664,14 @@ class TestGetAllStartAndEndIndexesForPreviewSubstrings:
         expected_result = [[34, indexes[0] + s_word_string_length + preview_length]]
 
         assert (
-            get_start_end_indexes_for_preview(
+            get_all_start_and_end_indexes_for_preview_substrings(
                 content, preview_length, s_word_string_length, indexes
             )
             == expected_result
         )
 
     def test_get_all_start_and_end_indexes_for_preview_substrings_with_preview_length_end_in_the_middle_of_word(
-        self, get_start_end_indexes_for_preview
+        self,
     ):
         content = "Publication of his journal of the vo yage made Darwin famous popular author"
         preview_length = 10
@@ -688,14 +681,14 @@ class TestGetAllStartAndEndIndexesForPreviewSubstrings:
         expected_result = [[indexes[0] - preview_length, 68]]
 
         assert (
-            get_start_end_indexes_for_preview(
+            get_all_start_and_end_indexes_for_preview_substrings(
                 content, preview_length, s_word_string_length, indexes
             )
             == expected_result
         )
 
     def test_get_all_start_and_end_indexes_for_preview_substrings_with_multiple_indexes(
-        self, get_start_end_indexes_for_preview
+        self,
     ):
         content = (
             "Darwin as an eminent geologist, whose observations and Darwin theories"
@@ -709,7 +702,7 @@ class TestGetAllStartAndEndIndexesForPreviewSubstrings:
         expected_result = [[0, 20], [38, 80], [97, 133], [176, 204]]
 
         assert (
-            get_start_end_indexes_for_preview(
+            get_all_start_and_end_indexes_for_preview_substrings(
                 content, preview_length, s_word_string_length, indexes
             )
             == expected_result
@@ -725,7 +718,9 @@ class TestGetAllStartAndEndIndexesForPreviewSubstrings:
 
     @pytest.mark.parametrize("preview_length, expected_result", preview_lengths)
     def test_get_all_start_and_end_indexes_for_preview_substrings_with_multiple_preview_length_values(
-        self, get_start_end_indexes_for_preview, preview_length, expected_result
+        self,
+        preview_length,
+        expected_result,
     ):
         content = (
             "Darwin as an eminent geologist, whose observations"
@@ -736,7 +731,7 @@ class TestGetAllStartAndEndIndexesForPreviewSubstrings:
         indexes = [0, 55, 108, 188]
 
         assert (
-            get_start_end_indexes_for_preview(
+            get_all_start_and_end_indexes_for_preview_substrings(
                 content, preview_length, s_word_string_length, indexes
             )
             == expected_result
@@ -746,18 +741,18 @@ class TestGetAllStartAndEndIndexesForPreviewSubstrings:
 # Tests for merge_overlapping_preview_substrings
 class TestMergeOverlappingPreviewSubstrings:
     def test_merge_overlapping_preview_substrings_with_non_overlapping_indexes(
-        self, merge_overlapping_substrings
+        self,
     ):
         preview_substrings_start_end_indexes = [[0, 12], [17, 28], [36, 80]]
         expected_result = [[0, 12], [17, 28], [36, 80]]
 
         assert (
-            merge_overlapping_substrings(preview_substrings_start_end_indexes)
+            merge_overlapping_preview_substrings(preview_substrings_start_end_indexes)
             == expected_result
         )
 
     def test_merge_overlapping_preview_substrings_with_overlapping_indexes(
-        self, merge_overlapping_substrings
+        self,
     ):
         preview_substrings_start_end_indexes = [
             [0, 18],
@@ -776,12 +771,12 @@ class TestMergeOverlappingPreviewSubstrings:
         expected_result = [[0, 28], [95, 102], [103, 111], [112, 120], [121, 133]]
 
         assert (
-            merge_overlapping_substrings(preview_substrings_start_end_indexes)
+            merge_overlapping_preview_substrings(preview_substrings_start_end_indexes)
             == expected_result
         )
 
     def test_merge_overlapping_preview_substrings_with_overlapping_and_non_overlapping_indexes(
-        self, merge_overlapping_substrings
+        self,
     ):
         preview_substrings_start_end_indexes = [
             [0, 18],
@@ -807,7 +802,7 @@ class TestMergeOverlappingPreviewSubstrings:
         ]
 
         assert (
-            merge_overlapping_substrings(preview_substrings_start_end_indexes)
+            merge_overlapping_preview_substrings(preview_substrings_start_end_indexes)
             == expected_results
         )
 
@@ -815,7 +810,7 @@ class TestMergeOverlappingPreviewSubstrings:
 # Tests for get_preview_string
 class TestGetPreviewString:
     def test_get_preview_string_with_no_added_brackets_at_the_start_or_end_of_preview_string(
-        self, preview_string
+        self,
     ):
         preview_substring_indexes = [[0, 30], [38, 80], [89, 133]]
         content = (
@@ -828,10 +823,10 @@ class TestGetPreviewString:
             + " supported [...] Lyell's concept of Darwin gradual geological"
         )
 
-        assert preview_string(preview_substring_indexes, content) == expected_result
+        assert get_preview_string(preview_substring_indexes, content) == expected_result
 
     def test_get_preview_string_with_added_bracket_at_the_end_of_preview_string(
-        self, preview_string
+        self,
     ):
         preview_substring_indexes = [[0, 30], [38, 80], [89, 133]]
         content = (
@@ -845,10 +840,10 @@ class TestGetPreviewString:
             + " Darwin gradual geological [...]"
         )
 
-        assert preview_string(preview_substring_indexes, content) == expected_result
+        assert get_preview_string(preview_substring_indexes, content) == expected_result
 
     def test_get_preview_string_with_added_bracket_at_the_start_of_preview_string(
-        self, preview_string
+        self,
     ):
         preview_substring_indexes = [[6, 55], [63, 105], [114, 158]]
         content = (
@@ -862,10 +857,10 @@ class TestGetPreviewString:
             + " concept of Darwin gradual geological"
         )
 
-        assert preview_string(preview_substring_indexes, content) == expected_result
+        assert get_preview_string(preview_substring_indexes, content) == expected_result
 
     def test_get_preview_string_with_added_brackets_at_the_start_and_end_of_preview_string(
-        self, preview_string
+        self,
     ):
         preview_substring_indexes = [[6, 55], [63, 105], [114, 158]]
         content = (
@@ -881,17 +876,17 @@ class TestGetPreviewString:
             + " geological [...]"
         )
 
-        assert preview_string(preview_substring_indexes, content) == expected_result
+        assert get_preview_string(preview_substring_indexes, content) == expected_result
 
     def test_get_preview_string_with_empty_list_passed_for_preview_substring_indexes(
-        self, preview_string
+        self,
     ):
         preview_substring_indexes = []
         content = "Darwin as an eminent geologist, whose observations"
 
         expected_result = "preview not available"
 
-        assert preview_string(preview_substring_indexes, content) == expected_result
+        assert get_preview_string(preview_substring_indexes, content) == expected_result
 
 
 # Tests for add_html_tags_around_preview_string_parantheses
