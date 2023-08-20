@@ -141,13 +141,18 @@ class TestStoreSWordInSession:
 
 # Tests for format_search_word
 class TestFormatSearchWord:
-    def test_format_search_word_with_one_word_as_input(self, test_client):
+    def test_format_search_word_with_one_word_as_input(self):
 
         formatted_s_word = format_search_word("darwin")
         assert formatted_s_word == "darwin"
 
+    def test_format_search_word_with_one_word_as_input_and_extra_spaces_around(self):
+
+        formatted_s_word = format_search_word("  darwin ")
+        assert formatted_s_word == "darwin"
+
     def test_format_search_word_with_multiple_words_as_input_and_default_separator(
-        self, test_client
+        self,
     ):
 
         formatted_s_word = format_search_word("Victor Babeș")
@@ -156,15 +161,20 @@ class TestFormatSearchWord:
         formatted_s_word = format_search_word("ala bala portocala")
         assert formatted_s_word == "ala bala portocala"
 
-    def test_format_search_word_with_multiple_words_as_input_and_passed_separator(
-        self, test_client
-    ):
+    def test_format_search_word_with_multiple_words_as_input_and_passed_separator(self):
 
         formatted_s_word = format_search_word("Victor Babeș", "+")
         assert formatted_s_word == "Victor+Babeș"
 
         formatted_s_word = format_search_word("ala bala portocala", "+")
         assert formatted_s_word == "ala+bala+portocala"
+
+    def test_format_search_word_with_multiple_words_as_input_and_extra_spaces_around(
+        self,
+    ):
+
+        formatted_s_word = format_search_word(" ala bala portocala ")
+        assert formatted_s_word == "ala bala portocala"
 
 
 # Tests for get_distinct_magazine_names_and_count_for_searched_term

@@ -141,12 +141,13 @@ def format_search_word(s_word, separator=" "):
 
     This function returns the inputted search word if it is a single word, or the inputted
     search word concatenated with the separator sign if there are more than one term in s_word.
+    The function removes all leading and trailing whitespaces of the input.
     """
 
     s_word_list = s_word.split()
 
     if len(s_word_list) == 1:
-        formatted_s_word = s_word
+        formatted_s_word = s_word.strip()
     else:
         formatted_s_word = separator.join(s_word_list)
 
