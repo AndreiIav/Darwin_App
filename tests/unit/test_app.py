@@ -543,9 +543,13 @@ class TestGetIndexesForHighlightingSWord:
         self, get_indexes_for_highlighting_word
     ):
         s_word = "Mărţişor"
-        content = """cumpărând mărţişorul elaborat de Liga Apărării contra Atacurilor Aeriene, preţul fiind de 10 lei bucata,
-                mărţişor ce-1 vinde cu ocazia zilei de 1 Martie 1935. Acest mărţişor, însă cu panglicuţă"""
-        assert get_indexes_for_highlighting_word(s_word, content) == [10, 121, 181]
+        content = (
+            "cumpărând mărţişorul elaborat de Liga Apărării contra"
+            + " Atacurilor Aeriene, preţul fiind de 10 lei bucata,"
+            + " mărţişor ce-1 vinde cu ocazia zilei de 1 Martie 1935."
+            + " Acest mărţişor, însă cu panglicuţă"
+        )
+        assert get_indexes_for_highlighting_word(s_word, content) == [10, 105, 165]
 
 
 # Tests for get_distinct_s_word_variants
@@ -693,7 +697,11 @@ class TestGetAllStartAndEndIndexesForPreviewSubstrings:
     def test_get_all_start_and_end_indexes_for_preview_substrings_with_multiple_indexes(
         self, get_start_end_indexes_for_preview
     ):
-        content = """Darwin as an eminent geologist, whose observations and Darwin theories supported Charles Lyell's concept of Darwin gradual geological change. Publication of his journal of the voyage made Darwin famous as a popular author"""
+        content = (
+            "Darwin as an eminent geologist, whose observations and Darwin theories"
+            + " supported Charles Lyell's concept of Darwin gradual geological change. Publication"
+            + " of his journal of the voyage made Darwin famous as a popular author"
+        )
         preview_length = 10
         s_word_string_length = len("Darwin")
         indexes = [0, 55, 108, 188]
@@ -719,7 +727,11 @@ class TestGetAllStartAndEndIndexesForPreviewSubstrings:
     def test_get_all_start_and_end_indexes_for_preview_substrings_with_multiple_preview_length_values(
         self, get_start_end_indexes_for_preview, preview_length, expected_result
     ):
-        content = """Darwin as an eminent geologist, whose observations and Darwin theories supported Charles Lyell's concept of Darwin gradual geological change. Publication of his journal of the voyage made Darwin famous as a popular author"""
+        content = (
+            "Darwin as an eminent geologist, whose observations"
+            + " and Darwin theories supported Charles Lyell's concept of Darwin gradual geological"
+            + " change. Publication of his journal of the voyage made Darwin famous as a popular author"
+        )
         s_word_string_length = len("Darwin")
         indexes = [0, 55, 108, 188]
 
@@ -806,9 +818,15 @@ class TestGetPreviewString:
         self, preview_string
     ):
         preview_substring_indexes = [[0, 30], [38, 80], [89, 133]]
-        content = "Darwin as an eminent geologist, whose observations and Darwin theories supported Charles Lyell's concept of Darwin gradual geological"
+        content = (
+            "Darwin as an eminent geologist, whose observations and Darwin theories"
+            + " supported Charles Lyell's concept of Darwin gradual geological"
+        )
 
-        expected_result = "Darwin as an eminent geologist [...] observations and Darwin theories supported [...] Lyell's concept of Darwin gradual geological"
+        expected_result = (
+            "Darwin as an eminent geologist [...] observations and Darwin theories"
+            + " supported [...] Lyell's concept of Darwin gradual geological"
+        )
 
         assert preview_string(preview_substring_indexes, content) == expected_result
 
@@ -816,9 +834,16 @@ class TestGetPreviewString:
         self, preview_string
     ):
         preview_substring_indexes = [[0, 30], [38, 80], [89, 133]]
-        content = "Darwin as an eminent geologist, whose observations and Darwin theories supported Charles Lyell's concept of Darwin gradual geological change."
+        content = (
+            "Darwin as an eminent geologist, whose observations and Darwin theories"
+            + " supported Charles Lyell's concept of Darwin gradual geological change."
+        )
 
-        expected_result = "Darwin as an eminent geologist [...] observations and Darwin theories supported [...] Lyell's concept of Darwin gradual geological [...]"
+        expected_result = (
+            "Darwin as an eminent geologist [...] observations and"
+            + " Darwin theories supported [...] Lyell's concept of"
+            + " Darwin gradual geological [...]"
+        )
 
         assert preview_string(preview_substring_indexes, content) == expected_result
 
@@ -826,9 +851,16 @@ class TestGetPreviewString:
         self, preview_string
     ):
         preview_substring_indexes = [[6, 55], [63, 105], [114, 158]]
-        content = "as an eminent geologist. Darwin as an eminent geologist, whose observations and Darwin theories supported Charles Lyell's concept of Darwin gradual geological"
+        content = (
+            "as an eminent geologist. Darwin as an eminent geologist, whose observations"
+            + " and Darwin theories supported Charles Lyell's concept of Darwin gradual geological"
+        )
 
-        expected_result = "[...] eminent geologist. Darwin as an eminent geologist [...] observations and Darwin theories supported [...] Lyell's concept of Darwin gradual geological"
+        expected_result = (
+            "[...] eminent geologist. Darwin as an eminent geologist [...]"
+            + " observations and Darwin theories supported [...] Lyell's"
+            + " concept of Darwin gradual geological"
+        )
 
         assert preview_string(preview_substring_indexes, content) == expected_result
 
@@ -836,9 +868,18 @@ class TestGetPreviewString:
         self, preview_string
     ):
         preview_substring_indexes = [[6, 55], [63, 105], [114, 158]]
-        content = "as an eminent geologist. Darwin as an eminent geologist, whose observations and Darwin theories supported Charles Lyell's concept of Darwin gradual geological change"
+        content = (
+            "as an eminent geologist. Darwin as an eminent geologist, whose"
+            + " observations and Darwin theories supported Charles Lyell's"
+            + " concept of Darwin gradual geological change"
+        )
 
-        expected_result = "[...] eminent geologist. Darwin as an eminent geologist [...] observations and Darwin theories supported [...] Lyell's concept of Darwin gradual geological [...]"
+        expected_result = (
+            "[...] eminent geologist. Darwin as an eminent"
+            + " geologist [...] observations and Darwin theories"
+            + " supported [...] Lyell's concept of Darwin gradual"
+            + " geological [...]"
+        )
 
         assert preview_string(preview_substring_indexes, content) == expected_result
 
@@ -909,9 +950,11 @@ class TestGetPreviewsForPageId:
 
         expected_page_id = page_id
         expected_preview_text = (
-            "<b><i>[...]</i></b> două natură. Acum un an s'a făcut aci la Ateneu, experienţa. Intr'o conferinţă de un merit real,"
-            + " d. <mark>Ştefan Michăilescu</mark>, care trata despre determinism de o dată a început să vorbească- cu mult"
-            + " emfas despre teatrul românesc <b><i>[...]</i></b>"
+            "<b><i>[...]</i></b> două natură. Acum un an s'a făcut aci"
+            + " la Ateneu, experienţa. Intr'o conferinţă de un merit real,"
+            + " d. <mark>Ştefan Michăilescu</mark>, care trata despre"
+            + " determinism de o dată a început să vorbească- cu mult emfas"
+            + " despre teatrul românesc <b><i>[...]</i></b>"
         )
 
         res = get_previews_for_page_id(
