@@ -74,7 +74,7 @@ class TestGetMagazineDetails:
     def test_get_magazine_details_with_existent_magazine_id(
         self, test_client, magazine_id
     ):
-        test_magazine_details = [("ANUL 1 1868", 24, 759), ("ANUL 2 1871", 2, 72)]
+        test_magazine_details = [("ANUL 1 1868", 24, 757), ("ANUL 2 1871", 2, 72)]
 
         for index, magazine_detail in enumerate(get_magazine_details(magazine_id)):
             assert test_magazine_details[index] == magazine_detail

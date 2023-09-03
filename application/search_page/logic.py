@@ -3,6 +3,7 @@ from ..models import (
     Magazines,
     MagazineYear,
     MagazineNumber,
+    MagazineNumberContent,
     MagazineNumberContentFTS,
     db,
 )
@@ -25,8 +26,8 @@ def get_details_for_searched_term(formatted_s_word):
 
     This function returns a SQLAlchemy Query object that retrieves specific columns
     (Magazines.name, MagazineYear.year, MagazineNumber.magazine_number,
-    MagazineNumberContentFTS.magazine_page, MagazineNumber.magazine_number_link,
-    and MagazineNumberContentFTS.rowid) from multiple tables based on a provided search
+    MagazineNumberContent.magazine_page, MagazineNumber.magazine_number_link,
+    and MagazineNumberContent.id) from multiple tables based on a provided search
     term.
     The search is performed on an FTS5 table, which enables fast text search capabilities.
     The Query object can be iterated to access the results.
@@ -37,15 +38,19 @@ def get_details_for_searched_term(formatted_s_word):
             Magazines.name,
             MagazineYear.year,
             MagazineNumber.magazine_number,
-            MagazineNumberContentFTS.magazine_page,
+            MagazineNumberContent.magazine_page,
             MagazineNumber.magazine_number_link,
-            MagazineNumberContentFTS.rowid,
+            MagazineNumberContent.id,
         )
         .join(MagazineYear, Magazines.id == MagazineYear.magazine_id)
         .join(MagazineNumber, MagazineYear.id == MagazineNumber.magazine_year_id)
         .join(
+            MagazineNumberContent,
+            MagazineNumber.id == MagazineNumberContent.magazine_number_id,
+        )
+        .join(
             MagazineNumberContentFTS,
-            MagazineNumber.id == MagazineNumberContentFTS.magazine_number_id,
+            MagazineNumberContent.id == MagazineNumberContentFTS.rowid,
         )
         .filter(
             MagazineNumberContentFTS.magazine_content.match(f'"{formatted_s_word}"*')
@@ -116,8 +121,12 @@ def get_distinct_magazine_names_and_count_for_searched_term(formatted_s_word):
         .join(MagazineYear, Magazines.id == MagazineYear.magazine_id)
         .join(MagazineNumber, MagazineYear.id == MagazineNumber.magazine_year_id)
         .join(
+            MagazineNumberContent,
+            MagazineNumber.id == MagazineNumberContent.magazine_number_id,
+        )
+        .join(
             MagazineNumberContentFTS,
-            MagazineNumber.id == MagazineNumberContentFTS.magazine_number_id,
+            MagazineNumberContent.id == MagazineNumberContentFTS.rowid,
         )
         .filter(
             MagazineNumberContentFTS.magazine_content.match(f'"{formatted_s_word}"*')
@@ -156,7 +165,7 @@ def format_search_word(s_word, separator=" "):
 
 def get_magazine_content_details(page_id=0):
     """
-    Retrieve the content of a magazine page from the MagazineNumberContentFTS table based on the
+    Retrieve the content of a magazine page from the MagazineNumberContent table based on the
     provided page_id.
 
     Args:
@@ -168,8 +177,8 @@ def get_magazine_content_details(page_id=0):
     """
 
     magazine_content_details = db.session.query(
-        MagazineNumberContentFTS.magazine_content
-    ).filter(MagazineNumberContentFTS.rowid == page_id)
+        MagazineNumberContent.magazine_content
+    ).filter(MagazineNumberContent.id == page_id)
 
     # Check that the Query object is not empty
     if magazine_content_details.first():
