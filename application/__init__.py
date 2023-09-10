@@ -1,4 +1,4 @@
-from flask import Flask
+from flask import Flask, render_template
 from flask_sqlalchemy import SQLAlchemy
 import os
 
@@ -24,6 +24,7 @@ def init_app():
 
     initialize_extensions(app)
     register_blueprints(app)
+    register_error_pages(app)
 
     return app
 
@@ -45,3 +46,9 @@ def register_blueprints(app):
 
 def initialize_extensions(app):
     db.init_app(app)
+
+
+def register_error_pages(app):
+    @app.errorhandler(404)
+    def page_not_found(e):
+        return render_template("404.html"), 404
