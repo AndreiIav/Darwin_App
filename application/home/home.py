@@ -1,9 +1,10 @@
-from flask import Blueprint, request
-
-from flask import render_template, redirect, url_for
-
+from flask import Blueprint, request, render_template, redirect, url_for, abort
 from application.forms import SearchForm
-from .logic import get_existent_magazines, get_magazine_details, get_magazine_name
+from application.home.logic import (
+    get_existent_magazines,
+    get_magazine_details,
+    get_magazine_name,
+)
 
 
 # Blueprint Configuration
@@ -35,7 +36,7 @@ def show_magazine_details():
     magazine_name = get_magazine_name(magazine_id)
 
     if magazine_name is None:
-        return "Page doesn't exist"
+        abort(404)
 
     magazine_details = get_magazine_details(magazine_id)
 
