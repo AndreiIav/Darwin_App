@@ -1,0 +1,13 @@
+{% extends "base.html" %}
+
+{% block search_form%}
+<h1 class="errorpage-title">No results found.</h1>
+<div class="errorpage-section">
+    {% if not_minimum_s_word_length %}
+    <h4>The search term must be at least four characters long.</h4>
+    {% elif searched_term %}
+    <h4>No results were found for "{{searched_term}}".</h4>
+    {% endif %}
+    <h4>Back to <a href="{{ url_for('home_bp.search_form') }}">Darwin App</a></h4>
+</div>
+{% endblock%}
