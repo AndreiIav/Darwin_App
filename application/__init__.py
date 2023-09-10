@@ -1,3 +1,4 @@
+import os
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
 
@@ -7,7 +8,8 @@ db = SQLAlchemy()
 def init_app():
 
     app = Flask(__name__, instance_relative_config=False)
-    app.config.from_object("config.DevelopmentConfig")
+    config_type = os.getenv("CONFIG_TYPE", default="config.DevelopmentConfig")
+    app.config.from_object(config_type)
 
     db.init_app(app)
 
