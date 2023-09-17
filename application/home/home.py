@@ -45,3 +45,13 @@ def show_magazine_details():
         magazine_name=magazine_name,
         magazine_details=magazine_details,
     )
+
+
+@home_bp.route("/contact")
+def show_contact_page():
+    return render_template("contact.html")
+
+
+@home_bp.route("/about")
+def show_about_page():
+    return render_template("about.html")

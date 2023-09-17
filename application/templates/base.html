@@ -10,9 +10,9 @@
     <header>
         <nav>
             <ul>
-                <li><a href="{{ url_for('home_bp.search_form') }}">Home</a></li>
-                <li><a>About</a></li>
-                <li><a>Contact</a></li>
+                <li><a href="{{ url_for('home_bp.search_form')}}">Home</a></li>
+                <li><a href="{{url_for('home_bp.show_about_page')}}">About</a></li>
+                <li><a href="{{ url_for('home_bp.show_contact_page')}}">Contact</a></li>
             </ul>
         </nav>
     </header>

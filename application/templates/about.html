@@ -1,0 +1,10 @@
+{% extends "base.html" %}
+
+{% block title %} About Page {% endblock %}
+
+{% block content%}
+<h1>Things this site is about:</h1>
+<div>
+    <h4>Back to <a href="{{ url_for('home_bp.search_form') }}">Darwin App</a></h4>
+</div>
+{% endblock%}
