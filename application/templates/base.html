@@ -7,6 +7,18 @@
 </head>
 
 <body>
+    <header>
+        <nav>
+            <ul>
+                <li><a href="{{ url_for('home_bp.search_form') }}">Home</a></li>
+                <li><a>About</a></li>
+                <li><a>Contact</a></li>
+            </ul>
+        </nav>
+    </header>
+
+
+
     {% block search_form %}{% endblock %}
     {% block content %} {% endblock %}
 </body>
