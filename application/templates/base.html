@@ -1,7 +1,9 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 
 <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{% block title%}{% endblock %}</title>
     {% block css %}{% endblock %}
 </head>
@@ -17,10 +19,14 @@
         </nav>
     </header>
 
+    <main>
+        {% block search_form %}{% endblock %}
+        {% block content %} {% endblock %}
+    </main>
 
-
-    {% block search_form %}{% endblock %}
-    {% block content %} {% endblock %}
+    <footer>
+        <small>BCU-Search - 2023</small>
+    </footer>
 </body>
 
 </html>
