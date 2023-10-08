@@ -3,7 +3,7 @@
 {% block title %}BCU-Search{% endblock %}
 
 {% block search_form %}
-<div class="container text-center py-2">
+<div class="container text-center py-1">
     <p1 class="display-6">Please introduce a search term in the box</p1><br>
     <p1 class="h5">(the search term can have at least 4 characters and at most 200)</p1>
     <form action="{{ url_for('search_page_bp.search_for_term') }}">
@@ -12,7 +12,7 @@
                 {{ search_form.search_box(class_="form-control") }}
             </div>
             <div class="col-xs py-1">
-                {{ search_form.submit(class_="btn btn-primary mb-3")}}
+                {{ search_form.submit(class_="btn btn-primary mb-1")}}
             </div>
         </div>
     </form>
@@ -20,19 +20,21 @@
 {% endblock %}
 
 {% block content %}
-<h1> The submited term will be searched in the following magazines: </h1>
-<ul>
-    {% for res in existent_magazines %}
-    <form action="{{url_for('home_bp.show_magazine_details')}}" target="_blank">
-        <div class="results">
-            <button>
-                <p1>{{ res[0] }} </p1><br>
-                <input type="hidden" id="magazine_id" name="magazine_id" value={{res[1]}}>
-            </button type="submit">
+<div class="container-fluid text-center py-1">
+    <h1 class="display-6"> The submited term will be searched in the following magazines </h1>
+    <p1 class="h5 py-1">(you can click on any magazine to see details about it)</p1>
+    <div class="py-2">
+        {% for res in existent_magazines %}
+        <div class="my-2">
+            <form action="{{url_for('home_bp.show_magazine_details')}}" target="_blank">
+                <button type="submit" class="btn btn-outline-dark border-0">
+                    <p1>{{ res[0] }} </p1><br>
+                    <input type="hidden" id="magazine_id" name="magazine_id" value={{res[1]}}>
+                </button>
         </div>
-    </form>
-    {% endfor %}
-</ul>
-
+        </form>
+        {% endfor %}
+    </div>
+</div>
 
 {% endblock %}
