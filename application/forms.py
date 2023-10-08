@@ -10,7 +10,11 @@ class SearchForm(FlaskForm):
         [
             DataRequired(),
             Length(
-                min=4, message=("The searched term must be greater than 3 characters.")
+                min=4,
+                max=200,
+                message=(
+                    "The searched term must be greater than 3 characters and lower than 200."
+                ),
             ),
         ],
     )
