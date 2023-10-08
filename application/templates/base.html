@@ -10,13 +10,19 @@
     {% block css %}{% endblock %}
 </head>
 
-<body class="container-fluid p-2 text-bg-light fw-light">
+<body class="container-fluid text-bg-light">
     <header>
-        <nav>
-            <ul>
-                <li><a href="{{ url_for('home_bp.search_form')}}">Home</a></li>
-                <li><a href="{{url_for('home_bp.show_about_page')}}">About</a></li>
-                <li><a href="{{ url_for('home_bp.show_contact_page')}}">Contact</a></li>
+        <nav class="container-fluid text-bg-info"> <!-- add styling  -->
+            <ul class="nav justify-content-center">
+                <li class="nav-item">
+                    <a class="nav-link text-light" href="{{ url_for('home_bp.search_form')}}">Home</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link text-light" href="{{url_for('home_bp.show_about_page')}}">About</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link text-light" href="{{ url_for('home_bp.show_contact_page')}}">Contact</a>
+                </li>
             </ul>
         </nav>
     </header>
