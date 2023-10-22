@@ -25,16 +25,25 @@
 
     <div class="row">
         <div class="col-sm-4">
-            <form action="{{url_for('search_page_bp.search_for_term')}}">
-                <label for="magazine_filter">Filter Results by Magazine Name</label>
-                <select name="magazine_filter" id="magazine_filter">
-                    {% for magazine_name, count in distinct_magazines_and_count %}
-                    <option value="{{magazine_name}}">{{magazine_name}}, results: {{count}}</option>
-                    {% endfor %}
-                </select>
-                <input type="submit" value="Submit">
-                <input type="hidden" id="search_box" name="search_box" value="{{session['s_word']}}">
-            </form>
+            <button class="btn btn-primary p-2" type="button" data-bs-toggle="collapse"
+                data-bs-target="#collapseCountResults">
+                Number of results displayed by magazine name <br>
+                (click to expand or collapse)
+            </button>
+            <div class="collapse show" id="collapseCountResults">
+                <p1 class="h5 p-2">(you can click on any magazine to filter the results)</p1>
+                {% for magazine_name, count in distinct_magazines_and_count %}
+                <div class="my-1">
+                    <form action="{{url_for('search_page_bp.search_for_term')}}">
+                        <button class="btn btn-outline-dark border-0" type="submit" id="magazine_filter"
+                            name="magazine_filter" value="{{magazine_name}}">
+                            <p1>{{magazine_name}}, results: {{count}}</p1><br>
+                            <input type="hidden" id="search_box" name="search_box" value="{{session['s_word']}}">
+                        </button>
+                    </form>
+                </div>
+                {% endfor %}
+            </div>
         </div>
 
         <div class="col-sm-8">
