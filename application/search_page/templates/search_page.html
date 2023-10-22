@@ -8,44 +8,59 @@
 
 
 {% block content %}
-<div>
-    <p><a href="{{ url_for('home_bp.search_form') }}">Go back to home page</a></p>
-    {% if magazine_filter %}
-    <h1>{{ details_for_searched_term.total }} results found for "{{ searched_term }}" in "{{ magazine_filter }}": </h1>
-    {% else %}
-    <h1>{{ details_for_searched_term.total }} results found for "{{ searched_term }}" : </h1>
-    {% endif %}
-
-    <div>
-        <form action="{{url_for('search_page_bp.search_for_term')}}">
-            <label for="magazine_filter">Filter Results by Magazine Name</label>
-            <select name="magazine_filter" id="magazine_filter">
-                {% for magazine_name, count in distinct_magazines_and_count %}
-                <option value="{{magazine_name}}">{{magazine_name}}, results: {{count}}</option>
-                {% endfor %}
-            </select>
-            <input type="submit" value="Submit">
-            <input type="hidden" id="search_box" name="search_box" value="{{session['s_word']}}">
-        </form>
+<div class="container-fluid text-center py-1">
+    <div class="py-2">
+        <p><a href="{{ url_for('home_bp.search_form') }}">Go back to home page</a></p>
     </div>
-    <ul>
-        {% for name, year, magazine_number, magazine_page, magazine_number_link, rowid in details_for_searched_term%}
-        <div class="results">
-            <h1>{{name}}</h1>
-            <h1>{{year}}</h1>
-            <h1>{{magazine_number}}</h1>
-            <h1>Page {{magazine_page}}</h1>
-            <h1>Link: <a href="{{magazine_number_link}}" target="_blank">{{magazine_number_link}}</a></h1>
-            <div>
-                {% for preview_rowid, preview_content in previews %}
-                {% if preview_rowid == rowid%}
-                {{preview_content}}
-                {% endif %}
-                {% endfor %}
-            </div>
+
+    <div class="py-2">
+        {% if magazine_filter %}
+        <p1 class="display-6">{{ details_for_searched_term.total }} results found for "{{ searched_term }}" in "{{
+            magazine_filter }}":
+        </p1>
+        {% else %}
+        <p1 class="display-6">{{ details_for_searched_term.total }} results found for "{{ searched_term }}" : </p1>
+        {% endif %}
+    </div>
+
+    <div class="row">
+        <div class="col-sm-4">
+            <form action="{{url_for('search_page_bp.search_for_term')}}">
+                <label for="magazine_filter">Filter Results by Magazine Name</label>
+                <select name="magazine_filter" id="magazine_filter">
+                    {% for magazine_name, count in distinct_magazines_and_count %}
+                    <option value="{{magazine_name}}">{{magazine_name}}, results: {{count}}</option>
+                    {% endfor %}
+                </select>
+                <input type="submit" value="Submit">
+                <input type="hidden" id="search_box" name="search_box" value="{{session['s_word']}}">
+            </form>
         </div>
-        {% endfor %}
-    </ul>
+
+        <div class="col-sm-8">
+            <ul>
+                {% for name, year, magazine_number, magazine_page, magazine_number_link, rowid in
+                details_for_searched_term%}
+                <div class="results">
+                    <h1>{{name}}</h1>
+                    <h1>{{year}}</h1>
+                    <h1>{{magazine_number}}</h1>
+                    <h1>Page {{magazine_page}}</h1>
+                    <h1>Link: <a href="{{magazine_number_link}}" target="_blank">{{magazine_number_link}}</a></h1>
+                    <div>
+                        {% for preview_rowid, preview_content in previews %}
+                        {% if preview_rowid == rowid%}
+                        {{preview_content}}
+                        {% endif %}
+                        {% endfor %}
+                    </div>
+                </div>
+                {% endfor %}
+            </ul>
+        </div>
+    </div>
+
+
 </div>
 
 {% for page_num in details_for_searched_term.iter_pages(left_edge=1, right_edge=1, left_current=1, right_current=1) %}
