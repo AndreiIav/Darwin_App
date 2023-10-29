@@ -22,13 +22,12 @@
 {% block content %}
 <div class="container-fluid text-center py-1">
     <h1 class="display-6"> The submited term will be searched in the following magazines </h1>
-    <p1 class="h5 py-1">(you can click on any magazine to see details about it)</p1>
     <div class="py-2">
         {% for res in existent_magazines %}
         <div class="my-2">
-            <form action="{{url_for('home_bp.show_magazine_details')}}" target="_blank">
+            <form action="{{url_for('home_bp.show_magazine_details')}}" target="_blank" title="Check magazine details">
                 <button type="submit" class="btn btn-outline-dark border-0">
-                    <p1>{{ res[0] }} </p1><br>
+                    <p1><i class="bi bi-box-arrow-up-right"></i> {{ res[0] }} </p1><br>
                     <input type="hidden" id="magazine_id" name="magazine_id" value={{res[1]}}>
                 </button>
             </form>
