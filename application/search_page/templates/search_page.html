@@ -13,13 +13,18 @@
         <p><a href="{{ url_for('home_bp.search_form') }}">Go back to home page</a></p>
     </div>
 
-    <div class="py-2">
+    <div class="py-2 my-2">
         {% if magazine_filter %}
-        <p1 class="display-6">{{ details_for_searched_term.total }} results found for "{{ searched_term }}" in "{{
-            magazine_filter }}":
+        <p1 class="display-6">
+            <span class="fw-bold">{{ details_for_searched_term.total }}</span> results found for
+            <span class="text-primary">{{ searched_term }}</span> in
+            <span class="fw-bold">{{magazine_filter}}</span>
         </p1>
         {% else %}
-        <p1 class="display-6">{{ details_for_searched_term.total }} results found for "{{ searched_term }}" : </p1>
+        <p1 class="display-6">
+            <span class="fw-bold">{{ details_for_searched_term.total }}</span> results found for
+            <span class="text-primary">{{searched_term }}</span>
+        </p1>
         {% endif %}
     </div>
 
