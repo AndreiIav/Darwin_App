@@ -27,17 +27,16 @@
         <div class="col-sm-4">
             <button class="btn btn-primary p-2" type="button" data-bs-toggle="collapse"
                 data-bs-target="#collapseCountResults">
-                Number of results displayed by magazine name <br>
-                (click to expand or collapse)
+                <i class="bi bi-view-list"></i>
+                Number of results displayed by magazine name
             </button>
             <div class="collapse show" id="collapseCountResults">
-                <p1 class="h5 p-2">(you can click on any magazine to filter the results)</p1>
                 {% for magazine_name, count in distinct_magazines_and_count %}
                 <div class="my-1">
                     <form action="{{url_for('search_page_bp.search_for_term')}}">
                         <button class="btn btn-outline-dark border-0" type="submit" id="magazine_filter"
                             name="magazine_filter" value="{{magazine_name}}">
-                            <p1>{{magazine_name}}, results: {{count}}</p1><br>
+                            <p1><i class="bi bi-link"></i> {{magazine_name}} ({{count}} results)</p1><br>
                             <input type="hidden" id="search_box" name="search_box" value="{{session['s_word']}}">
                         </button>
                     </form>
