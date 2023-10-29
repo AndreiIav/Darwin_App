@@ -54,13 +54,20 @@
             <ul>
                 {% for name, year, magazine_number, magazine_page, magazine_number_link, rowid in
                 details_for_searched_term%}
-                <div class="results">
-                    <h1>{{name}}</h1>
-                    <h1>{{year}}</h1>
-                    <h1>{{magazine_number}}</h1>
-                    <h1>Page {{magazine_page}}</h1>
-                    <h1>Link: <a href="{{magazine_number_link}}" target="_blank">{{magazine_number_link}}</a></h1>
-                    <div>
+                <div class="row border-bottom border-success me-1">
+                    <div class="col-sm-6 text-bg-light vstack gap-1 py-2">
+                        <p1 class="lead text-center">{{name}}</p1>
+                        <p1 class="lead text-center">{{year}}</p1>
+                        <p1 class="lead text-center">{{magazine_number}}</p1>
+                        <p1 class="lead text-center">Page {{magazine_page}}</p1>
+                        <p1 class="lead text-center">
+                            <a href="{{magazine_number_link}}" target="_blank" title="Access magazine pdf on BCU site"
+                                class="link-offset-2 link-offset-3-hover link-underline link-underline-opacity-0 link-underline-opacity-75-hover">
+                                <i class="bi bi-box-arrow-up-right"></i> Open Magazine
+                            </a>
+                        </p1>
+                    </div>
+                    <div class="col-sm-6 text-start py-2">
                         {% for preview_rowid, preview_content in previews %}
                         {% if preview_rowid == rowid%}
                         {{preview_content}}
