@@ -83,14 +83,67 @@
 
 </div>
 
-{% for page_num in details_for_searched_term.iter_pages(left_edge=1, right_edge=1, left_current=1, right_current=1) %}
-{% if page_num %}
-<a
-    href="{{ url_for('search_page_bp.search_for_term', magazine_filter=magazine_filter, search_box=searched_term, page=page_num)}}">{{
-    page_num}}</a>
-{% else %}
-...
-{% endif %}
-{% endfor %}
+<nav aria-label="Page navigation">
+    <ul class="pagination justify-content-center">
+        {% if details_for_searched_term.has_prev %}
+        <li class="page-item">
+            <a class="page-link"
+                href="{{ url_for('search_page_bp.search_for_term', magazine_filter=magazine_filter, search_box=searched_term, page=1) }}">First</a>
+        </li>
+        <li class="page-item">
+            <a class="page-link"
+                href="{{ url_for('search_page_bp.search_for_term', magazine_filter=magazine_filter, search_box=searched_term, page=details_for_searched_term.prev_num) }}">Previous</a>
+        </li>
+        {% else %}
+        <li class="page-item disabled">
+            <span class="page-link">First</span>
+        </li>
+        <li class="page-item disabled">
+            <span class="page-link">Previous</span>
+        </li>
+        {% endif %}
+
+
+        {% for page_num in details_for_searched_term.iter_pages(left_edge=1, right_edge=1, left_current=1,
+        right_current=1) %}
+        {% if page_num %}
+        {% if page_num != details_for_searched_term.page %}
+        <li class="page-item">
+            <a class="page-link"
+                href="{{ url_for('search_page_bp.search_for_term', magazine_filter=magazine_filter, search_box=searched_term, page=page_num)}}">{{
+                page_num}}</a>
+        </li>
+        {% else %}
+        <li class="page-item active" aria-current="page">
+            <span class="page-link">{{ page_num }} <span class="sr-only"></span></span>
+        </li>
+        {% endif %}
+        {% else %}
+        <li class="page-item disabled">
+            <span class="page-link">...</span>
+        </li>
+        {% endif %}
+        {% endfor %}
+
+        {% if details_for_searched_term.has_next %}
+        <li class="page-item">
+            <a class="page-link"
+                href="{{ url_for('search_page_bp.search_for_term', magazine_filter=magazine_filter, search_box=searched_term, page=details_for_searched_term.next_num) }}">Next</a>
+        </li>
+        <li class="page-item">
+            <a class="page-link"
+                href="{{ url_for('search_page_bp.search_for_term', magazine_filter=magazine_filter, search_box=searched_term, page=details_for_searched_term.pages) }}">Last</a>
+        </li>
+        {% else %}
+        <li class="page-item disabled">
+            <span class="page-link">Next</span>
+        </li>
+        <li class="page-item disabled">
+            <span class="page-link">Last</span>
+        </li>
+        {% endif %}
+
+    </ul>
+</nav>
 
 {% endblock %}
