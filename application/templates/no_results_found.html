@@ -1,15 +1,17 @@
 {% extends "base.html" %}
 
-{% block title %} No Results Found-BCU-Search {% endblock %}
+{% block title %} No Results Found {% endblock %}
 
 {% block content%}
-<h1>No results found.</h1>
-<div>
-    {% if not_minimum_s_word_length %}
-    <h4>The search term must be at least four characters long.</h4>
-    {% elif searched_term %}
-    <h4>No results were found for "{{searched_term}}".</h4>
-    {% endif %}
-    <h4>Back to <a href="{{ url_for('home_bp.search_form') }}">Darwin App</a></h4>
+<div class="container-fluid text-center py-1">
+    <p1 class="display-6">No results found.</p1>
+    <div>
+        {% if not_minimum_s_word_length %}
+        <h5 class="h5">The search term can have at least 4 characters and at most 200.</h5>
+        {% elif searched_term %}
+        <h5 class="h5">No results were found for <span class="fw-bold">{{searched_term}}</span>.</h5>
+        {% endif %}
+        <h5 class="h5">Back to <a href="{{ url_for('home_bp.search_form') }}">search page</a>.</h5>
+    </div>
 </div>
 {% endblock%}
