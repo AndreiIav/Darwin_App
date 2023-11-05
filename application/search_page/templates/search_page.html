@@ -17,13 +17,13 @@
         {% if magazine_filter %}
         <p1 class="display-6">
             <span class="fw-bold">{{ details_for_searched_term.total }}</span> results found for
-            <span class="text-success">{{ searched_term }}</span> in
+            <span class="fw-bold">{{ searched_term }}</span> in
             <span class="fw-bold">{{magazine_filter}}</span>
         </p1>
         {% else %}
         <p1 class="display-6">
             <span class="fw-bold">{{ details_for_searched_term.total }}</span> results found for
-            <span class="text-success">{{searched_term }}</span>
+            <span class="fw-bold">{{searched_term }}</span>
         </p1>
         {% endif %}
     </div>
