@@ -10,7 +10,7 @@ def test_results_page_get(test_client):
 
     assert response.status_code == 200
     assert b"Go back to home page" in response.data
-    assert b"Filter Results by Magazine Name" in response.data
+    assert b"Number of results displayed by magazine name" in response.data
 
 
 def test_results_page_post(test_client):
