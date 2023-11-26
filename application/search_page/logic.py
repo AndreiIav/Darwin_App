@@ -33,6 +33,8 @@ def get_details_for_searched_term(formatted_s_word):
     The Query object can be iterated to access the results.
     """
 
+    expression_to_search = '"' + formatted_s_word + '"' + '*'
+
     all_details_for_searched_term = (
         db.session.query(
             Magazines.name,
@@ -52,9 +54,7 @@ def get_details_for_searched_term(formatted_s_word):
             MagazineNumberContentFTS,
             MagazineNumberContent.id == MagazineNumberContentFTS.rowid,
         )
-        .filter(
-            MagazineNumberContentFTS.magazine_content.match(f'"{formatted_s_word}"*')
-        )
+        .filter(MagazineNumberContentFTS.magazine_content.match(expression_to_search))
     )
 
     return all_details_for_searched_term
@@ -116,6 +116,8 @@ def get_distinct_magazine_names_and_count_for_searched_term(formatted_s_word):
     The Query object can be iterated to access the magazine names and their respective search term counts.
     """
 
+    expression_to_search = '"' + formatted_s_word + '"' + '*'
+
     distinct_magazine_names_and_count_for_searched_term = (
         db.session.query(Magazines.name, func.count(Magazines.name))
         .join(MagazineYear, Magazines.id == MagazineYear.magazine_id)
@@ -128,9 +130,7 @@ def get_distinct_magazine_names_and_count_for_searched_term(formatted_s_word):
             MagazineNumberContentFTS,
             MagazineNumberContent.id == MagazineNumberContentFTS.rowid,
         )
-        .filter(
-            MagazineNumberContentFTS.magazine_content.match(f'"{formatted_s_word}"*')
-        )
+        .filter(MagazineNumberContentFTS.magazine_content.match(expression_to_search))
         .group_by(Magazines.name)
     )
 
