@@ -163,6 +163,30 @@ def format_search_word(s_word, separator=" "):
     return formatted_s_word
 
 
+def check_characters_that_break_sqlalchemy_query(formatted_s_word):
+
+    """
+    Check if formatted input contains characters that break sqlalchemy fts search query.
+
+    Args:
+        formatted_s_word (str): The string to be checked.
+
+    Returns:
+        contains_character_that_breaks_sqlalchemy_query (bool)
+    """
+
+    contains_character_that_breaks_sqlalchemy_query = bool()
+
+    if formatted_s_word.count('"') % 2 != 0:
+        contains_single_double_quote = True
+    else:
+        contains_single_double_quote = False
+
+    contains_character_that_breaks_sqlalchemy_query = contains_single_double_quote
+
+    return contains_character_that_breaks_sqlalchemy_query
+
+
 def get_magazine_content_details(page_id=0):
     """
     Retrieve the content of a magazine page from the MagazineNumberContent table based on the
