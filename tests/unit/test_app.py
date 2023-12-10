@@ -177,6 +177,20 @@ class TestFormatSearchWord:
         formatted_s_word = format_search_word(" ala bala portocala ")
         assert formatted_s_word == "ala bala portocala"
 
+    @pytest.mark.parametrize(
+        "input, expected",
+        [
+            ('"Darwin"', 'Darwin'),
+            ('Darwin"', 'Darwin'),
+            ('Charles " Darwin', 'Charles Darwin'),
+            ('Charles"Darwin', 'CharlesDarwin'),
+            ('Charles "Darwin', 'Charles Darwin'),
+        ],
+    )
+    def test_format_search_word_with_double_quotes(self, input, expected):
+        formatted_s_word = format_search_word(input)
+        assert formatted_s_word == expected
+
 
 # Tests for get_distinct_magazine_names_and_count_for_searched_term
 class TestGetDistinctMagazineNamesAndCountForSearchedTerm:
