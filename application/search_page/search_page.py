@@ -28,7 +28,7 @@ def search_for_term():
     request_s_word = request.args.get("search_box")
     request_s_word = format_search_word(request_s_word)
     s_word = store_s_word_in_session(session_s_word, request_s_word)
-    if len(s_word) < 4:
+    if len(s_word) < 4 or len(s_word) > 200:
         return render_template("no_results_found.html", not_minimum_s_word_length=True)
 
     preview_length = current_app.config["PREVIEW_SUBSTRING_LENGTH"]
