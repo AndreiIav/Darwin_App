@@ -8,7 +8,6 @@ from application.search_page.logic import (
     format_search_word,
     store_s_word_in_session,
     get_previews_for_page_id,
-    check_characters_that_break_sqlalchemy_query,
 )
 
 
@@ -36,11 +35,6 @@ def search_for_term():
     page = request.args.get("page", 1, type=int)
 
     formatted_s_word = format_search_word(s_word, "+")
-
-    # check if the input contains characters that break the fts
-    # query (like: a single double quote(i.e., 'iulia"'))
-    if check_characters_that_break_sqlalchemy_query(formatted_s_word):
-        abort(422)
 
     distinct_magazines_and_count = (
         get_distinct_magazine_names_and_count_for_searched_term(

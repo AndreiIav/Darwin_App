@@ -26,7 +26,6 @@ from application.search_page.logic import (
     get_preview_string,
     get_previews_for_page_id,
     add_html_tags_around_preview_string_parantheses,
-    check_characters_that_break_sqlalchemy_query,
 )
 
 # Tests for get_existent_magazines()
@@ -983,31 +982,3 @@ class TestGetPreviewsForPageId:
 
         assert res[0][0] == expected_page_id
         assert res[0][1] == expected_preview_text
-
-
-# Tests for check_characters_that_break_sqlalchemy_query
-class TestCheckCharactersThatBreakSqlalchemyQuery:
-    def test_check_characters_that_break_sqlalchemy_query_returns_True_when_a_single_double_quote(
-        self, test_client
-    ):
-        input = 'Iulia"'
-        res = check_characters_that_break_sqlalchemy_query(input)
-
-        assert res is True
-
-    def test_check_characters_that_break_sqlalchemy_query_returns_False_when_double_double_quotes(
-        self, test_client
-    ):
-        input = '"Iulia"'
-        res = check_characters_that_break_sqlalchemy_query(input)
-
-        assert res is False
-
-    def test_check_characters_that_break_sqlalchemy_query_returns_False_when_no_double_quotes(
-        self, test_client
-    ):
-
-        input = 'Iulia'
-        res = check_characters_that_break_sqlalchemy_query(input)
-
-        assert res is False
