@@ -1,7 +1,6 @@
 venv
 instance
 __pycache__
-requirements.txt
 test.db
 app.db
 access_db.py
