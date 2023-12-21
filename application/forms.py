@@ -18,4 +18,3 @@ class SearchForm(FlaskForm):
             ),
         ],
     )
-    submit = SubmitField("Search")

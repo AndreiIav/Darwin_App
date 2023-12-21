@@ -20,9 +20,6 @@ def search_form():
     existent_magazines = get_existent_magazines()
     placeholder_text_for_search_bar = "the search term can have at least 4 characters and at most 200 and can be composed of multiple words"
 
-    if search_form.validate_on_submit():
-        return redirect(url_for("search_for_term"))
-
     return render_template(
         "home_page.html",
         search_form=search_form,
