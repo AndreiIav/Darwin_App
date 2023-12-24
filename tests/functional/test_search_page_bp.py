@@ -73,7 +73,7 @@ def test_results_page_with_accepted_special_characters(test_client):
 
 def test_results_page_with_unaccepted_special_characters(test_client):
 
-    s_word = "()&/\|~{}[]+=<>"
+    s_word = r"()&/\|~{}[]+=<>"
 
     response = test_client.get("/results/search", query_string={"search_box": s_word})
 

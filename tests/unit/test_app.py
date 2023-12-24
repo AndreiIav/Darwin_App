@@ -184,7 +184,7 @@ class TestFormatSearchWord:
         assert formatted_s_word == expected_output
 
     def test_format_search_word_with_not_accepted_special_characters(self):
-        input = 'Darwin"()&/\|~{}[]+='
+        input = r'Darwin"()&/\|~{}[]+='
         expected_output = "Darwin"
 
         formatted_s_word = format_search_word(input)
@@ -192,8 +192,8 @@ class TestFormatSearchWord:
     
     @pytest.mark.parametrize("input, expected",
         [
-        ('Victor<"()&/\|~{}[]+=Babes', "VictorBabes"),
-        ('Victor<"()&/\|~{}[]+= Babes', "Victor Babes")
+        (r'Victor<"()&/\|~{}[]+=Babes', "VictorBabes"),
+        (r'Victor<"()&/\|~{}[]+= Babes', "Victor Babes")
         ]
     )
     def test_format_search_word_with_multiple_words_with_not_accepted_special_characters(self, input, expected):
