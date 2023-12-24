@@ -151,10 +151,15 @@ def format_search_word(s_word, separator=" "):
     This function returns the inputted search word if it is a single word, or the inputted
     search word concatenated with the separator sign if there are more than one term in s_word.
     The function removes all leading and trailing whitespaces of the input.
-    The function removes all double quotes (") of the input.
+    The function removes all unaccepted special characters of the input.
     """
 
-    s_word = s_word.replace('"', '')
+    accepted_special_characters = ("-_.,„!?;:'' ")
+
+    for character in s_word:
+        if character.isalnum() is False and character not in accepted_special_characters:
+            s_word = s_word.replace(character, "")
+
     s_word_list = s_word.split()
 
     if len(s_word_list) == 1:

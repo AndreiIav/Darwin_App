@@ -175,18 +175,28 @@ class TestFormatSearchWord:
 
         formatted_s_word = format_search_word(" ala bala portocala ")
         assert formatted_s_word == "ala bala portocala"
+        
+    def test_format_search_word_with_accepted_special_characters(self):
+        input = "Darwin-_.,„!?;:''"
+        expected_output = "Darwin-_.,„!?;:''"
 
-    @pytest.mark.parametrize(
-        "input, expected",
+        formatted_s_word = format_search_word(input)
+        assert formatted_s_word == expected_output
+
+    def test_format_search_word_with_not_accepted_special_characters(self):
+        input = 'Darwin"()&/\|~{}[]+='
+        expected_output = "Darwin"
+
+        formatted_s_word = format_search_word(input)
+        assert formatted_s_word == expected_output
+    
+    @pytest.mark.parametrize("input, expected",
         [
-            ('"Darwin"', 'Darwin'),
-            ('Darwin"', 'Darwin'),
-            ('Charles " Darwin', 'Charles Darwin'),
-            ('Charles"Darwin', 'CharlesDarwin'),
-            ('Charles "Darwin', 'Charles Darwin'),
-        ],
+        ('Victor<"()&/\|~{}[]+=Babes', "VictorBabes"),
+        ('Victor<"()&/\|~{}[]+= Babes', "Victor Babes")
+        ]
     )
-    def test_format_search_word_with_double_quotes(self, input, expected):
+    def test_format_search_word_with_multiple_words_with_not_accepted_special_characters(self, input, expected):
         formatted_s_word = format_search_word(input)
         assert formatted_s_word == expected
 
