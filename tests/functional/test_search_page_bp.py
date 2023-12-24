@@ -54,4 +54,19 @@ def test_results_page_with_magazine_filter(test_client):
 
     assert response.status_code == 200
 
+def test_results_page_with_accepted_special_characters(test_client):
 
+    s_word = "-_.,„!?;:'"
+    response = test_client.get("/results/search", query_string={"search_box": s_word})
+
+    assert response.status_code == 200
+    assert b"No results were found for" in response.data
+
+def test_results_page_with_unaccepted_special_characters(test_client):
+
+    s_word = "()&/\|~{}[]+=<>"
+
+    response = test_client.get("/results/search", query_string={"search_box": s_word})
+
+    assert response.status_code == 200
+    assert b"The search term can have at least 4 characters and at most 200." in response.data
