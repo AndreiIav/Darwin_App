@@ -41,7 +41,7 @@ class TestGetExistentMagazines:
         assert isinstance(get_existent_magazines(), flask_sqlalchemy.query.Query)
 
     def test_length_of_get_existent_magazines(self, test_client):
-        assert len(list(get_existent_magazines())) == 132
+        assert len(list(get_existent_magazines())) == 136
 
 
 # Tests for get_magazine_name()
