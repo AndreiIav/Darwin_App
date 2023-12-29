@@ -19,7 +19,7 @@ def get_existent_magazines():
     The Query object can be iterated to access the results.
     """
 
-    existent_magazines = db.session.query(Magazines.name, Magazines.id)
+    existent_magazines = db.session.query(Magazines.name, Magazines.id).order_by(Magazines.name)
     return existent_magazines
 
 
@@ -80,6 +80,7 @@ def get_magazine_details(magazine_id=0):
         )
         .filter(MagazineYear.magazine_id == magazine_id)
         .group_by(MagazineYear.id)
+        .order_by(MagazineYear.year)
     )
 
     return magazine_details
