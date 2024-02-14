@@ -22,7 +22,7 @@ class Config(object):
     SQLALCHEMY_TRACK_MODIFICATIONS = False
 
     # Environment variables
-    ENV = "development"
+    FLASK_ENV = "development"
     DEBUG = False
     TESTING = False
     SECRET_KEY = os.getenv(
