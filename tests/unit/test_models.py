@@ -1,4 +1,11 @@
-from application.models import Magazines, MagazineYear, MagazineNumber, MagazineNumberContent, MagazineNumberContentFTS
+from application.models import (
+Magazines,
+MagazineYear,
+MagazineNumber,
+MagazineNumberContent,
+MagazineNumberContentFTS,
+MagazineDetails
+)
 
 
 class TestModels:
@@ -43,3 +50,13 @@ class TestModels:
         assert magazine_number_content_fts.rowid == 1
         assert magazine_number_content_fts.magazine_content == "testMagazineContent"
         assert repr(magazine_number_content_fts) == "MagazineNumberContentFTS(rowid=1,magazine_content=testMagazineContent)"
+
+    def test_MagazineDetails(self):
+        magazine_details = MagazineDetails(id=1,magazine_id=1,year="Anul 1899",distinct_magazine_numbers_count=10,distinct_pages_count=100)
+
+        assert magazine_details.id == 1
+        assert magazine_details.magazine_id == 1
+        assert magazine_details.year == "Anul 1899"
+        assert magazine_details.distinct_magazine_numbers_count == 10
+        assert magazine_details.distinct_pages_count == 100
+        assert repr(magazine_details) == "MagazineDetails(id=1,magazine_id=1,year=Anul 1899,distinct_magazine_numbers_count=10,distinct_pages_count=100)"

@@ -62,3 +62,17 @@ class MagazineNumberContentFTS(db.Model):
 
     def __repr__(self):
         return f"MagazineNumberContentFTS(rowid={self.rowid},magazine_content={self.magazine_content})"
+    
+
+class MagazineDetails(db.Model):
+
+    __tablename__ = "magazine_details"
+
+    id = db.Column(db.Integer, primary_key=True)
+    magazine_id = db.Column(db.Integer, db.ForeignKey("magazines.id"))
+    year = db.Column(db.Text)
+    distinct_magazine_numbers_count = db.Column(db.Integer)
+    distinct_pages_count = db.Column(db.Integer)
+
+    def __repr__(self):
+        return f"MagazineDetails(id={self.id},magazine_id={self.magazine_id},year={self.year},distinct_magazine_numbers_count={self.distinct_magazine_numbers_count},distinct_pages_count={self.distinct_pages_count})"

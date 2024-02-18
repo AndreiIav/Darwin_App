@@ -1,5 +1,6 @@
 from ..models import (
     Magazines,
+    MagazineDetails,
     MagazineYear,
     MagazineNumber,
     MagazineNumberContent,
@@ -52,35 +53,28 @@ def get_magazine_name(magazine_id=0):
 
 def get_magazine_details(magazine_id=0):
     """
-    Retrieve MagazineYear instances for a given magazine_id.
+    Retrieve MagazineDetails instances for a given magazine_id.
 
     Args:
         magazine_id (int, optional): The ID of the magazine to retrieve details for. Defaults to 0.
 
     Returns:
-        magazine_details (flask_sqlalchemy.query.Query): A Query object containing MagazineYear
+        magazine_details (flask_sqlalchemy.query.Query): A Query object containing MagazineDetails
         instances with associated counts.
 
-    This function returns a SQLAlchemy Query object that retrieves MagazineYear instances for a given magazine_id.
-    Each MagazineYear instance includes the distinct count of magazine numbers and pages associated with that year.
+    This function returns a SQLAlchemy Query object that retrieves MagazineDetails instances for a given magazine_id.
+    Each MagazineDetails instance includes the distinct count of magazine numbers and pages associated with that year.
     The Query object can be iterated to access the results.
     If the magazine_id is not found or is of an invalid data type, the Query object will be empty.
     """
 
     magazine_details = (
-        db.session.query(
-            MagazineYear.year,
-            func.count(func.distinct(MagazineNumber.id)),
-            func.count(func.distinct(MagazineNumberContent.id)),
-        )
-        .join(MagazineNumber, MagazineYear.id == MagazineNumber.magazine_year_id)
-        .join(
-            MagazineNumberContent,
-            MagazineNumber.id == MagazineNumberContent.magazine_number_id,
-        )
-        .filter(MagazineYear.magazine_id == magazine_id)
-        .group_by(MagazineYear.id)
-        .order_by(MagazineYear.year)
+    db.session.query(
+        MagazineDetails.year,
+        MagazineDetails.distinct_magazine_numbers_count,
+        MagazineDetails.distinct_pages_count
+    )
+    .filter(MagazineDetails.magazine_id == magazine_id)
     )
 
     return magazine_details
