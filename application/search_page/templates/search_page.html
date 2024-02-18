@@ -4,9 +4,12 @@
 
 {% block content %}
 <div class="container-fluid text-center py-1">
-    <div class="py-2">
-        <p><a href="{{ url_for('home_bp.search_form') }}">Go back to home page</a></p>
-    </div>
+    <a href="{{ url_for('home_bp.search_form') }}" class="btn btn-primary" type="button">Go back to home page</a>
+    {% if magazine_filter %}
+    <a href="{{ url_for('search_page_bp.search_for_term', search_box=searched_term) }}" class="btn btn-primary"
+        type="button">Go back to all results</a>
+    {% endif %}
+
 
     <div class="py-2 my-2">
         {% if magazine_filter %}
