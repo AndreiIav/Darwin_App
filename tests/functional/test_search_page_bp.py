@@ -10,6 +10,13 @@ def test_results_page_get(test_client):
     assert b"Go back to home page" in response.data
     assert b"Number of results displayed by magazine name" in response.data
 
+def test_results_page_without_magazine_filter_go_back_to_all_results_button_not_displayed(test_client):
+
+    s_word = "Victor+Babeș"
+    response = test_client.get("/results/search", query_string={"search_box": s_word})
+
+    assert b"Go back to all results" not in response.data
+
 def test_results_page_post(test_client):
 
     s_word = "Victor+Babeș"
@@ -62,6 +69,20 @@ def test_results_page_with_magazine_filter_pagination(test_client):
     )
 
     assert response.status_code == 200
+
+def test_results_page_with_magazine_filter_go_back_buttons_displayed(test_client):
+
+    s_word = "Victor+Babeș"
+    magazine_filter = "Gazeta+de+Transilvania+(1838-1914)"
+    page = 2
+
+    response = test_client.get(
+        "/results/search",
+        query_string={"magazine_filter": magazine_filter, "search_box": s_word, "page": page},
+    )
+
+    assert b"Go back to home page" in response.data
+    assert b"Go back to all results" in response.data
 
 def test_results_page_with_accepted_special_characters(test_client):
 
