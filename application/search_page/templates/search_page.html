@@ -16,12 +16,12 @@
         <p1 class="display-6">
             <span class="fw-bold">{{ details_for_searched_term.total }}</span> results found for
             <span class="fw-bold">{{ searched_term }}</span> in
-            <span class="fw-bold">{{magazine_filter}}</span>
+            <span class="fw-bold">{{ magazine_filter }}</span>
         </p1>
         {% else %}
         <p1 class="display-6">
             <span class="fw-bold">{{ details_for_searched_term.total }}</span> results found for
-            <span class="fw-bold">{{searched_term }}</span>
+            <span class="fw-bold">{{ searched_term }}</span>
         </p1>
         {% endif %}
     </div>
@@ -36,11 +36,11 @@
             <div class="collapse" id="collapseCountResults">
                 {% for magazine_name, count in distinct_magazines_and_count %}
                 <div class="my-1">
-                    <form action="{{url_for('search_page_bp.search_for_term')}}">
+                    <form action="{{ url_for('search_page_bp.search_for_term') }}">
                         <button class="btn btn-outline-dark border-0" type="submit" id="magazine_filter"
-                            name="magazine_filter" value="{{magazine_name}}">
-                            <p1><i class="bi bi-link"></i> {{magazine_name}} ({{count}} results)</p1><br>
-                            <input type="hidden" id="search_box" name="search_box" value="{{session['s_word']}}">
+                            name="magazine_filter" value="{{ magazine_name }}">
+                            <p1><i class="bi bi-link"></i> {{ magazine_name }} ({{ count }} results)</p1><br>
+                            <input type="hidden" id="search_box" name="search_box" value="{{ session['s_word'] }}">
                         </button>
                     </form>
                 </div>
@@ -51,15 +51,15 @@
         <div class="col-sm-8">
             <ul>
                 {% for name, year, magazine_number, magazine_page, magazine_number_link, rowid in
-                details_for_searched_term%}
+                details_for_searched_term %}
                 <div class="row border-bottom border-success me-1">
                     <div class="col-sm-6 text-bg-light vstack gap-1 py-2">
-                        <p1 class="lead text-center">{{name}}</p1>
-                        <p1 class="lead text-center">{{year}}</p1>
-                        <p1 class="lead text-center">{{magazine_number}}</p1>
-                        <p1 class="lead text-center">Page {{magazine_page}}</p1>
+                        <p1 class="lead text-center">{{ name }}</p1>
+                        <p1 class="lead text-center">{{ year }}</p1>
+                        <p1 class="lead text-center">{{ magazine_number }}</p1>
+                        <p1 class="lead text-center">Page {{ magazine_page }}</p1>
                         <p1 class="lead text-center">
-                            <a href="{{magazine_number_link}}" target="_blank" title="Access magazine pdf on BCU site"
+                            <a href="{{ magazine_number_link }}" target="_blank" title="Access magazine pdf on BCU site"
                                 class="link-offset-2 link-offset-3-hover link-underline link-underline-opacity-0 link-underline-opacity-75-hover">
                                 <i class="bi bi-box-arrow-up-right"></i> Open Magazine
                             </a>
@@ -67,8 +67,8 @@
                     </div>
                     <div class="col-sm-6 text-start py-2">
                         {% for preview_rowid, preview_content in previews %}
-                        {% if preview_rowid == rowid%}
-                        {{preview_content}}
+                        {% if preview_rowid == rowid %}
+                        {{ preview_content }}
                         {% endif %}
                         {% endfor %}
                     </div>
@@ -77,8 +77,6 @@
             </ul>
         </div>
     </div>
-
-
 </div>
 
 <nav aria-label="Page navigation">
@@ -108,8 +106,8 @@
         {% if page_num != details_for_searched_term.page %}
         <li class="page-item">
             <a class="page-link"
-                href="{{ url_for('search_page_bp.search_for_term', magazine_filter=magazine_filter, search_box=searched_term, page=page_num)}}">{{
-                page_num}}</a>
+                href="{{ url_for('search_page_bp.search_for_term', magazine_filter=magazine_filter, search_box=searched_term, page=page_num) }}">{{
+                page_num }}</a>
         </li>
         {% else %}
         <li class="page-item active" aria-current="page">
@@ -140,7 +138,6 @@
             <span class="page-link">Last</span>
         </li>
         {% endif %}
-
     </ul>
 </nav>
 

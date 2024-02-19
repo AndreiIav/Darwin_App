@@ -24,10 +24,11 @@
     <div class="py-2">
         {% for res in existent_magazines %}
         <div class="my-2">
-            <form action="{{url_for('home_bp.show_magazine_details')}}" target="_blank" title="Check magazine details">
+            <form action="{{  url_for('home_bp.show_magazine_details')  }}" target="_blank"
+                title="Check magazine details">
                 <button type="submit" class="btn btn-outline-dark border-0">
                     <p1><i class="bi bi-box-arrow-up-right"></i> {{ res[0] }} </p1><br>
-                    <input type="hidden" id="magazine_id" name="magazine_id" value={{res[1]}}>
+                    <input type="hidden" id="magazine_id" name="magazine_id" value="{{ res[1] }}">
                 </button>
             </form>
         </div>

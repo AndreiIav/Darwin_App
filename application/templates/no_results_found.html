@@ -2,16 +2,16 @@
 
 {% block title %} No Results Found {% endblock %}
 
-{% block content%}
+{% block content %}
 <div class="container-fluid text-center py-1">
     <p1 class="display-6">No results found.</p1>
     <div>
         {% if not_minimum_s_word_length %}
         <h5 class="h5">The search term can have at least 4 characters and at most 200.</h5>
         {% elif searched_term %}
-        <h5 class="h5">No results were found for <span class="fw-bold">{{searched_term}}</span>.</h5>
+        <h5 class="h5">No results were found for <span class="fw-bold">{{ searched_term }}</span>.</h5>
         {% endif %}
         <h5 class="h5">Back to <a href="{{ url_for('home_bp.search_form') }}">search page</a>.</h5>
     </div>
 </div>
-{% endblock%}
+{% endblock %}

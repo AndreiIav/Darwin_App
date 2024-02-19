@@ -1,13 +1,8 @@
 from ..models import (
     Magazines,
     MagazineDetails,
-    MagazineYear,
-    MagazineNumber,
-    MagazineNumberContent,
     db,
 )
-from sqlalchemy import func
-
 
 def get_existent_magazines():
     """

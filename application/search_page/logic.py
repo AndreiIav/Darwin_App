@@ -9,7 +9,6 @@ from ..models import (
 )
 from sqlalchemy import func
 from flask import session
-
 from markupsafe import Markup
 
 

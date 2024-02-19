@@ -1,5 +1,10 @@
-from flask import Blueprint
-from flask import render_template, request, session, current_app, abort
+from flask import (
+    Blueprint,
+    render_template,
+    request,
+    session,
+    current_app,
+)
 from application.search_page.logic import (
     get_details_for_searched_term,
     get_details_for_searched_term_for_specific_magazine,
