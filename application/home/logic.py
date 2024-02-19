@@ -28,22 +28,16 @@ def get_magazine_name(magazine_id=0):
 
     Returns:
         magazine_name.name (str) or None: The name of the magazine if found, or None if the
-        magazine_id is not found or is of an invalid data type.
+        magazine_id is not found or the magazine_id is of an invalid data type.
     """
 
-    try:
-        magazine_id = int(magazine_id)
-    except ValueError:
-        return
-    except TypeError:
+    if not isinstance(magazine_id, int):
         return
 
     magazine_name = db.session.get(Magazines, magazine_id)
 
     if magazine_name is not None:
         return magazine_name.name
-
-    return
 
 
 def get_magazine_details(magazine_id=0):

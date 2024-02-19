@@ -50,7 +50,6 @@ class TestGetMagazineName:
         test_magazine = "Buletinul eugenic şi biopolitic (1927-1947)"
 
         assert test_magazine == get_magazine_name(33)
-        assert test_magazine == get_magazine_name("33")
 
     def test_get_magazine_name_with_non_existent_magazine_id(self, test_client):
         assert get_magazine_name(999) is None
@@ -59,7 +58,7 @@ class TestGetMagazineName:
     def test_get_magazine_name_with_no_parameter_passed(self, test_client):
         assert get_magazine_name() is None
 
-    invalid_magazine_id_input = ["a", True, 1.23, None]
+    invalid_magazine_id_input = ["a", True, 1.23, None, "33"]
 
     @pytest.mark.parametrize("invalid_magazine_id", invalid_magazine_id_input)
     def test_get_magazine_name_with_invalid_data_types_parameters(

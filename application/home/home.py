@@ -31,7 +31,13 @@ def search_form():
 @home_bp.route("/magazine_details")
 def show_magazine_details():
 
-    magazine_id = request.args.get("magazine_id")
+    try:
+        magazine_id = int(request.args.get("magazine_id"))
+    except ValueError:
+        abort(404)
+    except TypeError:
+        abort(404)
+
     magazine_name = get_magazine_name(magazine_id)
 
     if magazine_name is None:
