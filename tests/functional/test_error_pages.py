@@ -1,7 +1,17 @@
 import pytest
 
-def test_404_exception_in_magazine_details_page(test_client):
-    response = test_client.get("/magazine_details", query_string={"magazine_id": "0"})
+def test_404_response_in_magazine_details_page_because_magazine_id_is_not_found(test_client):
+    response = test_client.get("/magazine_details", query_string={"magazine_id": 0})
+
+    assert response.status_code == 404
+
+def test_404_response_in_magazine_details_page_because_ValueError_is_raised(test_client):
+    response = test_client.get("/magazine_details", query_string={"magazine_id": 'a'})
+
+    assert response.status_code == 404
+
+def test_404_response_in_magazine_details_page_because_TypeError_is_raised(test_client):
+    response = test_client.get("/magazine_details", query_string={"magazine_id": []})
 
     assert response.status_code == 404
 
