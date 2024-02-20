@@ -387,10 +387,7 @@ class TestPaginateResults:
         error_out = True
 
         with pytest.raises(werkzeug.exceptions.NotFound) as err:
-            paginated_details_for_searched_word = paginate_results(
-                details_for_searched_term, page, per_page, error_out
-            )
-            assert paginated_details_for_searched_word == err
+            paginate_results(details_for_searched_term, page, per_page, error_out)
 
     def test_paginate_results_error_out_false(self, test_client):
 
