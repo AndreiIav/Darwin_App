@@ -389,6 +389,8 @@ class TestPaginateResults:
         with pytest.raises(werkzeug.exceptions.NotFound) as err:
             paginate_results(details_for_searched_term, page, per_page, error_out)
 
+        assert '404 Not Found' in str(err.value)
+
     def test_paginate_results_error_out_false(self, test_client):
 
         s_word = format_search_word("Victor Babeș")
