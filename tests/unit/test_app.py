@@ -66,6 +66,9 @@ class TestGetMagazineName:
     ):
         assert get_magazine_name(invalid_magazine_id) is None
 
+    def test_get_magazine_name_if_OverflowError_returns_None(self, test_client):
+        assert get_magazine_name(99999999999999999999) is None
+
 
 # Tests for get_magazine_details()
 class TestGetMagazineDetails:

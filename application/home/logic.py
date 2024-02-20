@@ -33,8 +33,11 @@ def get_magazine_name(magazine_id=0):
 
     if not isinstance(magazine_id, int):
         return
-
-    magazine_name = db.session.get(Magazines, magazine_id)
+    
+    try:
+        magazine_name = db.session.get(Magazines, magazine_id)
+    except OverflowError:
+        return
 
     if magazine_name is not None:
         return magazine_name.name
