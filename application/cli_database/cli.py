@@ -3,7 +3,7 @@ from pathlib import Path
 from flask import Blueprint, current_app
 import click
 
-from application.cli.logic import (
+from application.cli_database.logic import (
     create_database,
     write_data_to_database,
     create_magazine_details_table,
@@ -12,10 +12,10 @@ from application.cli.logic import (
 
 
 # Blueprint Configuration
-cli_bp = Blueprint("cli_bp", __name__, cli_group="database")
+cli_database_bp = Blueprint("cli_database_bp", __name__, cli_group="database")
 
 
-@cli_bp.cli.command("create")
+@cli_database_bp.cli.command("create")
 @click.argument("name")
 def create_new_database(name):
 
@@ -30,7 +30,7 @@ def create_new_database(name):
     root_folder = Path(current_app.config["ROOT_FOLDER"])
     database_path = root_folder / "instance" / database_name
     create_database_files_path = (
-        root_folder / "application" / "cli" / "create_database_files"
+        root_folder / "application" / "cli_database" / "create_database_files"
     )
     files_to_tables = [
         ("magazines.csv", "magazines"),

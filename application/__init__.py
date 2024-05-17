@@ -38,12 +38,12 @@ def register_blueprints(app):
     # Import the blueprints
     from application.home.home import home_bp
     from application.search_page.search_page import search_page_bp
-    from application.cli.cli import cli_bp
+    from application.cli_database.cli import cli_database_bp
 
     # Register Blueprints
     app.register_blueprint(home_bp)
     app.register_blueprint(search_page_bp)
-    app.register_blueprint(cli_bp)
+    app.register_blueprint(cli_database_bp)
 
 
 def initialize_extensions(app):
