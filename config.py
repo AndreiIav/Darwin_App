@@ -37,6 +37,8 @@ class Config(object):
     # Preview string
     PREVIEW_SUBSTRING_LENGTH = 200
 
+    ROOT_FOLDER = BASEDIR
+
 
 class ProductionConfig(Config):
 
