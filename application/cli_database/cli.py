@@ -1,4 +1,5 @@
 from pathlib import Path
+import os
 
 from flask import Blueprint, current_app
 import click
@@ -28,7 +29,8 @@ def create_new_database(name):
         database_name = "app.db"
 
     root_folder = Path(current_app.config["ROOT_FOLDER"])
-    database_path = root_folder / "instance" / database_name
+    database_directory = root_folder / "instance"
+    database_path = database_directory / database_name
     create_database_files_path = (
         root_folder / "application" / "cli_database" / "create_database_files"
     )
@@ -55,4 +57,31 @@ def create_new_database(name):
     # create and populate the fts table
     create_fts_table(database_path)
 
-    print(f"database {name} created at {database_path}")
+    print(f"database {name} created in {database_directory}")
+
+
+@cli_database_bp.cli.command("remove")
+@click.argument("name")
+def remove_database_file(name):
+
+    if name not in ("test", "demo"):
+        raise click.BadParameter(name)
+
+    if name == "test":
+        database_name = "test.db"
+    elif name == "demo":
+        database_name = "app.db"
+
+    root_folder = Path(current_app.config["ROOT_FOLDER"])
+    database_directory = root_folder / "instance"
+    database_path = database_directory / database_name
+
+    # check if a database file with the requested name exists to be deleted
+    # and, if not, raise an error
+    if not database_path.is_file():
+        raise click.UsageError(message=f"{name} database does not exist.")
+
+    # delete database file
+    os.remove(database_path)
+
+    print(f"{name} database was removed from {database_directory}")
