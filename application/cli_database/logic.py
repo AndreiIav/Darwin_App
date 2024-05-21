@@ -66,6 +66,7 @@ def get_data_from_csv_file(file_path):
 def write_to_database(database_path, table, data):
 
     conn = sqlite3.connect(database_path)
+    conn.execute("PRAGMA foreign_keys = 1")  # to enable foreign keys
     c = conn.cursor()
 
     with conn:
