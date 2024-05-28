@@ -23,11 +23,7 @@ def create_new_database(name):
     if name not in ("test", "demo"):
         raise click.BadParameter(name)
 
-    if name == "test":
-        database_name = "test.db"
-    elif name == "demo":
-        database_name = "app.db"
-
+    database_name = f"{name}.db"
     root_folder = Path(current_app.config["ROOT_FOLDER"])
     database_directory = root_folder / "instance"
     database_path = database_directory / database_name
@@ -67,11 +63,7 @@ def remove_database_file(name):
     if name not in ("test", "demo"):
         raise click.BadParameter(name)
 
-    if name == "test":
-        database_name = "test.db"
-    elif name == "demo":
-        database_name = "app.db"
-
+    database_name = f"{name}.db"
     root_folder = Path(current_app.config["ROOT_FOLDER"])
     database_directory = root_folder / "instance"
     database_path = database_directory / database_name
