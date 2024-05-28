@@ -136,7 +136,6 @@ def create_magazine_details_table(database_path):
             ;
             """
         )
-        print("magazine_details table was created and data inserted into it.")
 
 
 def create_fts_table(database_path):
@@ -155,7 +154,6 @@ def create_fts_table(database_path):
                 )
             """
         )
-        print("Table magazine_number_content_fts was created.")
 
         # populate the fts table
         c.execute(
@@ -164,4 +162,3 @@ def create_fts_table(database_path):
             SELECT id, magazine_content FROM magazine_number_content
             """
         )
-        print("Table magazine_number_content_fts was populated.")
