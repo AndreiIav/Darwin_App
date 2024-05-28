@@ -1,5 +1,8 @@
 ### Flask ###
-instance/*
+instance/*.cfg
+instance/*.db
+instance/*.log
+instance/*.log*
 !instance/.gitignore
 .webassets-cache
 .env
@@ -67,9 +70,6 @@ cover/
 local_settings.py
 db.sqlite3
 db.sqlite3-journal
-
-# Flask stuff:
-instance/
 
 # Scrapy stuff:
 .scrapy
@@ -259,6 +259,5 @@ pyrightconfig.json
 # End of https://www.toptal.com/developers/gitignore/api/python,flask
 
 # Project specific stuff
-*.db
 access_db.py
 req.txt
