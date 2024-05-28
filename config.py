@@ -61,3 +61,12 @@ class TestingConfig(Config):
     # Environment variables
     TESTING = True
     SERVER_NAME = "localhost.localdomain:5000"
+
+
+class DemoConfig(Config):
+
+    # Database
+    SQLALCHEMY_DATABASE_URI = os.getenv(
+        "DEMO_SQLALCHEMY_DATABASE_URI",
+        default=f"sqlite:///{os.path.join(BASEDIR,'instance','demo.db')}",
+    )
