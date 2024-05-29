@@ -1,6 +1,8 @@
 import sqlite3
 import csv
 
+import click
+
 
 def create_database(database_path):
 
@@ -46,7 +48,20 @@ def write_data_to_database(files_path, database_path, files_to_tables):
     for file, table in files_to_tables:
 
         file_path = files_path / file
-        data = get_data_from_csv_file(file_path)
+
+        try:
+            data = get_data_from_csv_file(file_path)
+        except FileNotFoundError:
+            raise click.FileError(
+                file_path,
+                hint=f"The {file} file needed to create the"
+                " database was not found.\n"
+                "Check the csv files and try again.\n"
+                "If a database file was already created use"
+                " 'flask database remove <name_of_database>'"
+                " command to delete it.",
+            )
+
         write_to_database(database_path, table, data)
 
 
