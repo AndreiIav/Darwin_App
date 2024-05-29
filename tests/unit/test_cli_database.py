@@ -1,12 +1,15 @@
 import sqlite3
 from pathlib import Path
 
+import pytest
+import click
 from flask import current_app
 
 from application.cli_database.logic import (
     create_database,
     get_data_from_csv_file,
     write_to_database,
+    write_data_to_database,
 )
 
 
@@ -47,7 +50,9 @@ class TestGetDataFromCsv:
     def test_get_data_from_csv_reads_data_correctly(self, test_client):
 
         root_folder = Path(current_app.config["ROOT_FOLDER"])
-        file_path = root_folder / "tests" / "test_data" / "create_db_test_data.csv"
+        file_path = (
+            root_folder / "tests" / "test_data" / "get_data_from_csv_test_data.csv"
+        )
 
         res = get_data_from_csv_file(file_path)
 
@@ -123,8 +128,8 @@ class TestWriteToDatabase:
 
         path_database = create_test_db
         test_data = [
-            (1, 1, "magazine_content_1", "magazine_page_1"),
-            (2, 1, "magazine_content_2", "magazine_page_2"),
+            (1, 1, "magazine_content_1", 1),
+            (2, 1, "magazine_content_2", 2),
         ]
 
         write_to_database(path_database, "magazine_number_content", test_data)
@@ -136,3 +141,73 @@ class TestWriteToDatabase:
         for row in range(len(test_data)):
             for column in range(len(test_data[row])):
                 assert test_data[row][column] == inserted_data[row][column]
+
+
+class TestWriteDataToDatabase:
+
+    def test_write_data_to_database(self, test_client, create_test_db):
+
+        root_folder = Path(current_app.config["ROOT_FOLDER"])
+        files_path = root_folder / "tests" / "test_data"
+        database_path = create_test_db
+        files_to_tables = [
+            ("magazines_test_data.csv", "magazines"),
+            ("magazine_year_test_data.csv", "magazine_year"),
+            ("magazine_number_test_data.csv", "magazine_number"),
+            ("magazine_number_content_test_data.csv", "magazine_number_content"),
+        ]
+
+        write_data_to_database(files_path, database_path, files_to_tables)
+
+        conn = sqlite3.connect(database_path)
+        c = conn.cursor()
+        magazines_inserted_data = c.execute("SELECT * FROM magazines").fetchall()
+        magazine_year_inserted_data = c.execute(
+            "SELECT * FROM magazine_year"
+        ).fetchall()
+        magazine_number_inserted_data = c.execute(
+            "SELECT * FROM magazine_number"
+        ).fetchall()
+        magazine_number_content_data = c.execute(
+            "SELECT * FROM magazine_number_content"
+        ).fetchall()
+
+        assert magazines_inserted_data == [
+            (1, "magazine_name_1", "magazine_link_1"),
+            (2, "magazine_name_2", "magazine_link_2"),
+        ]
+        assert magazine_year_inserted_data == [
+            (1, 1, "year_1", "year_link_1"),
+            (2, 1, "year_2", "year_link_2"),
+        ]
+        assert magazine_number_inserted_data == [
+            (1, 1, "number_1", "number_link_1"),
+            (2, 1, "number_2", "number_link_2"),
+        ]
+        assert magazine_number_content_data == [
+            (1, 1, "magazine_content_1", 1),
+            (2, 1, "magazine_content_2", 2),
+        ]
+
+    def test_write_data_to_database_with_missing_file(
+        self, test_client, create_test_db
+    ):
+
+        root_folder = Path(current_app.config["ROOT_FOLDER"])
+        files_path = root_folder / "tests" / "test_data"
+        database_path = create_test_db
+        files_to_tables = [
+            ("fake_name.csv", "magazines"),
+        ]
+
+        with pytest.raises(click.exceptions.FileError) as err:
+            write_data_to_database(files_path, database_path, files_to_tables)
+
+        assert (
+            "The fake_name.csv file needed to create the"
+            " database was not found.\n"
+            "Check the csv files and try again.\n"
+            "If a database file was already created use"
+            " 'flask database remove <name_of_database>'"
+            " command to delete it."
+        ) in str(err.value)
