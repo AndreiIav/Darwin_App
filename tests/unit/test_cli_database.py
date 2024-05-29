@@ -1,6 +1,10 @@
 import sqlite3
+from pathlib import Path
 
-from application.cli_database.logic import create_database
+import pytest
+from flask import current_app
+
+from application.cli_database.logic import create_database, get_data_from_csv_file
 
 
 class TestCreateDatabase:
@@ -33,3 +37,18 @@ class TestCreateDatabase:
 
         for table in tables_to_be_created:
             assert table in existing_tables
+
+
+class TestGetDataFromCsv:
+
+    def test_get_data_from_csv_reads_data_correctly(self, test_client):
+
+        root_folder = Path(current_app.config["ROOT_FOLDER"])
+        file_path = root_folder / "tests" / "test_data" / "create_db_test_data.csv"
+
+        res = get_data_from_csv_file(file_path)
+
+        assert res == [
+            ("test_data_1", "test_data_2", "test_data_3", "test_data_4"),
+            ("test_data_5", "test_data_6", "test_data_7", "test_data_8"),
+        ]
