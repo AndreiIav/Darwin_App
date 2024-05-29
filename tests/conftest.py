@@ -1,5 +1,8 @@
 import os
+import sqlite3
+
 import pytest
+
 from application import init_app
 from application.search_page.logic import (
     store_s_word_in_session,
@@ -44,3 +47,109 @@ def set_up_data_for_previews_for_page_id():
     page_id = list(paginated_details_for_searched_term)[0][-1]
 
     return (s_word, page_id, paginated_details_for_searched_term)
+
+
+@pytest.fixture
+def create_test_db(tmp_path):
+
+    path_db = tmp_path / "test.db"
+    conn = sqlite3.connect(path_db)
+    conn.execute("PRAGMA foreign_keys = 1")  # to enable foreign keys
+    c = conn.cursor()
+
+    with conn:
+        c.executescript(
+            """
+            CREATE TABLE magazines(
+            id integer PRIMARY KEY ,
+            name text,
+            magazine_link text);
+
+            CREATE TABLE magazine_year(
+            id integer PRIMARY KEY,
+            magazine_id integer,
+            year text,
+            magazine_year_link text,
+            FOREIGN KEY(magazine_id) REFERENCES magazines(id));
+
+            CREATE TABLE magazine_number(
+            id integer PRIMARY KEY,
+            magazine_year_id integer,
+            magazine_number text,
+            magazine_number_link text,
+            FOREIGN KEY(magazine_year_id) REFERENCES magazine_year(id));
+
+            CREATE TABLE magazine_number_content(
+            id integer PRIMARY KEY,
+            magazine_number_id integer,
+            magazine_content text,
+            magazine_page id,
+            FOREIGN KEY(magazine_number_id) REFERENCES magazine_number(id));
+            """
+        )
+
+    yield path_db
+
+
+@pytest.fixture
+def insert_data_in_magazines_table(create_test_db):
+
+    database_path = create_test_db
+    data = [
+        (1, "magazine_name_1", "magazine_link_1"),
+        (2, "magazine_name_2", "magazine_link_2"),
+    ]
+
+    conn = sqlite3.connect(database_path)
+    conn.execute("PRAGMA foreign_keys = 1")  # to enable foreign keys
+    c = conn.cursor()
+
+    with conn:
+        c.executemany(
+            "INSERT INTO magazines(id,name,magazine_link) VALUES(?,?,?)",
+            data,
+        )
+
+    yield database_path
+
+
+@pytest.fixture
+def insert_data_in_magazine_year_table(insert_data_in_magazines_table):
+
+    database_path = insert_data_in_magazines_table
+    data = [
+        (1, 1, "year_1", "year_link_1"),
+        (2, 1, "year_2", "year_link_2"),
+    ]
+
+    conn = sqlite3.connect(database_path)
+    conn.execute("PRAGMA foreign_keys = 1")  # to enable foreign keys
+    c = conn.cursor()
+
+    with conn:
+        c.executemany(
+            "INSERT INTO magazine_year(id,magazine_id,year,magazine_year_link) VALUES (?,?,?,?)",
+            data,
+        )
+
+    yield database_path
+
+
+@pytest.fixture
+def insert_data_in_magazine_number_table(insert_data_in_magazine_year_table):
+
+    database_path = insert_data_in_magazine_year_table
+    data = [
+        (1, 1, "number_1", "number_link_1"),
+        (2, 1, "number_2", "number_link_2"),
+    ]
+
+    conn = sqlite3.connect(database_path)
+    conn.execute("PRAGMA foreign_keys = 1")  # to enable foreign keys
+    c = conn.cursor()
+
+    with conn:
+        c.executemany(
+            "INSERT INTO magazine_number(id,magazine_year_id,magazine_number,magazine_number_link) VALUES (?,?,?,?)",
+            data,
+        )
