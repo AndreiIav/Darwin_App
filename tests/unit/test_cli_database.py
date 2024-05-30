@@ -10,6 +10,8 @@ from application.cli_database.logic import (
     get_data_from_csv_file,
     write_to_database,
     write_data_to_database,
+    create_magazine_details_table,
+    create_fts_table,
 )
 
 
@@ -211,3 +213,45 @@ class TestWriteDataToDatabase:
             " 'flask database remove <name_of_database>'"
             " command to delete it."
         ) in str(err.value)
+
+
+class TestCreateMagazineDetailsTable:
+
+    def test_create_magazine_details_table_created(
+        self, insert_data_in_magazine_number_content_table
+    ):
+
+        database_path = insert_data_in_magazine_number_content_table
+
+        create_magazine_details_table(database_path)
+
+        conn = sqlite3.connect(database_path)
+        c = conn.cursor()
+        inserted_data = c.execute("SELECT * FROM magazine_details").fetchall()
+
+        assert inserted_data == [(1, 1, "year_1", 1, 2)]
+
+
+class TestCreateFtsTable:
+
+    def test_create_fts_table_with_match_query(
+        self, insert_data_in_magazine_number_content_table
+    ):
+
+        database_path = insert_data_in_magazine_number_content_table
+
+        create_fts_table(database_path)
+
+        conn = sqlite3.connect(database_path)
+        c = conn.cursor()
+
+        inserted_data = c.execute(
+            """
+        SELECT *
+        FROM magazine_number_content mnc
+        INNER JOIN magazine_number_content_fts mncf ON mnc.id = mncf.rowid
+        WHERE magazine_number_content_fts MATCH '"magazine_content"*'
+           """
+        ).fetchall()
+
+        assert len(inserted_data) == 2

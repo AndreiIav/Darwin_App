@@ -153,3 +153,27 @@ def insert_data_in_magazine_number_table(insert_data_in_magazine_year_table):
             "INSERT INTO magazine_number(id,magazine_year_id,magazine_number,magazine_number_link) VALUES (?,?,?,?)",
             data,
         )
+
+    yield database_path
+
+
+@pytest.fixture
+def insert_data_in_magazine_number_content_table(insert_data_in_magazine_number_table):
+
+    database_path = insert_data_in_magazine_number_table
+    data = [
+        (1, 1, "magazine_content_1", 1),
+        (2, 1, "magazine_content_2", 2),
+    ]
+
+    conn = sqlite3.connect(database_path)
+    conn.execute("PRAGMA foreign_keys = 1")  # to enable foreign keys
+    c = conn.cursor()
+
+    with conn:
+        c.executemany(
+            "INSERT INTO magazine_number_content(id,magazine_number_id,magazine_content,magazine_page) VALUES(?,?,?,?)",
+            data,
+        )
+
+    yield database_path
