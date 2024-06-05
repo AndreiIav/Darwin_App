@@ -37,7 +37,11 @@ class Config(object):
     # Preview string
     PREVIEW_SUBSTRING_LENGTH = 200
 
-    ROOT_FOLDER = BASEDIR
+    # cli_database blueprint
+    DATABASE_FOLDER = os.path.join(BASEDIR, "instance")
+    DATABASE_FILES = os.path.join(
+        BASEDIR, "application", "cli_database", "create_database_files"
+    )
 
 
 class ProductionConfig(Config):
