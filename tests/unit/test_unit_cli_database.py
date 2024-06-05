@@ -51,10 +51,8 @@ class TestGetDataFromCsv:
 
     def test_get_data_from_csv_reads_data_correctly(self, test_client):
 
-        root_folder = Path(current_app.config["ROOT_FOLDER"])
-        file_path = (
-            root_folder / "tests" / "test_data" / "get_data_from_csv_test_data.csv"
-        )
+        files_path = Path(current_app.config["DATABASE_FILES_TEST"])
+        file_path = files_path / "get_data_from_csv_test_data.csv"
 
         res = get_data_from_csv_file(file_path)
 
@@ -149,8 +147,7 @@ class TestWriteDataToDatabase:
 
     def test_write_data_to_database(self, test_client, create_test_db):
 
-        root_folder = Path(current_app.config["ROOT_FOLDER"])
-        files_path = root_folder / "tests" / "test_data"
+        files_path = Path(current_app.config["DATABASE_FILES_TEST"])
         database_path = create_test_db
         files_to_tables = [
             ("magazines_test_data.csv", "magazines"),
@@ -195,8 +192,7 @@ class TestWriteDataToDatabase:
         self, test_client, create_test_db
     ):
 
-        root_folder = Path(current_app.config["ROOT_FOLDER"])
-        files_path = root_folder / "tests" / "test_data"
+        files_path = Path(current_app.config["DATABASE_FILES_TEST"])
         database_path = create_test_db
         files_to_tables = [
             ("fake_name.csv", "magazines"),

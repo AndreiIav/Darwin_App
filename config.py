@@ -66,6 +66,9 @@ class TestingConfig(Config):
     TESTING = True
     SERVER_NAME = "localhost.localdomain:5000"
 
+    # cli_database blueprint test
+    DATABASE_FILES_TEST = os.path.join(BASEDIR, "tests", "test_data")
+
 
 class DemoConfig(Config):
 
