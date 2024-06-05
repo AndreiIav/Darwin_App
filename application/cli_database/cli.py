@@ -24,12 +24,9 @@ def create_new_database(name):
         raise click.BadParameter(name)
 
     database_name = f"{name}.db"
-    root_folder = Path(current_app.config["ROOT_FOLDER"])
-    database_directory = root_folder / "instance"
+    database_directory = Path(current_app.config["DATABASE_FOLDER"])
     database_path = database_directory / database_name
-    create_database_files_path = (
-        root_folder / "application" / "cli_database" / "create_database_files"
-    )
+    create_database_files_path = Path(current_app.config["DATABASE_FILES"])
     files_to_tables = [
         ("magazines.csv", "magazines"),
         ("magazine_years.csv", "magazine_year"),
@@ -64,8 +61,7 @@ def remove_database_file(name):
         raise click.BadParameter(name)
 
     database_name = f"{name}.db"
-    root_folder = Path(current_app.config["ROOT_FOLDER"])
-    database_directory = root_folder / "instance"
+    database_directory = Path(current_app.config["DATABASE_FOLDER"])
     database_path = database_directory / database_name
 
     # check if a database file with the requested name exists to be deleted
