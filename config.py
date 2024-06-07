@@ -38,10 +38,17 @@ class Config(object):
     PREVIEW_SUBSTRING_LENGTH = 200
 
     # cli_database blueprint
-    DATABASE_FOLDER = os.path.join(BASEDIR, "instance")
+    ROOT_FOLDER = BASEDIR
+    DATABASE_FOLDER = os.path.join(ROOT_FOLDER, "instance")
     DATABASE_FILES = os.path.join(
-        BASEDIR, "application", "cli_database", "create_database_files"
+        ROOT_FOLDER, "application", "cli_database", "create_database_files"
     )
+    FILES_TO_TABLES = [
+        ("magazines.csv", "magazines"),
+        ("magazine_years.csv", "magazine_year"),
+        ("magazine_numbers.csv", "magazine_number"),
+        ("magazine_content.csv", "magazine_number_content"),
+    ]
 
 
 class ProductionConfig(Config):
@@ -67,7 +74,7 @@ class TestingConfig(Config):
     SERVER_NAME = "localhost.localdomain:5000"
 
     # cli_database blueprint test
-    DATABASE_FILES_TEST = os.path.join(BASEDIR, "tests", "test_data")
+    # DATABASE_FILES_TEST = os.path.join(BASEDIR, "tests", "test_data")
 
 
 class DemoConfig(Config):
