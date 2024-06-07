@@ -24,15 +24,10 @@ def create_new_database(name):
         raise click.BadParameter(name)
 
     database_name = f"{name}.db"
-    database_directory = Path(current_app.config["DATABASE_FOLDER"])
-    database_path = database_directory / database_name
+    database_folder = Path(current_app.config["DATABASE_FOLDER"])
+    database_path = database_folder / database_name
     create_database_files_path = Path(current_app.config["DATABASE_FILES"])
-    files_to_tables = [
-        ("magazines.csv", "magazines"),
-        ("magazine_years.csv", "magazine_year"),
-        ("magazine_numbers.csv", "magazine_number"),
-        ("magazine_content.csv", "magazine_number_content"),
-    ]
+    files_to_tables = current_app.config["FILES_TO_TABLES"]
 
     # check if a database file with the requested name already exists
     if database_path.is_file():
@@ -50,7 +45,7 @@ def create_new_database(name):
     # create and populate the fts table
     create_fts_table(database_path)
 
-    print(f"database {name} created in {database_directory}")
+    print(f"database {name} created in {database_folder}")
 
 
 @cli_database_bp.cli.command("remove")
@@ -61,8 +56,8 @@ def remove_database_file(name):
         raise click.BadParameter(name)
 
     database_name = f"{name}.db"
-    database_directory = Path(current_app.config["DATABASE_FOLDER"])
-    database_path = database_directory / database_name
+    database_folder = Path(current_app.config["DATABASE_FOLDER"])
+    database_path = database_folder / database_name
 
     # check if a database file with the requested name exists to be deleted
     # and, if not, raise an error
@@ -72,4 +67,4 @@ def remove_database_file(name):
     # delete database file
     os.remove(database_path)
 
-    print(f"{name} database was removed from {database_directory}")
+    print(f"{name} database was removed from {database_folder}")
