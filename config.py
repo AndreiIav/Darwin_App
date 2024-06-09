@@ -74,7 +74,13 @@ class TestingConfig(Config):
     SERVER_NAME = "localhost.localdomain:5000"
 
     # cli_database blueprint test
-    # DATABASE_FILES_TEST = os.path.join(BASEDIR, "tests", "test_data")
+    FILES_TO_TABLES = [
+        ("magazines_test_data.csv", "magazines"),
+        ("magazine_year_test_data.csv", "magazine_year"),
+        ("magazine_number_test_data.csv", "magazine_number"),
+        ("magazine_number_content_test_data.csv", "magazine_number_content"),
+    ]
+    DATABASE_FILES = os.path.join(BASEDIR, "tests", "test_data")
 
 
 class DemoConfig(Config):
