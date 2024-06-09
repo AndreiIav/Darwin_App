@@ -16,19 +16,44 @@ def test_cli_create_database_correct(
     runner = test_cli_app.test_cli_runner()
     runner.invoke(args=["database", "create", database_name])
 
-    tables_to_be_created = [
-        "magazines",
-        "magazine_year",
-        "magazine_number",
-        "magazine_number_content",
-        "magazine_details",
-        "magazine_number_content_fts",
-    ]
-
     conn = sqlite3.connect(path_database)
     c = conn.cursor()
-    tables = c.execute("SELECT name FROM sqlite_master WHERE type='table'").fetchall()
-    existing_tables = [t[0] for t in tables]
 
-    for table in tables_to_be_created:
-        assert table in existing_tables
+    magazines_inserted_data = c.execute("SELECT * FROM magazines").fetchall()
+    magazine_year_inserted_data = c.execute("SELECT * FROM magazine_year").fetchall()
+    magazine_number_inserted_data = c.execute(
+        "SELECT * FROM magazine_number"
+    ).fetchall()
+    magazine_number_content_inserted_data = c.execute(
+        "SELECT * FROM magazine_number_content"
+    ).fetchall()
+    magazine_details_inserted_data = c.execute(
+        "SELECT * FROM magazine_details"
+    ).fetchall()
+    fts_table_inserted_data = c.execute(
+        """
+        SELECT *
+        FROM magazine_number_content mnc
+        INNER JOIN magazine_number_content_fts mncf ON mnc.id = mncf.rowid
+        WHERE magazine_number_content_fts MATCH '"magazine_content"*'
+           """
+    ).fetchall()
+
+    assert magazines_inserted_data == [
+        (1, "magazine_name_1", "magazine_link_1"),
+        (2, "magazine_name_2", "magazine_link_2"),
+    ]
+    assert magazine_year_inserted_data == [
+        (1, 1, "year_1", "year_link_1"),
+        (2, 1, "year_2", "year_link_2"),
+    ]
+    assert magazine_number_inserted_data == [
+        (1, 1, "number_1", "number_link_1"),
+        (2, 1, "number_2", "number_link_2"),
+    ]
+    assert magazine_number_content_inserted_data == [
+        (1, 1, "magazine_content_1", 1),
+        (2, 1, "magazine_content_2", 2),
+    ]
+    assert magazine_details_inserted_data == [(1, 1, "year_1", 1, 2)]
+    assert len(fts_table_inserted_data) == 2
