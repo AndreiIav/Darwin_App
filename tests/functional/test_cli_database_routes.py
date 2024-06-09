@@ -4,7 +4,7 @@ import pytest
 
 
 @pytest.mark.parametrize("database_name", ["test", "demo"])
-def test_cli_create_database_correct(
+def test_cli_create_database_correct_tables_and_data(
     test_cli_app, database_name, monkeypatch, tmp_path
 ):
 
@@ -57,3 +57,20 @@ def test_cli_create_database_correct(
     ]
     assert magazine_details_inserted_data == [(1, 1, "year_1", 1, 2)]
     assert len(fts_table_inserted_data) == 2
+
+
+@pytest.mark.parametrize("database_name", ["test", "demo"])
+def test_cli_create_database_correct_confirmation_message(
+    test_cli_app, database_name, monkeypatch, tmp_path
+):
+
+    # Set the DATABASE_FOLDER to use tmp_path
+    monkeypatch.setitem(test_cli_app.config, "DATABASE_FOLDER", tmp_path)
+    database_folder = test_cli_app.config["DATABASE_FOLDER"]
+
+    runner = test_cli_app.test_cli_runner()
+    res = runner.invoke(args=["database", "create", database_name])
+
+    standard_output = res.stdout
+
+    assert f"database {database_name} created in {database_folder}" in standard_output
