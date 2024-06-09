@@ -25,6 +25,17 @@ def test_client():
 
 
 @pytest.fixture
+def test_cli_app():
+
+    # Set the Testing configuration prior to creating the Flask application
+    os.environ["CONFIG_TYPE"] = "config.TestingConfig"
+
+    app = init_app()
+
+    yield app
+
+
+@pytest.fixture
 def s_word_in_session():
     # Set the Testing configuration prior to creating the Flask application
     os.environ["CONFIG_TYPE"] = "config.TestingConfig"
