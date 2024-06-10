@@ -1,6 +1,7 @@
 import sqlite3
 
 import pytest
+import click
 
 
 @pytest.mark.parametrize("database_name", ["test", "demo"])
@@ -11,11 +12,10 @@ def test_cli_create_database_correct_tables_and_data(
     # Set the DATABASE_FOLDER to use tmp_path
     monkeypatch.setitem(test_cli_app.config, "DATABASE_FOLDER", tmp_path)
 
-    path_database = tmp_path / f"{database_name}.db"
-
     runner = test_cli_app.test_cli_runner()
     runner.invoke(args=["database", "create", database_name])
 
+    path_database = tmp_path / f"{database_name}.db"
     conn = sqlite3.connect(path_database)
     c = conn.cursor()
 
@@ -74,3 +74,14 @@ def test_cli_create_database_correct_confirmation_message(
     standard_output = res.stdout
 
     assert f"database {database_name} created in {database_folder}" in standard_output
+
+
+def test_cli_create_database_with_incorrect_database_name(test_cli_app):
+
+    runner = test_cli_app.test_cli_runner()
+
+    database_name = "wrong_name"
+    res = runner.invoke(args=["database", "create", database_name])
+
+    assert res.exit_code == 2
+    assert f"Error: Invalid value: {database_name}" in res.output
