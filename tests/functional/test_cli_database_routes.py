@@ -85,3 +85,15 @@ def test_cli_create_database_with_incorrect_database_name(test_cli_app):
 
     assert res.exit_code == 2
     assert f"Error: Invalid value: {database_name}" in res.output
+
+
+def test_cli_create_database_with_already_existing_database_file(test_cli_app):
+
+    runner = test_cli_app.test_cli_runner()
+
+    database_name = "test"
+    res = runner.invoke(args=["database", "create", database_name])
+    res2 = runner.invoke(args=["database", "create", database_name])
+
+    assert res2.exit_code == 2
+    assert f"{database_name} database already exists." in res.output
