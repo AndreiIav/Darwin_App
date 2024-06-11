@@ -41,6 +41,8 @@ class TestCreateDatabase:
         tables = c.execute(
             "SELECT name FROM sqlite_master WHERE type='table'"
         ).fetchall()
+        conn.close()
+
         existing_tables = [t[0] for t in tables]
 
         for table in tables_to_be_created:
@@ -77,6 +79,7 @@ class TestWriteToDatabase:
         conn = sqlite3.connect(path_database)
         c = conn.cursor()
         inserted_data = c.execute("SELECT * FROM magazines").fetchall()
+        conn.close()
 
         for row in range(len(test_data)):
             for column in range(len(test_data[row])):
@@ -97,6 +100,7 @@ class TestWriteToDatabase:
         conn = sqlite3.connect(path_database)
         c = conn.cursor()
         inserted_data = c.execute("SELECT * FROM magazine_year").fetchall()
+        conn.close()
 
         for row in range(len(test_data)):
             for column in range(len(test_data[row])):
@@ -117,6 +121,7 @@ class TestWriteToDatabase:
         conn = sqlite3.connect(path_database)
         c = conn.cursor()
         inserted_data = c.execute("SELECT * FROM magazine_number").fetchall()
+        conn.close()
 
         for row in range(len(test_data)):
             for column in range(len(test_data[row])):
@@ -137,6 +142,7 @@ class TestWriteToDatabase:
         conn = sqlite3.connect(path_database)
         c = conn.cursor()
         inserted_data = c.execute("SELECT * FROM magazine_number_content").fetchall()
+        conn.close()
 
         for row in range(len(test_data)):
             for column in range(len(test_data[row])):
@@ -165,6 +171,7 @@ class TestWriteDataToDatabase:
         magazine_number_content_data = c.execute(
             "SELECT * FROM magazine_number_content"
         ).fetchall()
+        conn.close()
 
         assert magazines_inserted_data == [
             (1, "magazine_name_1", "magazine_link_1"),
@@ -189,15 +196,16 @@ class TestWriteDataToDatabase:
 
         files_path = Path(current_app.config["DATABASE_FILES"])
         database_path = create_test_db
+        missing_file = "fake_name"
         files_to_tables = [
-            ("fake_name.csv", "magazines"),
+            (f"{missing_file}", "magazines"),
         ]
 
         with pytest.raises(click.exceptions.FileError) as err:
             write_data_to_database(files_path, database_path, files_to_tables)
 
         assert (
-            "The fake_name.csv file needed to create the"
+            f"The {missing_file} file needed to create the"
             " database was not found.\n"
             "Check the csv files and try again.\n"
             "If a database file was already created use"
@@ -219,6 +227,7 @@ class TestCreateMagazineDetailsTable:
         conn = sqlite3.connect(database_path)
         c = conn.cursor()
         inserted_data = c.execute("SELECT * FROM magazine_details").fetchall()
+        conn.close()
 
         assert inserted_data == [(1, 1, "year_1", 1, 2)]
 
@@ -235,7 +244,6 @@ class TestCreateFtsTable:
 
         conn = sqlite3.connect(database_path)
         c = conn.cursor()
-
         inserted_data = c.execute(
             """
         SELECT *
@@ -244,5 +252,6 @@ class TestCreateFtsTable:
         WHERE magazine_number_content_fts MATCH '"magazine_content"*'
            """
         ).fetchall()
+        conn.close()
 
         assert len(inserted_data) == 2
