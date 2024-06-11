@@ -3,6 +3,10 @@ import sqlite3
 import pytest
 import click
 
+# -------------------------------
+# create_new_database route tests
+# -------------------------------
+
 
 @pytest.mark.parametrize("database_name", ["test", "demo"])
 def test_cli_create_database_correct_tables_and_data(
@@ -111,6 +115,11 @@ def test_cli_create_database_with_already_existing_database_file(
     assert f"{database_name} database already exists." in res.output
 
 
+# --------------------------------
+# remove_database_file route tests
+# --------------------------------
+
+
 def test_cli_remove_database_file_deletes_database(test_cli_app, monkeypatch, tmp_path):
 
     # Set the DATABASE_FOLDER to use tmp_path
@@ -127,3 +136,18 @@ def test_cli_remove_database_file_deletes_database(test_cli_app, monkeypatch, tm
     res = runner.invoke(args=["database", "remove", database_name])
 
     assert f"{database_name} database was removed from {database_folder}" in res.output
+
+
+def test_cli_remove_database_file_to_be_removed_does_not_exist(
+    test_cli_app, monkeypatch, tmp_path
+):
+
+    # Set the DATABASE_FOLDER to use tmp_path
+    monkeypatch.setitem(test_cli_app.config, "DATABASE_FOLDER", tmp_path)
+    database_name = "test"
+
+    runner = test_cli_app.test_cli_runner()
+    res = runner.invoke(args=["database", "remove", database_name])
+
+    assert res.exit_code == 2
+    assert f"{database_name} database does not exist." in res.output
