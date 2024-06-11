@@ -11,11 +11,12 @@ def test_cli_create_database_correct_tables_and_data(
 
     # Set the DATABASE_FOLDER to use tmp_path
     monkeypatch.setitem(test_cli_app.config, "DATABASE_FOLDER", tmp_path)
+    database_folder = test_cli_app.config["DATABASE_FOLDER"]
 
     runner = test_cli_app.test_cli_runner()
     runner.invoke(args=["database", "create", database_name])
 
-    path_database = tmp_path / f"{database_name}.db"
+    path_database = database_folder / f"{database_name}.db"
     conn = sqlite3.connect(path_database)
     c = conn.cursor()
 
@@ -38,6 +39,8 @@ def test_cli_create_database_correct_tables_and_data(
         WHERE magazine_number_content_fts MATCH '"magazine_content"*'
            """
     ).fetchall()
+
+    conn.close()
 
     assert magazines_inserted_data == [
         (1, "magazine_name_1", "magazine_link_1"),
@@ -78,22 +81,49 @@ def test_cli_create_database_correct_confirmation_message(
 
 def test_cli_create_database_with_incorrect_database_name(test_cli_app):
 
-    runner = test_cli_app.test_cli_runner()
-
     database_name = "wrong_name"
+
+    runner = test_cli_app.test_cli_runner()
     res = runner.invoke(args=["database", "create", database_name])
 
     assert res.exit_code == 2
     assert f"Error: Invalid value: {database_name}" in res.output
 
 
-def test_cli_create_database_with_already_existing_database_file(test_cli_app):
+def test_cli_create_database_with_already_existing_database_file(
+    test_cli_app, monkeypatch, tmp_path
+):
+
+    # Set the DATABASE_FOLDER to use tmp_path
+    monkeypatch.setitem(test_cli_app.config, "DATABASE_FOLDER", tmp_path)
+    database_folder = test_cli_app.config["DATABASE_FOLDER"]
+    database_name = "test"
+    database_path = database_folder / f"{database_name}.db"
+
+    # create a sqlite3 .db file
+    conn = sqlite3.connect(database_path)
+    conn.close()
 
     runner = test_cli_app.test_cli_runner()
-
-    database_name = "test"
     res = runner.invoke(args=["database", "create", database_name])
-    res2 = runner.invoke(args=["database", "create", database_name])
 
-    assert res2.exit_code == 2
+    assert res.exit_code == 2
     assert f"{database_name} database already exists." in res.output
+
+
+def test_cli_remove_database_file_deletes_database(test_cli_app, monkeypatch, tmp_path):
+
+    # Set the DATABASE_FOLDER to use tmp_path
+    monkeypatch.setitem(test_cli_app.config, "DATABASE_FOLDER", tmp_path)
+    database_folder = test_cli_app.config["DATABASE_FOLDER"]
+    database_name = "test"
+    database_path = database_folder / f"{database_name}.db"
+
+    # create a sqlite3 .db file
+    conn = sqlite3.connect(database_path)
+    conn.close()
+
+    runner = test_cli_app.test_cli_runner()
+    res = runner.invoke(args=["database", "remove", database_name])
+
+    assert f"{database_name} database was removed from {database_folder}" in res.output
