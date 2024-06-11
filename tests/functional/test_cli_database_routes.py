@@ -1,7 +1,6 @@
 import sqlite3
 
 import pytest
-import click
 
 # -------------------------------
 # create_new_database route tests
@@ -43,7 +42,6 @@ def test_cli_create_database_correct_tables_and_data(
         WHERE magazine_number_content_fts MATCH '"magazine_content"*'
            """
     ).fetchall()
-
     conn.close()
 
     assert magazines_inserted_data == [
