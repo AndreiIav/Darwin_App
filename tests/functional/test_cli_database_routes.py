@@ -151,3 +151,18 @@ def test_cli_remove_database_file_to_be_removed_does_not_exist(
 
     assert res.exit_code == 2
     assert f"{database_name} database does not exist." in res.output
+
+
+def test_cli_remove_database_file_with_incorrect_database_name(
+    test_cli_app, monkeypatch, tmp_path
+):
+
+    # Set the DATABASE_FOLDER to use tmp_path
+    monkeypatch.setitem(test_cli_app.config, "DATABASE_FOLDER", tmp_path)
+    database_name = "wrong_name"
+
+    runner = test_cli_app.test_cli_runner()
+    res = runner.invoke(args=["database", "remove", database_name])
+
+    assert res.exit_code == 2
+    assert f"Error: Invalid value: {database_name}" in res.output
