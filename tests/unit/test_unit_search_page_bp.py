@@ -149,7 +149,7 @@ class TestGetDistinctMagazineNamesAndCountForSearchedTerm:
             assert magazine_name == expected_magazine_name
             assert count == expected_count
 
-    def test_instance_of_get_distinct_magazine_names_and_count_for_searched_term(
+    def test_type_of_get_distinct_magazine_names_and_count_for_searched_term(
         self, test_client
     ):
 
@@ -176,17 +176,39 @@ class TestGetDistinctMagazineNamesAndCountForSearchedTerm:
 
 # Tests for get_details_for_searched_term
 class TestGetDetailsForSearchedTerm:
-    def test_instance_of_get_details_for_searched_term(self, test_client):
+    def test_get_details_for_searched_term_gets_correct_data(self, test_client):
 
-        s_word = format_search_word("Constantin Esarcu")
+        s_word = "fotbal"
+        expected_magazine_name = "Amicul Şcoalei (1925-1935)"
+        expected_year = "ANUL 1930"
+        expected_number = "Nr.23-24"
+        expected_page = 8
+        expected_link = "https://documente.bcucluj.ro/web/bibdigit/periodice/amiculscoalei/1930/BCUCLUJ_FP_279091_1930_006_023_024.pdf"
+        expected_rowid = 10708
+
+        details_for_searched_term = get_details_for_searched_term(s_word)
+
+        for name, year, number, page, link, rowid in details_for_searched_term:
+            assert name == expected_magazine_name
+            assert year == expected_year
+            assert number == expected_number
+            assert page == expected_page
+            assert link == expected_link
+            assert rowid == expected_rowid
+
+    def test_type_of_get_details_for_searched_term(self, test_client):
+
+        s_word = "fotbal"
         details_for_searched_term = get_details_for_searched_term(s_word)
 
         assert isinstance(details_for_searched_term, flask_sqlalchemy.query.Query)
 
     def test_response_details_of_get_details_for_searched_term(self, test_client):
 
-        s_word = format_search_word("Constantin Esarcu")
+        s_word = "fotbal"
         details_for_searched_term = get_details_for_searched_term(s_word)
+
+        assert len(list(details_for_searched_term)) == 1
 
         for row in details_for_searched_term:
             assert len(row) == 6
