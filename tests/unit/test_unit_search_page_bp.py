@@ -134,6 +134,21 @@ class TestFormatSearchWord:
 
 # Tests for get_distinct_magazine_names_and_count_for_searched_term
 class TestGetDistinctMagazineNamesAndCountForSearchedTerm:
+
+    def test_get_distinct_magazine_names_and_count_for_searched_term_gets_correct_data(
+        self, test_client
+    ):
+        magazine_names_and_count = (
+            get_distinct_magazine_names_and_count_for_searched_term("fotbal")
+        )
+        expected_magazine_name = "Amicul Şcoalei (1925-1935)"
+        expected_count = 1
+
+        assert len(list(magazine_names_and_count)) == 1
+        for magazine_name, count in magazine_names_and_count:
+            assert magazine_name == expected_magazine_name
+            assert count == expected_count
+
     def test_instance_of_get_distinct_magazine_names_and_count_for_searched_term(
         self, test_client
     ):
