@@ -40,7 +40,7 @@ def test_cli_create_database_correct_tables_and_data(
         FROM magazine_number_content mnc
         INNER JOIN magazine_number_content_fts mncf ON mnc.id = mncf.rowid
         WHERE magazine_number_content_fts MATCH '"magazine_content"*'
-           """
+        """
     ).fetchall()
     conn.close()
 
@@ -81,7 +81,7 @@ def test_cli_create_database_correct_confirmation_message(
     assert f"database {database_name} created in {database_folder}" in standard_output
 
 
-def test_cli_create_database_with_incorrect_database_name(test_cli_app):
+def test_cli_create_database_with_incorrect_database_name_argument(test_cli_app):
 
     database_name = "wrong_name"
 
@@ -111,6 +111,15 @@ def test_cli_create_database_with_already_existing_database_file(
 
     assert res.exit_code == 2
     assert f"{database_name} database already exists." in res.output
+
+
+def test_cli_create_database_with_missing_database_name_argument(test_cli_app):
+
+    runner = test_cli_app.test_cli_runner()
+    res = runner.invoke(args=["database", "create"])
+
+    assert res.exit_code == 2
+    assert "Error: Missing argument 'NAME'." in res.output
 
 
 # --------------------------------
@@ -164,3 +173,12 @@ def test_cli_remove_database_file_with_incorrect_database_name(
 
     assert res.exit_code == 2
     assert f"Error: Invalid value: {database_name}" in res.output
+
+
+def test_cli_remove_database_with_missing_database_name_argument(test_cli_app):
+
+    runner = test_cli_app.test_cli_runner()
+    res = runner.invoke(args=["database", "remove"])
+
+    assert res.exit_code == 2
+    assert "Error: Missing argument 'NAME'." in res.output
