@@ -3,12 +3,6 @@ import flask_sqlalchemy
 import werkzeug
 from flask import request, current_app
 
-from application.home.logic import (
-    get_existent_magazines,
-    get_magazine_name,
-    get_magazine_details,
-)
-
 from application.search_page.logic import (
     format_search_word,
     get_distinct_magazine_names_and_count_for_searched_term,
@@ -27,74 +21,6 @@ from application.search_page.logic import (
     get_previews_for_page_id,
     add_html_tags_around_preview_string_parantheses,
 )
-
-# Tests for get_existent_magazines()
-class TestGetExistentMagazines:
-    def test_content_of_get_existent_magazines(self, test_client):
-        existent_magazine = ("Viaţa Noastră (1936-1937)", 153)
-        non_existent_magazine = ("abc", 0)
-
-        assert existent_magazine in get_existent_magazines()
-        assert non_existent_magazine not in get_existent_magazines()
-
-    def test_instance_of_get_existent_magazines(self, test_client):
-        assert isinstance(get_existent_magazines(), flask_sqlalchemy.query.Query)
-
-    def test_length_of_get_existent_magazines(self, test_client):
-        assert len(list(get_existent_magazines())) == 136
-
-
-# Tests for get_magazine_name()
-class TestGetMagazineName:
-    def test_get_magazine_name_with_existent_magazine_id(self, test_client):
-        test_magazine = "Buletinul eugenic şi biopolitic (1927-1947)"
-
-        assert test_magazine == get_magazine_name(33)
-
-    def test_get_magazine_name_with_non_existent_magazine_id(self, test_client):
-        assert get_magazine_name(999) is None
-        assert get_magazine_name("999") is None
-
-    def test_get_magazine_name_with_no_parameter_passed(self, test_client):
-        assert get_magazine_name() is None
-
-    invalid_magazine_id_input = ["a", True, 1.23, None, "33"]
-
-    @pytest.mark.parametrize("invalid_magazine_id", invalid_magazine_id_input)
-    def test_get_magazine_name_with_invalid_data_types_parameters(
-        self, test_client, invalid_magazine_id
-    ):
-        assert get_magazine_name(invalid_magazine_id) is None
-
-    def test_get_magazine_name_if_OverflowError_returns_None(self, test_client):
-        assert get_magazine_name(99999999999999999999) is None
-
-
-# Tests for get_magazine_details()
-class TestGetMagazineDetails:
-    @pytest.mark.parametrize("magazine_id", [13, "13"])
-    def test_get_magazine_details_with_existent_magazine_id(
-        self, test_client, magazine_id
-    ):
-        test_magazine_details = [("ANUL 1 1868", 24, 757), ("ANUL 2 1871", 2, 72)]
-
-        for index, magazine_detail in enumerate(get_magazine_details(magazine_id)):
-            assert test_magazine_details[index] == magazine_detail
-
-    def test_get_magazine_details_with_not_existent_magazine_id(self, test_client):
-
-        assert len(list(get_magazine_details(999))) == 0
-
-    def test_get_magazine_details_with_no_parameter_passed(self, test_client):
-        assert len(list(get_magazine_details())) == 0
-
-    invalid_magazine_id_input = ["a", True, 1.23, None]
-
-    @pytest.mark.parametrize("invalid_magazine_id", invalid_magazine_id_input)
-    def test_get_magazine_details_with_invalid_data_types_parameters(
-        self, test_client, invalid_magazine_id
-    ):
-        assert len(list(get_magazine_details(invalid_magazine_id))) == 0
 
 
 # Tests for store_s_word_in_session()
@@ -177,7 +103,7 @@ class TestFormatSearchWord:
 
         formatted_s_word = format_search_word(" ala bala portocala ")
         assert formatted_s_word == "ala bala portocala"
-        
+
     def test_format_search_word_with_accepted_special_characters(self):
         input = "Darwin-_.,„!?;:''"
         expected_output = "Darwin-_.,„!?;:''"
@@ -191,14 +117,17 @@ class TestFormatSearchWord:
 
         formatted_s_word = format_search_word(input)
         assert formatted_s_word == expected_output
-    
-    @pytest.mark.parametrize("input, expected",
+
+    @pytest.mark.parametrize(
+        "input, expected",
         [
-        (r'Victor<"()&/\|~{}[]+=Babes', "VictorBabes"),
-        (r'Victor<"()&/\|~{}[]+= Babes', "Victor Babes")
-        ]
+            (r'Victor<"()&/\|~{}[]+=Babes', "VictorBabes"),
+            (r'Victor<"()&/\|~{}[]+= Babes', "Victor Babes"),
+        ],
     )
-    def test_format_search_word_with_multiple_words_with_not_accepted_special_characters(self, input, expected):
+    def test_format_search_word_with_multiple_words_with_not_accepted_special_characters(
+        self, input, expected
+    ):
         formatted_s_word = format_search_word(input)
         assert formatted_s_word == expected
 
@@ -389,7 +318,7 @@ class TestPaginateResults:
         with pytest.raises(werkzeug.exceptions.NotFound) as err:
             paginate_results(details_for_searched_term, page, per_page, error_out)
 
-        assert '404 Not Found' in str(err.value)
+        assert "404 Not Found" in str(err.value)
 
     def test_paginate_results_error_out_false(self, test_client):
 
