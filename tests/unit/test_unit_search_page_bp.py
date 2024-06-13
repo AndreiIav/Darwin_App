@@ -135,43 +135,30 @@ class TestFormatSearchWord:
 # Tests for get_distinct_magazine_names_and_count_for_searched_term
 class TestGetDistinctMagazineNamesAndCountForSearchedTerm:
 
-    def test_get_distinct_magazine_names_and_count_for_searched_term_gets_correct_data(
-        self, test_client
-    ):
-        magazine_names_and_count = (
-            get_distinct_magazine_names_and_count_for_searched_term("fotbal")
-        )
-        expected_magazine_name = "Amicul Şcoalei (1925-1935)"
-        expected_count = 1
-
-        assert len(list(magazine_names_and_count)) == 1
-        for magazine_name, count in magazine_names_and_count:
-            assert magazine_name == expected_magazine_name
-            assert count == expected_count
-
     def test_type_of_get_distinct_magazine_names_and_count_for_searched_term(
         self, test_client
     ):
 
+        s_word = "Bucuresti"
         magazine_names_and_count = (
-            get_distinct_magazine_names_and_count_for_searched_term("fotbal")
+            get_distinct_magazine_names_and_count_for_searched_term(s_word)
         )
+
         assert isinstance(magazine_names_and_count, flask_sqlalchemy.query.Query)
 
-    def test_response_details_of_get_distinct_magazine_names_and_count_for_searched_term(
+    def test_get_distinct_magazine_names_and_count_for_searched_term_gets_correct_data(
         self, test_client
     ):
-
+        s_word = "Bucuresti"
         magazine_names_and_count = (
-            get_distinct_magazine_names_and_count_for_searched_term("fotbal")
+            get_distinct_magazine_names_and_count_for_searched_term(s_word)
         )
+        expected_result = [
+            ("Albina (1866-1876)", 26),
+            ("Amicul Şcoalei (1925-1935)", 186),
+        ]
 
-        for row in magazine_names_and_count:
-            assert len(row) == 2
-
-        for name, count in magazine_names_and_count:
-            assert isinstance(name, str)
-            assert isinstance(count, int)
+        assert list(magazine_names_and_count) == expected_result
 
 
 # Tests for get_details_for_searched_term
