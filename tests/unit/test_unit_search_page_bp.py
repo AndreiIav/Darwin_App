@@ -132,35 +132,6 @@ class TestFormatSearchWord:
         assert formatted_s_word == expected
 
 
-# Tests for get_distinct_magazine_names_and_count_for_searched_term
-class TestGetDistinctMagazineNamesAndCountForSearchedTerm:
-
-    def test_type_of_get_distinct_magazine_names_and_count_for_searched_term(
-        self, test_client
-    ):
-
-        s_word = "Bucuresti"
-        magazine_names_and_count = (
-            get_distinct_magazine_names_and_count_for_searched_term(s_word)
-        )
-
-        assert isinstance(magazine_names_and_count, flask_sqlalchemy.query.Query)
-
-    def test_get_distinct_magazine_names_and_count_for_searched_term_gets_correct_data(
-        self, test_client
-    ):
-        s_word = "Bucuresti"
-        magazine_names_and_count = (
-            get_distinct_magazine_names_and_count_for_searched_term(s_word)
-        )
-        expected_result = [
-            ("Albina (1866-1876)", 26),
-            ("Amicul Şcoalei (1925-1935)", 186),
-        ]
-
-        assert list(magazine_names_and_count) == expected_result
-
-
 # Tests for get_details_for_searched_term
 class TestGetDetailsForSearchedTerm:
     def test_get_details_for_searched_term_gets_correct_data(self, test_client):
@@ -209,84 +180,33 @@ class TestGetDetailsForSearchedTerm:
             assert isinstance(rowid, int)
 
 
-# Tests for paginate_results
-class TestPaginateResults:
-    def test_instance_of_paginate_results(self, test_client):
+# Tests for get_distinct_magazine_names_and_count_for_searched_term
+class TestGetDistinctMagazineNamesAndCountForSearchedTerm:
 
-        s_word = format_search_word("Victor Babeș")
-        details_for_searched_term = get_details_for_searched_term(s_word)
-        page = 1
-        per_page = current_app.config["RESULTS_PER_PAGE"]
-        error_out = False
-        paginated_details_for_searched_word = paginate_results(
-            details_for_searched_term, page, per_page, error_out
-        )
-
-        assert isinstance(
-            paginated_details_for_searched_word,
-            flask_sqlalchemy.pagination.QueryPagination,
-        )
-
-    pages = [1, 23]
-
-    @pytest.mark.parametrize("pages", pages)
-    def test_paginate_results_returns_correct_page(self, test_client, pages):
-
-        s_word = format_search_word("Victor Babeș")
-        details_for_searched_term = get_details_for_searched_term(s_word)
-        page = pages
-        per_page = current_app.config["RESULTS_PER_PAGE"]
-        error_out = False
-        paginated_details_for_searched_word = paginate_results(
-            details_for_searched_term, page, per_page, error_out
-        )
-
-        assert paginated_details_for_searched_word.page == page
-
-    results_per_page = [1, 10, 11, 200]
-
-    @pytest.mark.parametrize("per_page", results_per_page)
-    def test_paginate_results_returns_correct_number_of_results_per_page(
-        self, test_client, per_page
+    def test_type_of_get_distinct_magazine_names_and_count_for_searched_term(
+        self, test_client
     ):
 
-        s_word = format_search_word("Victor Babeș")
-        details_for_searched_term = get_details_for_searched_term(s_word)
-        page = 1
-        per_page = per_page
-        error_out = False
-        paginated_details_for_searched_word = paginate_results(
-            details_for_searched_term, page, per_page, error_out
+        s_word = "Bucuresti"
+        magazine_names_and_count = (
+            get_distinct_magazine_names_and_count_for_searched_term(s_word)
         )
 
-        assert len(paginated_details_for_searched_word.items) == per_page
+        assert isinstance(magazine_names_and_count, flask_sqlalchemy.query.Query)
 
-    def test_paginate_results_error_out_true(self, test_client):
-
-        s_word = format_search_word("Victor Babeș")
-        details_for_searched_term = get_details_for_searched_term(s_word)
-        page = 2000
-        per_page = 10
-        error_out = True
-
-        with pytest.raises(werkzeug.exceptions.NotFound) as err:
-            paginate_results(details_for_searched_term, page, per_page, error_out)
-
-        assert "404 Not Found" in str(err.value)
-
-    def test_paginate_results_error_out_false(self, test_client):
-
-        s_word = format_search_word("Victor Babeș")
-        details_for_searched_term = get_details_for_searched_term(s_word)
-        page = 2000
-        per_page = 10
-        error_out = False
-
-        paginated_details_for_searched_word = paginate_results(
-            details_for_searched_term, page, per_page, error_out
+    def test_get_distinct_magazine_names_and_count_for_searched_term_gets_correct_data(
+        self, test_client
+    ):
+        s_word = "Bucuresti"
+        magazine_names_and_count = (
+            get_distinct_magazine_names_and_count_for_searched_term(s_word)
         )
+        expected_result = [
+            ("Albina (1866-1876)", 26),
+            ("Amicul Şcoalei (1925-1935)", 186),
+        ]
 
-        assert paginated_details_for_searched_word
+        assert list(magazine_names_and_count) == expected_result
 
 
 # Tests for replace_multiple_extra_white_spaces_with_just_one
