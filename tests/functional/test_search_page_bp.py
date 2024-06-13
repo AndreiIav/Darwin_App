@@ -1,10 +1,13 @@
 import pytest
 
+from flask import current_app
 import flask_sqlalchemy
+import werkzeug
 
 from application.search_page.logic import (
     get_details_for_searched_term,
     get_details_for_searched_term_for_specific_magazine,
+    paginate_results,
 )
 
 
@@ -177,3 +180,86 @@ class TestGetDetailsForSpecificMagazineForSearchedTerm:
 
         for row in details_for_searched_term_for_specific_magazine:
             assert row[0] == magazine_filter
+
+
+# Tests for paginate_results
+class TestPaginateResults:
+    def test_type_of_paginate_results(self, test_client):
+
+        s_word = "Bucuresti"
+        # get a flask_sqlalchemy.query.Query object to be paginated
+        details_for_searched_term = get_details_for_searched_term(s_word)
+        page = 1
+        per_page = current_app.config["RESULTS_PER_PAGE"]
+        error_out = False
+
+        paginated_details_for_searched_word = paginate_results(
+            details_for_searched_term, page, per_page, error_out
+        )
+
+        assert isinstance(
+            paginated_details_for_searched_word,
+            flask_sqlalchemy.pagination.QueryPagination,
+        )
+
+    pages = [1, 22]
+
+    @pytest.mark.parametrize("pages", pages)
+    def test_paginate_results_returns_correct_page(self, test_client, pages):
+
+        s_word = "Bucuresti"
+        # get a flask_sqlalchemy.query.Query object to be paginated
+        details_for_searched_term = get_details_for_searched_term(s_word)
+        page = pages
+        per_page = current_app.config["RESULTS_PER_PAGE"]
+        error_out = False
+
+        paginated_details_for_searched_word = paginate_results(
+            details_for_searched_term, page, per_page, error_out
+        )
+
+        assert paginated_details_for_searched_word.page == page
+
+    results_per_page = [1, 10, 11, 200]
+
+    @pytest.mark.parametrize("per_page", results_per_page)
+    def test_paginate_results_returns_correct_number_of_results_per_page(
+        self, test_client, per_page
+    ):
+
+        s_word = "Bucuresti"
+        # get a flask_sqlalchemy.query.Query object to be paginated
+        details_for_searched_term = get_details_for_searched_term(s_word)
+        page = 1
+        per_page = per_page
+        error_out = False
+
+        paginated_details_for_searched_word = paginate_results(
+            details_for_searched_term, page, per_page, error_out
+        )
+
+        assert len(paginated_details_for_searched_word.items) == per_page
+
+    def test_paginate_results_error_out_true_not_existing_page(self, test_client):
+
+        s_word = "Bucuresti"
+        # get a flask_sqlalchemy.query.Query object to be paginated
+        details_for_searched_term = get_details_for_searched_term(s_word)
+        page = 2000
+        per_page = 10
+        error_out = True
+
+        with pytest.raises(werkzeug.exceptions.NotFound) as err:
+            paginate_results(details_for_searched_term, page, per_page, error_out)
+
+        assert "404 Not Found" in str(err.value)
+
+    def test_paginate_results_error_out_false_not_existing_page(self, test_client):
+
+        s_word = "Bucuresti"
+        details_for_searched_term = get_details_for_searched_term(s_word)
+        page = 2000
+        per_page = 10
+        error_out = False
+
+        paginate_results(details_for_searched_term, page, per_page, error_out)
