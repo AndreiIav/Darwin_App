@@ -248,13 +248,11 @@ class TestGetMagazineContentDetails:
         assert get_magazine_content_details(0) == ""
 
     def test_get_magazine_content_details_with_existent_rowid(self, test_client):
-        content_details = get_magazine_content_details(1)
+        page_id = 1989
+        content_details = get_magazine_content_details(page_id)
 
-        assert len(content_details) == 5180
-        assert (
-            "hiar mândri de a colabora la o asemenea operă de degradare a simţului literar şi moral. Ei"
-            in content_details
-        )
+        assert len(content_details) == 11544
+        assert " si romanii remanu espusi fatalităţilor!" in content_details
 
 
 # Tests for convert_diacritics_to_basic_latin_characters
