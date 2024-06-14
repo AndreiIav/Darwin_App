@@ -4,7 +4,7 @@ import pytest
 # Tests for /results/
 def test_results_page_get(test_client):
 
-    s_word = "Victor+Babeș"
+    s_word = "Bucuresti"
     response = test_client.get("/results/search", query_string={"search_box": s_word})
 
     assert response.status_code == 200
@@ -47,9 +47,9 @@ def test_results_page_pagination_existent_page(test_client, pages):
 
 def test_results_page_pagination_not_existent_page(test_client):
 
-    s_word = "Victor+Babeș"
+    s_word = "Bucuresti"
     response = test_client.get(
-        "/results/search", query_string={"search_box": s_word, "page": 24}
+        "/results/search", query_string={"search_box": s_word, "page": 2000}
     )
 
     assert response.status_code == 404
@@ -88,8 +88,8 @@ def test_results_page_with_magazine_filter_pagination(test_client):
 
 def test_results_page_with_magazine_filter_go_back_buttons_displayed(test_client):
 
-    s_word = "Victor+Babeș"
-    magazine_filter = "Gazeta+de+Transilvania+(1838-1914)"
+    s_word = "Bucuresti"
+    magazine_filter = "Albina (1866-1876)"
     page = 2
 
     response = test_client.get(
