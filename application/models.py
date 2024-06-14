@@ -1,5 +1,7 @@
 """Data models"""
-from . import db
+
+# from . import db
+from application.models import db
 
 
 class Magazines(db.Model):
@@ -25,7 +27,7 @@ class MagazineYear(db.Model):
 
     def __repr__(self):
         return f"MagazineYear(id={self.id},magazine_id={self.magazine_id},year={self.year},magazine_year_link={self.magazine_year_link})"
-        
+
 
 class MagazineNumber(db.Model):
 
@@ -62,7 +64,7 @@ class MagazineNumberContentFTS(db.Model):
 
     def __repr__(self):
         return f"MagazineNumberContentFTS(rowid={self.rowid},magazine_content={self.magazine_content})"
-    
+
 
 class MagazineDetails(db.Model):
 
