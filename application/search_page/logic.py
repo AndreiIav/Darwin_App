@@ -1,5 +1,10 @@
 import re
-from ..models import (
+
+from sqlalchemy import func
+from flask import session
+from markupsafe import Markup
+
+from application.models import (
     Magazines,
     MagazineYear,
     MagazineNumber,
@@ -7,32 +12,31 @@ from ..models import (
     MagazineNumberContentFTS,
     db,
 )
-from sqlalchemy import func
-from flask import session
-from markupsafe import Markup
 
 
 def get_details_for_searched_term(formatted_s_word):
     """
-    Retrieve specific columns from multiple tables based on a provided search term.
+    Retrieve specific columns from multiple tables based on a provided search
+    term.
 
     Args:
         formatted_s_word (str): The search term used for retrieval.
 
     Returns:
-        all_details_for_searched_term (flask_sqlalchemy.query.Query): A Query object
-        containing the retrieved results.
+        all_details_for_searched_term (flask_sqlalchemy.query.Query): A Query
+        object containing the retrieved results.
 
-    This function returns a SQLAlchemy Query object that retrieves specific columns
-    (Magazines.name, MagazineYear.year, MagazineNumber.magazine_number,
+    This function returns a SQLAlchemy Query object that retrieves specific
+    columns (Magazines.name, MagazineYear.year, MagazineNumber.magazine_number,
     MagazineNumberContent.magazine_page, MagazineNumber.magazine_number_link,
-    and MagazineNumberContent.id) from multiple tables based on a provided search
-    term.
-    The search is performed on an FTS5 table, which enables fast text search capabilities.
+    and MagazineNumberContent.id) from multiple tables based on a provided
+    search term.
+    The search is performed on an FTS5 table, which enables fast text search
+    capabilities.
     The Query object can be iterated to access the results.
     """
 
-    expression_to_search = '"' + formatted_s_word + '"' + '*'
+    expression_to_search = '"' + formatted_s_word + '"' + "*"
 
     all_details_for_searched_term = (
         db.session.query(
@@ -54,10 +58,12 @@ def get_details_for_searched_term(formatted_s_word):
             MagazineNumberContent.id == MagazineNumberContentFTS.rowid,
         )
         .filter(MagazineNumberContentFTS.magazine_content.match(expression_to_search))
-        .order_by(Magazines.name,
-                  MagazineYear.year,
-                  MagazineNumber.magazine_number,
-                  MagazineNumberContent.magazine_page)
+        .order_by(
+            Magazines.name,
+            MagazineYear.year,
+            MagazineNumber.magazine_number,
+            MagazineNumberContent.magazine_page,
+        )
     )
 
     return all_details_for_searched_term
@@ -70,13 +76,13 @@ def get_details_for_searched_term_for_specific_magazine(
     Filter a SQLAlchemy Query object based on a provided filter term.
 
     Args:
-        details_for_searched_term (flask_sqlalchemy.query.Query): The Query object returned by the
-        get_details_for_searched_term function.
+        details_for_searched_term (flask_sqlalchemy.query.Query): The Query
+        object returned by the get_details_for_searched_term function.
         magazine_filter (str): The filter term representing Magazines.name.
 
     Returns:
-        details_for_specific_magazine (flask_sqlalchemy.query.Query): A new Query object containing the
-        filtered results.
+        details_for_specific_magazine (flask_sqlalchemy.query.Query): A new
+        Query object containing the filtered results.
     """
 
     details_for_specific_magazine = details_for_searched_term.filter(
@@ -91,14 +97,16 @@ def paginate_results(details_for_searched_term, page, per_page, error_out):
     Generate a SQLAlchemy Pagination object for the provided Query.
 
     Args:
-        details_for_searched_term (flask_sqlalchemy.query.Query): The SQLAlchemy Query object to paginate.
+        details_for_searched_term (flask_sqlalchemy.query.Query): The SQLAlchemy
+        Query object to paginate.
         page (int): The page number to retrieve.
         per_page (int): The number of results to be displayed on a page.
-        error_out (bool): The error flag for the error_out argument for the pagination object.
+        error_out (bool): The error flag for the error_out argument for the
+        pagination object.
 
     Returns:
-        flask_sqlalchemy.pagination.QueryPagination: A Pagination object representing the subset of query
-        results for the requested page.
+        flask_sqlalchemy.pagination.QueryPagination: A Pagination object
+        representing the subset of query results for the requested page.
     """
     return details_for_searched_term.paginate(
         page=page, per_page=per_page, error_out=error_out
@@ -107,19 +115,23 @@ def paginate_results(details_for_searched_term, page, per_page, error_out):
 
 def get_distinct_magazine_names_and_count_for_searched_term(formatted_s_word):
     """
-    Retrieve distinct magazine names and search term counts based on the formatted_s_word.
+    Retrieve distinct magazine names and search term counts based on the
+    formatted_s_word.
 
     Args:
-        formatted_s_word (str): The formatted search word obtained from format_search_word function.
+        formatted_s_word (str): The formatted search word obtained from
+        format_search_word function.
 
     Returns:
-        distinct_magazine_names_and_count_for_searched_term (flask_sqlalchemy.query.Query): A Query
-        object containing tuples of magazine names and search term counts.
+        distinct_magazine_names_and_count_for_searched_term
+        (flask_sqlalchemy.query.Query): A Query object containing tuples of
+        magazine names and search term counts.
 
-    The Query object can be iterated to access the magazine names and their respective search term counts.
+    The Query object can be iterated to access the magazine names and their
+    respective search term counts.
     """
 
-    expression_to_search = '"' + formatted_s_word + '"' + '*'
+    expression_to_search = '"' + formatted_s_word + '"' + "*"
 
     distinct_magazine_names_and_count_for_searched_term = (
         db.session.query(Magazines.name, func.count(Magazines.name))
@@ -147,21 +159,26 @@ def format_search_word(s_word, separator=" "):
 
     Args:
         s_word (str): The input search word.
-        separator (str): The separator used in case there are multiple words. Default is " ".
+        separator (str): The separator used in case there are multiple words.
+        Default is " ".
 
     Returns:
         formatted_s_word (str): The formatted search word.
 
-    This function returns the inputted search word if it is a single word, or the inputted
-    search word concatenated with the separator sign if there are more than one term in s_word.
-    The function removes all leading and trailing whitespaces of the input.
-    The function removes all unaccepted special characters of the input.
+    This function returns the inputted search word if it is a single word, or
+    the inputted search word concatenated with the separator sign if there are
+    more than one term in s_word. The function removes all leading and trailing
+    whitespaces of the input. The function removes all unaccepted special
+    characters of the input.
     """
 
-    accepted_special_characters = ("-_.,„!?;:'' ")
+    accepted_special_characters = "-_.,„!?;:'' "
 
     for character in s_word:
-        if character.isalnum() is False and character not in accepted_special_characters:
+        if (
+            character.isalnum() is False
+            and character not in accepted_special_characters
+        ):
             s_word = s_word.replace(character, "")
 
     s_word_list = s_word.split()
@@ -173,17 +190,20 @@ def format_search_word(s_word, separator=" "):
 
     return formatted_s_word
 
+
 def get_magazine_content_details(page_id=0):
     """
-    Retrieve the content of a magazine page from the MagazineNumberContent table based on the
-    provided page_id.
+    Retrieve the content of a magazine page from the MagazineNumberContent table
+    based on the provided page_id.
 
     Args:
-        page_id (int): The rowid of the page to retrieve the content for. Defaults to 0.
+        page_id (int): The rowid of the page to retrieve the content for.
+        Defaults to 0.
 
     Returns:
-        magazine_content_details (str): The content of the magazine page if found. If not found or
-        if the parameter is of an invalid data type the string will be empty.
+        magazine_content_details (str): The content of the magazine page if
+        found. If not found or if the parameter is of an invalid data type the
+        string will be empty.
     """
 
     magazine_content_details = db.session.query(
@@ -198,7 +218,6 @@ def get_magazine_content_details(page_id=0):
 
 
 def replace_multiple_extra_white_spaces_with_just_one(text=""):
-
     """
     Replace multiple consecutive whitespace characters with a single space.
 
@@ -206,7 +225,8 @@ def replace_multiple_extra_white_spaces_with_just_one(text=""):
         text (str): The input text string. Default is empty string: "".
 
     Returns:
-        replaced_text (str): The modified text string with multiple consecutive spaces replaced by a single space.
+        replaced_text (str): The modified text string with multiple consecutive
+        spaces replaced by a single space.
     """
 
     pattern = r"\s{2,}"
@@ -220,11 +240,14 @@ def convert_diacritics_to_basic_latin_characters(string_to_convert=""):
     Convert diacritics in a string to basic Latin characters.
 
     Args:
-        string_to_convert (str, optional): The input string containing diacritics. Defaults to an empty string.
+        string_to_convert (str, optional): The input string containing
+        diacritics. Defaults to an empty string.
 
     Returns:
-        converted_string (str): The input string with Romanian and Hungarian diacritics replaced by basic Latin
-        characters, or an empty string if no argument is provided or an argument of invalid type is given.
+        converted_string (str): The input string with Romanian and Hungarian
+        diacritics replaced by basic Latin
+        characters, or an empty string if no argument is provided or an argument
+        of invalid type is given.
     """
 
     if not isinstance(string_to_convert, str):
@@ -294,8 +317,8 @@ def get_indexes_for_highlighting_s_word(s_word, content):
         content (str): The text to search within.
 
     Returns:
-        indexes_for_highlighting_s_word (list): A list of integers representing the starting indexes of
-        each occurrence of the searched term.
+        indexes_for_highlighting_s_word (list): A list of integers representing
+        the starting indexes of each occurrence of the searched term.
     """
 
     formatted_content_string = convert_diacritics_to_basic_latin_characters(
@@ -328,15 +351,17 @@ def get_distinct_s_word_variants(
     Find distinct versions of the searched term in the given content.
 
     Args:
-        indexes_for_highlighting_s_word (list of int): A list of integers representing string indexes.
+        indexes_for_highlighting_s_word (list of int): A list of integers
+        representing string indexes.
         content (str): The string in which to search for the term.
         s_word_string_length (int): The length of the searched term.
 
     Returns:
-        distinct_s_words_variants (list of str): A list of distinct variants of the searched term.
+        distinct_s_words_variants (list of str): A list of distinct variants of
+        the searched term.
 
-    The function returns variations caused by different case letters or the use of diacritics for a term
-    (i, e.: "Darwin", "darwin" or "Babeș","Babes").
+    The function returns variations caused by different case letters or the use
+    of diacritics for a term (i, e.: "Darwin", "darwin" or "Babeș","Babes").
     """
 
     distinct_s_word_variants = []
@@ -354,11 +379,13 @@ def add_html_mark_tags_to_the_searched_term(distinct_s_word_variants, content):
     Add HTML <mark> tags around every variant of a term in the content.
 
     Args:
-        distinct_s_word_variants (list of str): A list of distinct variants for a term.
+        distinct_s_word_variants (list of str): A list of distinct variants for
+        a term.
         content (str): The content string to modify.
 
     Returns:
-        content (str): The modified content with HTML <mark> tags around each variant of the term.
+        content (str): The modified content with HTML <mark> tags around each
+        variant of the term.
     """
 
     while len(distinct_s_word_variants) > 0:
@@ -369,7 +396,6 @@ def add_html_mark_tags_to_the_searched_term(distinct_s_word_variants, content):
 
 
 def add_html_tags_around_preview_string_parantheses(content):
-
     """
     Add HTML <b> and <i> tags around every occurrance of "[...]" in the content.
 
@@ -377,7 +403,8 @@ def add_html_tags_around_preview_string_parantheses(content):
         content (str): The content string to modify.
 
     Returns:
-        content (str): The modified content with HTML <b> and <i> tags around every occurrance of "[...]" in the content.
+        content (str): The modified content with HTML <b> and <i> tags around
+        every occurrance of "[...]" in the content.
     """
 
     content = content.replace("[...]", "<b><i>" + "[...]" + "</i></b>")
@@ -392,24 +419,28 @@ def get_all_start_and_end_indexes_for_preview_substrings(
 
     Args:
         content (str): The content string to process.
-        preview_length (int): The length before and after a searched term for the needed substring.
+        preview_length (int): The length before and after a searched term for
+        the needed substring.
         s_word_string_length (int): The length of the searched term.
-        indexes (list): A list with the start indexes of searched term occurrences.
+        indexes (list): A list with the start indexes of searched term
+        occurrences.
 
     Returns:
-        preview_substrings_start_end_indexes (list): A list containing lists with start and end indexes
-        for the substrings.
+        preview_substrings_start_end_indexes (list): A list containing lists
+        with start and end indexes for the substrings.
 
-    This function accepts a content string (content) and retrieves start and end indexes for substrings
-    around searched term occurrences.
-    The length of each substring is determined by the provided preview_length, with consideration for
-    maintaining complete words.
+    This function accepts a content string (content) and retrieves start and end
+    indexes for substrings around searched term occurrences.
+    The length of each substring is determined by the provided preview_length,
+    with consideration for maintaining complete words.
 
     Note:
-        The lenght of the substring could be more or less than the set preview_lenght because the function
-        will try to return substrings that start and end with complete words. For example, if the preview_length
-        is set to 10 characters, the function will ensure that the returned substring includes full words and may
-        extend beyond 10 characters if necessary.
+        The lenght of the substring could be more or less than the set
+        preview_lenght because the function will try to return substrings that
+        start and end with complete words. For example, if the preview_length
+        is set to 10 characters, the function will ensure that the returned
+        substring includes full words and may extend beyond 10 characters if
+        necessary.
     """
 
     preview_substrings_start_end_indexes = []
@@ -446,15 +477,18 @@ def merge_overlapping_preview_substrings(preview_substrings_start_end_indexes):
     Merge overlapping intervals in a list of start and end indexes pairs.
 
     Args:
-        preview_substrings_start_end_indexes (list): A list containing lists of start and end indexes pairs.
+        preview_substrings_start_end_indexes (list): A list containing lists of
+        start and end indexes pairs.
 
     Returns:
-        preview_substrings_indexes (list): A list containing merged lists of start and end indexes.
+        preview_substrings_indexes (list): A list containing merged lists of
+        start and end indexes.
 
-    This function accepts a list (preview_substrings_start_end_indexes) containing lists of start and end
-    indexes pairs. It merges overlapping intervals within the lists and returns a list containing the merged
-    start and end index pairs. If there are no overlapping intervals, the function returns a list with the
-    original lists passed.
+    This function accepts a list (preview_substrings_start_end_indexes)
+    containing lists of start and end indexes pairs. It merges overlapping
+    intervals within the lists and returns a list containing the merged start
+    and end index pairs. If there are no overlapping intervals, the function
+    returns a list with the original lists passed.
     """
 
     preview_substrings_indexes = []
@@ -484,19 +518,23 @@ def merge_overlapping_preview_substrings(preview_substrings_start_end_indexes):
 
 def get_preview_string(preview_substrings_indexes, content):
     """
-    Create a concatenated string with substrings based on provided indexes and delimited by " [...] ".
+    Create a concatenated string with substrings based on provided indexes and
+    delimited by " [...] ".
 
     Args:
-        preview_substrings_indexes (list): A list containg lists of start and end indexes pairs.
+        preview_substrings_indexes (list): A list containg lists of start and
+        end indexes pairs.
         content (str): The text to extract the substrings from.
     Returns:
-        preview_string (str): A concatenated string of substrings delimited by " [...] ". If
-        preview_substrings_indexes is an empty lits, "preview not available" is returned.
+        preview_string (str): A concatenated string of substrings delimited by
+        " [...] ". If preview_substrings_indexes is an empty lits,
+        "preview not available" is returned.
 
-    If the start index of the first element in preview_substrings_indexes is zero, "[...] " is added to the beginning
+    If the start index of the first element in preview_substrings_indexes is
+    zero, "[...] " is added to the beginning of the preview_string.
+    If the end index of the last element in preview_substrings_indexes is equal
+    to or greater than the length of the content, " [...]" is added to the end
     of the preview_string.
-    If the end index of the last element in preview_substrings_indexes is equal to or greater than the length of the
-    content, " [...]" is added to the end of the preview_string.
     """
 
     content_length = len(content)
@@ -540,18 +578,24 @@ def get_previews_for_page_id(
     Generate preview texts for page IDs based on provided search term.
 
     Args:
-        paginated_details_for_searched_term (flask_sqlalchemy.pagination.QueryPagination): A flask_sqlalchemy Pagination
-        object containing search results.
+        paginated_details_for_searched_term
+        (flask_sqlalchemy.pagination.QueryPagination): A flask_sqlalchemy
+        Pagination object containing search results.
         s_word (str): The term to generate preview text around.
-        preview_length (int) : The length of the preview before and after the search term.
+        preview_length (int) : The length of the preview before and after the
+        search term.
 
-    Returns: previews_for_page_id (list): A list containing pairs of page IDs (int) and their corresponding preview texts (str).
+    Returns: previews_for_page_id (list): A list containing pairs of
+    page IDs (int) and their corresponding preview texts (str).
 
-    This function generates preview texts for page IDs using a provided Flask-SQLAlchemy Pagination object
-    (paginated_details_for_searched_term) and a search term (s_word).
-    The generated previews are centered around the search term with the specified preview length.
+    This function generates preview texts for page IDs using a provided
+    Flask-SQLAlchemy Pagination object (paginated_details_for_searched_term)
+    and a search term (s_word).
+    The generated previews are centered around the search term with the
+    specified preview length.
 
-    The function employs a series of helper functions to create these previews, including text processing and formatting operations.
+    The function employs a series of helper functions to create these previews,
+    including text processing and formatting operations.
     """
 
     previews_for_page_id = []
@@ -601,19 +645,20 @@ def get_previews_for_page_id(
 
 def store_s_word_in_session(session_s_word, request_s_word):
     """
-    Update the value of s_word in the session with the value from the current request.
+    Update the value of s_word in the session with the value from the current
+    request.
 
     Args:
         session_s_word (str): The current value of s_word stored in the session.
         request_s_word (str): The value of s_word from the current request.
 
     Returns:
-        str or None: The updated value of s_word in the session, or None if no current or request
-        value is provided.
+        str or None: The updated value of s_word in the session, or None if no
+        current or request value is provided.
 
-    This function replaces the current value of s_word in the session with the value from the
-    current request. It returns the updated value of s_word in the session, or None if no current
-    value or request value is provided.
+    This function replaces the current value of s_word in the session with the
+    value from the current request. It returns the updated value of s_word in
+    the session, or None if no current value or request value is provided.
     """
 
     if session_s_word is None or (
