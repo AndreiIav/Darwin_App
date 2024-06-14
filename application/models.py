@@ -1,7 +1,6 @@
 """Data models"""
 
-# from . import db
-from application.models import db
+from . import db
 
 
 class Magazines(db.Model):
