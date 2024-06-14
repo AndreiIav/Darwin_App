@@ -49,9 +49,10 @@ def s_word_in_session():
 
 @pytest.fixture(scope="class")
 def set_up_data_for_previews_for_page_id():
-    s_word = "stefan michailescu"
-    formatted_s_word = "stefan+michailescu"
+    s_word = "andrei mocioni"
+    formatted_s_word = "andrei+mocioni"
     details_searched_term = get_details_for_searched_term(formatted_s_word)
+    # get only one result by setting per_page = 1
     paginated_details_for_searched_term = paginate_results(
         details_searched_term, page=1, per_page=1, error_out=False
     )
