@@ -1,5 +1,4 @@
 import pytest
-
 from flask import current_app
 import flask_sqlalchemy
 import werkzeug
