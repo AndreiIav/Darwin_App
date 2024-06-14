@@ -1,14 +1,11 @@
 import pytest
 import flask_sqlalchemy
-import werkzeug
-from flask import request, current_app
+from flask import request
 
 from application.search_page.logic import (
     format_search_word,
     get_distinct_magazine_names_and_count_for_searched_term,
     get_details_for_searched_term,
-    get_details_for_searched_term_for_specific_magazine,
-    paginate_results,
     replace_multiple_extra_white_spaces_with_just_one,
     get_magazine_content_details,
     convert_diacritics_to_basic_latin_characters,
@@ -18,7 +15,6 @@ from application.search_page.logic import (
     get_all_start_and_end_indexes_for_preview_substrings,
     merge_overlapping_preview_substrings,
     get_preview_string,
-    get_previews_for_page_id,
     add_html_tags_around_preview_string_parantheses,
 )
 
