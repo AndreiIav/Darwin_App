@@ -1,7 +1,8 @@
 """Flask configuration"""
 
-from dotenv import load_dotenv
 import os
+
+from dotenv import load_dotenv
 
 
 # Determine the folder of the top-level directory of this project
