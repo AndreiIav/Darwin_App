@@ -1,4 +1,5 @@
-from flask import Blueprint, request, render_template, redirect, url_for, abort
+from flask import Blueprint, request, render_template, abort
+
 from application.forms import SearchForm
 from application.home.logic import (
     get_existent_magazines,
@@ -18,7 +19,10 @@ def search_form():
     search_form = SearchForm()
 
     existent_magazines = get_existent_magazines()
-    placeholder_text_for_search_bar = "the search term can have at least 4 characters and at most 200 and can be composed of multiple words"
+    placeholder_text_for_search_bar = (
+        "the search term can have at least 4"
+        + " characters and at most 200 and can be composed of multiple words"
+    )
 
     return render_template(
         "home_page.html",
