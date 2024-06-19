@@ -65,7 +65,7 @@ def configure_logging(app):
 
     # Logging Configuration
     file_handler = RotatingFileHandler(
-        "instance/Darwin_App.log", maxBytes=16384, backupCount=20
+        "instance/Darwin_App.log", maxBytes=16384, backupCount=20, encoding="utf-8"
     )
     file_formatter = logging.Formatter(
         "%(asctime)s %(levelname)s: %(message)s [in %(filename)s:%(lineno)d]"
