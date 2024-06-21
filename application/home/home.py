@@ -1,4 +1,4 @@
-from flask import Blueprint, request, render_template, abort, current_app
+from flask import Blueprint, request, render_template, abort, current_app, jsonify
 
 from application.forms import SearchForm
 from application.home.logic import (
@@ -89,3 +89,13 @@ def show_contact_page():
 def show_about_page():
     current_app.logger.info("Calling the show_about_page() function")
     return render_template("about.html")
+
+
+@home_bp.route("/log_magazine_click", methods=["POST"])
+def log_magazine_click():
+    data = request.json
+    link = data.get("link")
+
+    current_app.logger.info(f"Clicking on magazine link: {link}")
+
+    return jsonify(success=True)
