@@ -63,6 +63,10 @@ def register_error_pages(app):
     def page_not_found(e):
         return render_template("404.html"), 404
 
+    @app.errorhandler(405)
+    def method_not_allowed(e):
+        return render_template("405.html"), 405
+
 
 def configure_logging(app):
 

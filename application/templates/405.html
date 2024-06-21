@@ -1,0 +1,13 @@
+{% extends "base.html" %}
+
+{% block title %} Method Not Allowed (405) {% endblock %}
+
+{% block content %}
+<div class="container-fluid text-center py-1">
+    <p1 class="display-6">Method Not Allowed (405)</p1>
+    <div>
+        <h5 class="h5">The method is not allowed for the requested URL.</h5>
+        <h5 class="h5">Back to <a href="{{ url_for('home_bp.search_form') }}">search page</a>.</h5>
+    </div>
+</div>
+{% endblock %}
