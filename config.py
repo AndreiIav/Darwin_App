@@ -83,6 +83,9 @@ class TestingConfig(Config):
     ]
     DATABASE_FILES = os.path.join(BASEDIR, "tests", "test_data")
 
+    # WTF_CSFR
+    WTF_CSRF_ENABLED = False
+
 
 class DemoConfig(Config):
 
