@@ -73,7 +73,7 @@ def search_for_term():
     magazine_filter = request.args.get("magazine_filter")
 
     if magazine_filter:
-        current_app.logger.info(f"magazine_filter set to {magazine_filter}")
+        current_app.logger.info(f"magazine_filter set to: {magazine_filter}")
         details_for_searched_term = get_details_for_searched_term_for_specific_magazine(
             details_for_searched_term, magazine_filter
         )
