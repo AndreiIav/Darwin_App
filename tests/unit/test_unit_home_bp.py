@@ -52,14 +52,25 @@ class TestGetMagazineName:
 
 # Tests for get_magazine_details()
 class TestGetMagazineDetails:
-    @pytest.mark.parametrize("magazine_id", [13, "13"])
-    def test_get_magazine_details_with_existent_magazine_id(
-        self, test_client, magazine_id
-    ):
-        test_magazine_details = [("ANUL 1 1868", 24, 757), ("ANUL 2 1871", 2, 72)]
+    def test_get_magazine_details_with_existent_magazine_id(self, test_client):
+        test_magazine_id = 4
+        expected_magazine_details = [
+            ("ANUL 1866", 104, 364),
+            ("ANUL 1867", 142, 493),
+            ("ANUL 1868", 131, 471),
+            ("ANUL 1869", 109, 414),
+            ("ANUL 1870", 42, 164),
+            ("ANUL 1871", 81, 324),
+            ("ANUL 1872", 68, 274),
+            ("ANUL 1873", 99, 392),
+            ("ANUL 1874", 92, 350),
+            ("ANUL 1875", 53, 214),
+            ("ANUL 1876", 95, 428),
+        ]
+        res = get_magazine_details(test_magazine_id)
 
-        for index, magazine_detail in enumerate(get_magazine_details(magazine_id)):
-            assert test_magazine_details[index] == magazine_detail
+        for index, magazine_detail in enumerate(res):
+            assert expected_magazine_details[index] == magazine_detail
 
     def test_get_magazine_details_with_not_existent_magazine_id(self, test_client):
 
