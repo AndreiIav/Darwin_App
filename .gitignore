@@ -3,6 +3,7 @@ instance/*.cfg
 instance/*.db
 instance/*.log
 instance/*.log*
+instance/*.lock*
 !instance/.gitignore
 .webassets-cache
 .env

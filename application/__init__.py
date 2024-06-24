@@ -1,6 +1,7 @@
 import os
 import logging
-from logging.handlers import RotatingFileHandler
+
+from concurrent_log_handler import ConcurrentTimedRotatingFileHandler
 
 from flask import Flask, render_template
 from flask.logging import default_handler
@@ -71,8 +72,13 @@ def register_error_pages(app):
 def configure_logging(app):
 
     # Logging Configuration
-    file_handler = RotatingFileHandler(
-        "instance/Darwin_App.log", maxBytes=16384, backupCount=20, encoding="utf-8"
+    file_handler = ConcurrentTimedRotatingFileHandler(
+        "instance/Darwin_App.log",
+        when="M",
+        interval=1,
+        backupCount=20,
+        maxBytes=1048576,  # 10 MB
+        encoding="utf-8",
     )
     file_formatter = logging.Formatter(
         "%(asctime)s %(levelname)s: %(message)s [in %(filename)s:%(lineno)d]"
