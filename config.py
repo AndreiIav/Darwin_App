@@ -72,7 +72,6 @@ class TestingConfig(Config):
 
     # Environment variables
     TESTING = True
-    SERVER_NAME = "localhost.localdomain:5000"
 
     # cli_database blueprint test
     FILES_TO_TABLES = [
