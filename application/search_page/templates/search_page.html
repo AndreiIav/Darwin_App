@@ -29,11 +29,11 @@
     <div class="row">
         <div class="col-sm-4">
             <button class="btn btn-primary p-2" type="button" data-bs-toggle="collapse" aria-expanded="false"
-                data-bs-target="#collapseCountResults">
+                data-bs-target="#collapse_count_results">
                 <i class="bi bi-view-list"></i>
                 Number of results displayed by magazine name
             </button>
-            <div class="collapse" id="collapseCountResults">
+            <div class="collapse" id="collapse_count_results" data-testid="count_results_collapsed">
                 {% for magazine_name, count in distinct_magazines_and_count %}
                 <div class="my-1">
                     <form action="{{ url_for('search_page_bp.search_for_term') }}">
@@ -48,19 +48,19 @@
             </div>
         </div>
 
-        <div class="col-sm-8">
+        <div data-testid="displayed-results" class="col-sm-8">
             <ul>
                 {% for name, year, magazine_number, magazine_page, magazine_number_link, rowid in
                 details_for_searched_term %}
-                <div class="row border-bottom border-success me-1">
+                <div data-testid="result" class="row border-bottom border-success me-1">
                     <div class="col-sm-6 text-bg-light vstack gap-1 py-2">
-                        <p1 class="lead text-center">{{ name }}</p1>
-                        <p1 class="lead text-center">{{ year }}</p1>
-                        <p1 class="lead text-center">{{ magazine_number }}</p1>
-                        <p1 class="lead text-center">Page {{ magazine_page }}</p1>
-                        <p1 class="lead text-center">
+                        <p1 data-testid="name" class="lead text-center">{{ name }}</p1>
+                        <p1 data-testid="year" class="lead text-center">{{ year }}</p1>
+                        <p1 data-testid="magazine_number" class="lead text-center">{{ magazine_number }}</p1>
+                        <p1 data-testid="magazine_page" class="lead text-center">Page {{ magazine_page }}</p1>
+                        <p1 data-testid="magazine_number_link" class="lead text-center">
                             <a href="{{ magazine_number_link }}" onclick="log_click(event)" target="_blank"
-                                title="Access magazine pdf on BCU site" class=" link-offset-2 link-offset-3-hover link-underline link-underline-opacity-0
+                                title="Access magazine pdf on BCU site" data-testid="link" class=" link-offset-2 link-offset-3-hover link-underline link-underline-opacity-0
                                 link-underline-opacity-75-hover">
                                 <i class="bi bi-box-arrow-up-right"></i>
 
@@ -68,7 +68,7 @@
                             </a>
                         </p1>
                     </div>
-                    <div class="col-sm-6 text-start py-2">
+                    <div data-testid="preview_content" class="col-sm-6 text-start py-2">
                         {% for preview_rowid, preview_content in previews %}
                         {% if preview_rowid == rowid %}
                         {{ preview_content }}
@@ -82,7 +82,7 @@
     </div>
 </div>
 
-<nav aria-label="Page navigation">
+<nav aria-label="Page navigation" data-testid="page_navigation">
     <ul class="pagination justify-content-center">
         {% if details_for_searched_term.has_prev %}
         <li class="page-item">
