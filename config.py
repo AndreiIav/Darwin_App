@@ -35,6 +35,9 @@ class Config(object):
     RESULTS_PER_PAGE = 10
     ERROR_OUT = True
 
+    # Placeholder text for search bar
+    PLACEHOLDER_TEXT_FOR_SEARCH_BAR = "you can enter between 4 and 200 characters"
+
     # Preview string
     PREVIEW_SUBSTRING_LENGTH = 200
 
