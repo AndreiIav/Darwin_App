@@ -21,8 +21,8 @@ def test_home_locate_all_elements(page, start_app_server):
         page.get_by_text("Please introduce a search term in the box")
     ).to_be_visible()
 
-    expect(page.get_by_placeholder("the search term can have at")).to_be_visible()
-    expect(page.get_by_placeholder("the search term can have at")).to_be_empty()
+    expect(page.get_by_placeholder("you can enter between 4 and")).to_be_visible()
+    expect(page.get_by_placeholder("you can enter between 4 and")).to_be_empty()
 
     expect(page.get_by_role("button", name="Search")).to_be_visible()
 
@@ -56,8 +56,8 @@ def test_home_searching_with_valid_term_opens_search_page(page, start_app_server
     start_page = start_app_server
 
     page.goto(start_page)
-    page.get_by_placeholder("the search term can have at").click()
-    page.get_by_placeholder("the search term can have at").fill("bucuresti")
-    page.get_by_placeholder("the search term can have at").press("Enter")
+    page.get_by_placeholder("you can enter between 4 and").click()
+    page.get_by_placeholder("you can enter between 4 and").fill("bucuresti")
+    page.get_by_placeholder("you can enter between 4 and").press("Enter")
 
     expect(page).to_have_title(" Search Results-BCU-Search ")
