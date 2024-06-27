@@ -1,5 +1,7 @@
 import os
 import sqlite3
+import subprocess
+import time
 
 import pytest
 
@@ -33,6 +35,28 @@ def test_cli_app():
     app = init_app()
 
     yield app
+
+
+@pytest.fixture(scope="module")
+def start_app_server():
+    # Specify the port for the Flask app to run on
+    port = os.environ.get("FLASK_RUN_PORT", 5001)  # Default to 5001 if not set
+
+    # Set the Testing configuration prior to starting the app server
+    os.environ["CONFIG_TYPE"] = "config.TestingConfig"
+
+    # Start the Flask app in a subprocess with the specified port
+    process = subprocess.Popen(["flask", "run", "--port", str(port)])
+    # Wait a few seconds for the server to start
+    time.sleep(1)
+
+    server_address = f"http://localhost:{port}"
+
+    yield server_address
+
+    # Terminate the Flask app after tests are done
+    process.terminate()
+    process.wait()
 
 
 @pytest.fixture
