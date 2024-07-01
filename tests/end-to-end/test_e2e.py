@@ -184,3 +184,31 @@ class TestSearchPageE2E:
             )
             .get_by_test_id("link")
         ).to_have_attribute("target", "_blank")
+
+    class TestNavigationBarE2E:
+
+        def test_navigation_bar_has_correct_links(self, page, start_app_server):
+
+            start_page = start_app_server
+
+            page.goto(start_page)
+
+            expect(page.get_by_test_id("navigation_bar")).to_be_visible()
+            expect(page.get_by_role("link", name="Home")).to_be_visible()
+            expect(page.get_by_role("link", name="About")).to_be_visible()
+            expect(page.get_by_role("link", name="Contact")).to_be_visible()
+
+        def test_navigation_bar_links_work(self, page, start_app_server):
+
+            start_page = start_app_server
+
+            page.goto(start_page)
+
+            page.get_by_role("link", name="About").click()
+            expect(page).to_have_title("About Page")
+
+            page.get_by_role("link", name="Contact").click()
+            expect(page).to_have_title("Contact Page")
+
+            page.get_by_role("link", name="Home").click()
+            expect(page).to_have_title("BCU-Search")
