@@ -4,11 +4,14 @@
 
 {% block content %}
 <div class="container-fluid text-center py-1">
-    <a href="{{ url_for('home_bp.search_form') }}" class="btn btn-primary" type="button" data-testid="go_back_home">Go
-        back to home page</a>
+    <a href="{{ url_for('home_bp.search_form') }}" class="btn btn-primary" type="button" data-testid="go_back_home">
+        Go back to home page
+    </a>
     {% if magazine_filter %}
     <a href="{{ url_for('search_page_bp.search_for_term', search_box=searched_term) }}" class="btn btn-primary"
-        type="button" data-testid="go_back_to_all_results">Go back to all results</a>
+        type="button" data-testid="go_back_to_all_results">
+        Go back to all results
+    </a>
     {% endif %}
 
 
