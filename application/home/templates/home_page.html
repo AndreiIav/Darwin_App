@@ -4,14 +4,14 @@
 
 {% block search_form %}
 <div class="container text-center py-1">
-    <p1 class="display-6">Please introduce a search term in the box</p1><br>
+    <p1 class="display-6" data-testid="introduce_search_term_info">Please introduce a search term in the box</p1><br>
     <form action="{{ url_for('search_page_bp.search_for_term') }}">
         <div class="form-group row py-2 ">
-            <div class="col-xs py-1">
+            <div class="col-xs py-1 ">
                 {{ search_form.search_box(class_="form-control", placeholder_=placeholder_text_for_search_bar) }}
             </div>
             <div class="col-xs py-1">
-                <button type="submit" class="btn btn-primary mb-1">Search</button>
+                <button type="submit" class="btn btn-primary mb-1" data-testid="search_button">Search</button>
             </div>
         </div>
     </form>
@@ -19,9 +19,10 @@
 {% endblock %}
 
 {% block content %}
-<div class="container-fluid text-center py-1" data-testid="available_magazines">
-    <h1 class="display-6"> The submited term will be searched in the following magazines </h1>
-    <div class="py-2">
+<div class="container-fluid text-center py-1">
+    <h1 class="display-6" data-testid="available_magazines_info"> The submited term will be searched in the following
+        magazines </h1>
+    <div class="py-2" data-testid="available_magazines">
         {% for res in existent_magazines %}
         <div class="my-2">
             <form action="{{  url_for('home_bp.show_magazine_details')  }}" target="_blank"

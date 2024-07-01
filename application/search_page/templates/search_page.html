@@ -4,10 +4,11 @@
 
 {% block content %}
 <div class="container-fluid text-center py-1">
-    <a href="{{ url_for('home_bp.search_form') }}" class="btn btn-primary" type="button">Go back to home page</a>
+    <a href="{{ url_for('home_bp.search_form') }}" class="btn btn-primary" type="button" data-testid="go_back_home">Go
+        back to home page</a>
     {% if magazine_filter %}
     <a href="{{ url_for('search_page_bp.search_for_term', search_box=searched_term) }}" class="btn btn-primary"
-        type="button">Go back to all results</a>
+        type="button" data-testid="go_back_to_all_results">Go back to all results</a>
     {% endif %}
 
 
@@ -29,11 +30,11 @@
     <div class="row">
         <div class="col-sm-4">
             <button class="btn btn-primary p-2" type="button" data-bs-toggle="collapse" aria-expanded="false"
-                data-bs-target="#collapse_count_results">
+                data-bs-target="#collapse_count_results" data-testid="display_count_results_per_magazine">
                 <i class="bi bi-view-list"></i>
                 Number of results displayed by magazine name
             </button>
-            <div class="collapse" id="collapse_count_results" data-testid="count_results_collapsed">
+            <div class="collapse" id="collapse_count_results" data-testid="collapsed_count_results">
                 {% for magazine_name, count in distinct_magazines_and_count %}
                 <div class="my-1">
                     <form action="{{ url_for('search_page_bp.search_for_term') }}">
@@ -48,7 +49,7 @@
             </div>
         </div>
 
-        <div data-testid="displayed-results" class="col-sm-8">
+        <div data-testid="displayed_results" class="col-sm-8">
             <ul>
                 {% for name, year, magazine_number, magazine_page, magazine_number_link, rowid in
                 details_for_searched_term %}
@@ -82,7 +83,7 @@
     </div>
 </div>
 
-<nav aria-label="Page navigation" data-testid="page_navigation">
+<nav aria-label="Page navigation" data-testid="pagination">
     <ul class="pagination justify-content-center">
         {% if details_for_searched_term.has_prev %}
         <li class="page-item">
