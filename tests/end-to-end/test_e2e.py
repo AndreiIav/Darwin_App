@@ -71,7 +71,6 @@ class TestSearchPageE2E:
         ).to_be_visible()
         expect(page.get_by_test_id("displayed_results")).to_be_visible()
         expect(page.get_by_test_id("pagination")).to_be_visible()
-        expect(page.get_by_test_id("collapsed_count_results")).to_be_visible()
         # check that the count results are not collapsed/visible
         expect(page.get_by_test_id("collapsed_count_results")).not_to_have_class(
             "collapse show"
