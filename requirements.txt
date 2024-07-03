@@ -30,7 +30,7 @@ pytest-cov==4.1.0
 pytest-playwright==0.5.0
 python-dotenv==0.21.0
 python-slugify==8.0.4
-pywin32==306;platform_system=="Windows"
+pywin32==306; sys_platform == 'win32'
 requests==2.32.3
 SQLAlchemy==2.0.0
 text-unidecode==1.3
