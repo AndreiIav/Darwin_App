@@ -74,7 +74,7 @@ def configure_logging(app):
     # Logging Configuration
     file_handler = ConcurrentTimedRotatingFileHandler(
         "instance/Darwin_App.log",
-        when="M",
+        when="D",
         interval=1,
         backupCount=20,
         maxBytes=1048576,  # 10 MB
