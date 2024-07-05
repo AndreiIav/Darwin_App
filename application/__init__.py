@@ -22,7 +22,6 @@ csrf = CSRFProtect()
 
 
 def init_app():
-
     app = Flask(__name__)
 
     # Configure the Flask application
@@ -70,7 +69,6 @@ def register_error_pages(app):
 
 
 def configure_logging(app):
-
     # Logging Configuration
     file_handler = ConcurrentTimedRotatingFileHandler(
         "instance/Darwin_App.log",

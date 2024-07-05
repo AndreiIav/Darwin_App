@@ -13,7 +13,6 @@ load_dotenv(os.path.join(BASEDIR, ".env"))
 
 
 class Config(object):
-
     # Database
     SQLALCHEMY_DATABASE_URI = os.getenv(
         "DEVELOPMENT_SQLALCHEMY_DATABASE_URI",
@@ -56,17 +55,14 @@ class Config(object):
 
 
 class ProductionConfig(Config):
-
     FLASK_ENV = "production"
 
 
 class DevelopmentConfig(Config):
-
     DEBUG = True
 
 
 class TestingConfig(Config):
-
     # Database
     SQLALCHEMY_DATABASE_URI = os.getenv(
         "TESTING_SQLALCHEMY_DATABASE_URI",
@@ -90,7 +86,6 @@ class TestingConfig(Config):
 
 
 class DemoConfig(Config):
-
     # Database
     SQLALCHEMY_DATABASE_URI = os.getenv(
         "DEMO_SQLALCHEMY_DATABASE_URI",

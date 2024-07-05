@@ -25,7 +25,6 @@ invalid_magazine_id_input = ["a", True, 1.23, None, "33"]
 def test_magazine_details_page_get_with_invalid_magazine_id_parameter(
     test_client, invalid_magazine_id
 ):
-
     response = test_client.get(
         "/megazine_details", query_string={"magazine_id": invalid_magazine_id}
     )
@@ -55,7 +54,6 @@ def test_log_magazine_click_get(test_client):
 
 
 def test_log_magazine_click_post(test_client):
-
     data = {"link": "test_link"}
 
     response = test_client.post(

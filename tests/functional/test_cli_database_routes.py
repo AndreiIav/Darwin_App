@@ -11,7 +11,6 @@ import pytest
 def test_cli_create_database_correct_tables_and_data(
     test_cli_app, database_name, monkeypatch, tmp_path
 ):
-
     # Set the DATABASE_FOLDER to use tmp_path
     monkeypatch.setitem(test_cli_app.config, "DATABASE_FOLDER", tmp_path)
     database_folder = test_cli_app.config["DATABASE_FOLDER"]
@@ -68,7 +67,6 @@ def test_cli_create_database_correct_tables_and_data(
 def test_cli_create_database_correct_confirmation_message(
     test_cli_app, database_name, monkeypatch, tmp_path
 ):
-
     # Set the DATABASE_FOLDER to use tmp_path
     monkeypatch.setitem(test_cli_app.config, "DATABASE_FOLDER", tmp_path)
     database_folder = test_cli_app.config["DATABASE_FOLDER"]
@@ -82,7 +80,6 @@ def test_cli_create_database_correct_confirmation_message(
 
 
 def test_cli_create_database_with_incorrect_database_name_argument(test_cli_app):
-
     database_name = "wrong_name"
 
     runner = test_cli_app.test_cli_runner()
@@ -95,7 +92,6 @@ def test_cli_create_database_with_incorrect_database_name_argument(test_cli_app)
 def test_cli_create_database_with_already_existing_database_file(
     test_cli_app, monkeypatch, tmp_path
 ):
-
     # Set the DATABASE_FOLDER to use tmp_path
     monkeypatch.setitem(test_cli_app.config, "DATABASE_FOLDER", tmp_path)
     database_folder = test_cli_app.config["DATABASE_FOLDER"]
@@ -114,7 +110,6 @@ def test_cli_create_database_with_already_existing_database_file(
 
 
 def test_cli_create_database_with_missing_database_name_argument(test_cli_app):
-
     runner = test_cli_app.test_cli_runner()
     res = runner.invoke(args=["database", "create"])
 
@@ -128,7 +123,6 @@ def test_cli_create_database_with_missing_database_name_argument(test_cli_app):
 
 
 def test_cli_remove_database_file_deletes_database(test_cli_app, monkeypatch, tmp_path):
-
     # Set the DATABASE_FOLDER to use tmp_path
     monkeypatch.setitem(test_cli_app.config, "DATABASE_FOLDER", tmp_path)
     database_folder = test_cli_app.config["DATABASE_FOLDER"]
@@ -148,7 +142,6 @@ def test_cli_remove_database_file_deletes_database(test_cli_app, monkeypatch, tm
 def test_cli_remove_database_file_to_be_removed_does_not_exist(
     test_cli_app, monkeypatch, tmp_path
 ):
-
     # Set the DATABASE_FOLDER to use tmp_path
     monkeypatch.setitem(test_cli_app.config, "DATABASE_FOLDER", tmp_path)
     database_name = "test"
@@ -163,7 +156,6 @@ def test_cli_remove_database_file_to_be_removed_does_not_exist(
 def test_cli_remove_database_file_with_incorrect_database_name(
     test_cli_app, monkeypatch, tmp_path
 ):
-
     # Set the DATABASE_FOLDER to use tmp_path
     monkeypatch.setitem(test_cli_app.config, "DATABASE_FOLDER", tmp_path)
     database_name = "wrong_name"
@@ -176,7 +168,6 @@ def test_cli_remove_database_file_with_incorrect_database_name(
 
 
 def test_cli_remove_database_with_missing_database_name_argument(test_cli_app):
-
     runner = test_cli_app.test_cli_runner()
     res = runner.invoke(args=["database", "remove"])
 

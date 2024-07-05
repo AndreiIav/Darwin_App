@@ -447,7 +447,6 @@ def get_all_start_and_end_indexes_for_preview_substrings(
     content_length = len(content)
 
     for index in indexes:
-
         start, end = 0, 0
 
         if index <= preview_length:
@@ -499,7 +498,6 @@ def merge_overlapping_preview_substrings(preview_substrings_start_end_indexes):
         new_end = preview_substrings_start_end_indexes[pointer][1]
 
         if pointer < len(preview_substrings_start_end_indexes) - 1:
-
             while (
                 preview_substrings_start_end_indexes[pointer + 1][0]
                 <= preview_substrings_start_end_indexes[pointer][1]
@@ -541,7 +539,6 @@ def get_preview_string(preview_substrings_indexes, content):
     preview_string = "preview not available"
 
     if preview_substrings_indexes:
-
         substrings = []
 
         for substring_indexes in preview_substrings_indexes:

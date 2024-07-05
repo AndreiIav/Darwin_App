@@ -73,7 +73,6 @@ class TestGetMagazineDetails:
             assert expected_magazine_details[index] == magazine_detail
 
     def test_get_magazine_details_with_not_existent_magazine_id(self, test_client):
-
         assert len(list(get_magazine_details(999))) == 0
 
     def test_get_magazine_details_with_no_parameter_passed(self, test_client):

@@ -19,7 +19,6 @@ cli_database_bp = Blueprint("cli_database_bp", __name__, cli_group="database")
 @cli_database_bp.cli.command("create")
 @click.argument("name")
 def create_new_database(name):
-
     if name not in ("test", "demo"):
         raise click.BadParameter(name)
 
@@ -51,7 +50,6 @@ def create_new_database(name):
 @cli_database_bp.cli.command("remove")
 @click.argument("name")
 def remove_database_file(name):
-
     if name not in ("test", "demo"):
         raise click.BadParameter(name)
 

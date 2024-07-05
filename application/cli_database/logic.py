@@ -5,7 +5,6 @@ import click
 
 
 def create_database(database_path):
-
     conn = sqlite3.connect(database_path)
     conn.execute("PRAGMA foreign_keys = 1")  # to enable foreign keys
     c = conn.cursor()
@@ -44,9 +43,7 @@ def create_database(database_path):
 
 
 def write_data_to_database(files_path, database_path, files_to_tables):
-
     for file, table in files_to_tables:
-
         file_path = files_path / file
 
         try:
@@ -66,7 +63,6 @@ def write_data_to_database(files_path, database_path, files_to_tables):
 
 
 def get_data_from_csv_file(file_path):
-
     data = []
 
     with open(file_path, encoding="UTF-8-SIG") as f:
@@ -79,7 +75,6 @@ def get_data_from_csv_file(file_path):
 
 
 def write_to_database(database_path, table, data):
-
     conn = sqlite3.connect(database_path)
     conn.execute("PRAGMA foreign_keys = 1")  # to enable foreign keys
     c = conn.cursor()

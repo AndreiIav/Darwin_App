@@ -66,19 +66,16 @@ class TestStoreSWordInSession:
 # Tests for format_search_word
 class TestFormatSearchWord:
     def test_format_search_word_with_one_word_as_input(self):
-
         formatted_s_word = format_search_word("darwin")
         assert formatted_s_word == "darwin"
 
     def test_format_search_word_with_one_word_as_input_and_extra_spaces_around(self):
-
         formatted_s_word = format_search_word("  darwin ")
         assert formatted_s_word == "darwin"
 
     def test_format_search_word_with_multiple_words_as_input_and_default_separator(
         self,
     ):
-
         formatted_s_word = format_search_word("Victor Babeș")
         assert formatted_s_word == "Victor Babeș"
 
@@ -86,7 +83,6 @@ class TestFormatSearchWord:
         assert formatted_s_word == "ala bala portocala"
 
     def test_format_search_word_with_multiple_words_as_input_and_passed_separator(self):
-
         formatted_s_word = format_search_word("Victor Babeș", "+")
         assert formatted_s_word == "Victor+Babeș"
 
@@ -96,7 +92,6 @@ class TestFormatSearchWord:
     def test_format_search_word_with_multiple_words_as_input_and_extra_spaces_around(
         self,
     ):
-
         formatted_s_word = format_search_word(" ala bala portocala ")
         assert formatted_s_word == "ala bala portocala"
 
@@ -131,7 +126,6 @@ class TestFormatSearchWord:
 # Tests for get_details_for_searched_term
 class TestGetDetailsForSearchedTerm:
     def test_get_details_for_searched_term_gets_correct_data(self, test_client):
-
         s_word = "fotbal"
         expected_magazine_name = "Amicul Şcoalei (1925-1935)"
         expected_year = "ANUL 1930"
@@ -151,14 +145,12 @@ class TestGetDetailsForSearchedTerm:
             assert rowid == expected_rowid
 
     def test_type_of_get_details_for_searched_term(self, test_client):
-
         s_word = "fotbal"
         details_for_searched_term = get_details_for_searched_term(s_word)
 
         assert isinstance(details_for_searched_term, flask_sqlalchemy.query.Query)
 
     def test_response_details_of_get_details_for_searched_term(self, test_client):
-
         s_word = "fotbal"
         details_for_searched_term = get_details_for_searched_term(s_word)
 
@@ -178,11 +170,9 @@ class TestGetDetailsForSearchedTerm:
 
 # Tests for get_distinct_magazine_names_and_count_for_searched_term
 class TestGetDistinctMagazineNamesAndCountForSearchedTerm:
-
     def test_type_of_get_distinct_magazine_names_and_count_for_searched_term(
         self, test_client
     ):
-
         s_word = "Bucuresti"
         magazine_names_and_count = (
             get_distinct_magazine_names_and_count_for_searched_term(s_word)
@@ -210,7 +200,6 @@ class TestReplaceMultipleExtraWhiteSpacesWithJustOne:
     def test_replace_multiple_extra_white_spaces_with_just_one_with_multiple_consecutive_spaces(
         self,
     ):
-
         text = "Charles  Darwin      was        a               great  scientist"
 
         assert (
@@ -221,7 +210,6 @@ class TestReplaceMultipleExtraWhiteSpacesWithJustOne:
     def test_replace_multiple_extra_white_spaces_with_no_argument_passed(
         self,
     ):
-
         assert replace_multiple_extra_white_spaces_with_just_one() == ""
 
 
@@ -256,7 +244,6 @@ class TestConvertDiacriticsToBasicLatinCharacters:
     def test_convert_diacritics_to_basic_latin_characters_with_no_argument_passed(
         self,
     ):
-
         assert convert_diacritics_to_basic_latin_characters() == ""
 
     invalid_parameters = [1, False, 3.14]
@@ -266,7 +253,6 @@ class TestConvertDiacriticsToBasicLatinCharacters:
         self,
         invalid_parameters,
     ):
-
         assert convert_diacritics_to_basic_latin_characters(invalid_parameters) == ""
 
     diacritics_to_basic_characters = [

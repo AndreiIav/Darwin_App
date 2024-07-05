@@ -4,7 +4,6 @@ from . import db
 
 
 class Magazines(db.Model):
-
     __tablename__ = "magazines"
 
     id = db.Column(db.Integer, primary_key=True)
@@ -16,7 +15,6 @@ class Magazines(db.Model):
 
 
 class MagazineYear(db.Model):
-
     __tablename__ = "magazine_year"
 
     id = db.Column(db.Integer, primary_key=True)
@@ -29,7 +27,6 @@ class MagazineYear(db.Model):
 
 
 class MagazineNumber(db.Model):
-
     __tablename__ = "magazine_number"
 
     id = db.Column(db.Integer, primary_key=True)
@@ -42,7 +39,6 @@ class MagazineNumber(db.Model):
 
 
 class MagazineNumberContent(db.Model):
-
     __tablename__ = "magazine_number_content"
 
     id = db.Column(db.Integer, primary_key=True)
@@ -55,7 +51,6 @@ class MagazineNumberContent(db.Model):
 
 
 class MagazineNumberContentFTS(db.Model):
-
     __tablename__ = "magazine_number_content_fts"
 
     rowid = db.Column(db.Integer, primary_key=True)
@@ -66,7 +61,6 @@ class MagazineNumberContentFTS(db.Model):
 
 
 class MagazineDetails(db.Model):
-
     __tablename__ = "magazine_details"
 
     id = db.Column(db.Integer, primary_key=True)

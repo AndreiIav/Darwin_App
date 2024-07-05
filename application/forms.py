@@ -1,10 +1,9 @@
 from flask_wtf import FlaskForm
-from wtforms import StringField # field types
+from wtforms import StringField  # field types
 from wtforms.validators import DataRequired, Length  # validators
 
 
 class SearchForm(FlaskForm):
-
     search_box = StringField(
         "Search Box",
         [

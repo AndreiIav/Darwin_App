@@ -3,16 +3,13 @@ from playwright.sync_api import expect
 
 
 class TestHomePageE2E:
-
     def test_home_page_is_accessed(self, page, start_app_server):
-
         go_to_page = start_app_server
         page.goto(go_to_page)
 
         expect(page).to_have_title("BCU-Search")
 
     def test_home_locate_important_elements(self, page, start_app_server):
-
         go_to_page = start_app_server
         page.goto(go_to_page)
 
@@ -28,7 +25,6 @@ class TestHomePageE2E:
     def test_home_clicking_on_magazine_name_opens_magazine_details(
         self, page, start_app_server
     ):
-
         start_page = start_app_server
 
         page.goto(start_page)
@@ -41,7 +37,6 @@ class TestHomePageE2E:
     def test_home_searching_with_valid_term_opens_search_page(
         self, page, start_app_server
     ):
-
         start_page = start_app_server
 
         page.goto(start_page)
@@ -53,9 +48,7 @@ class TestHomePageE2E:
 
 
 class TestSearchPageE2E:
-
     def test_search_page_locate_important_elements(self, page, start_app_server):
-
         start_page = start_app_server
 
         page.goto(start_page)
@@ -77,7 +70,6 @@ class TestSearchPageE2E:
         )
 
     def test_go_back_to_home_page_button_opens_home_page(self, page, start_app_server):
-
         start_page = start_app_server
 
         page.goto(start_page)
@@ -92,7 +84,6 @@ class TestSearchPageE2E:
         expect(page).to_have_title("BCU-Search")
 
     def test_display_count_results_per_magazine_button(self, page, start_app_server):
-
         start_page = start_app_server
 
         page.goto(start_page)
@@ -114,7 +105,6 @@ class TestSearchPageE2E:
         )
 
     def test_add_magazine_filter(self, page, start_app_server):
-
         start_page = start_app_server
 
         page.goto(start_page)
@@ -130,7 +120,6 @@ class TestSearchPageE2E:
         ).to_be_visible()
 
     def test_go_back_to_all_results_button(self, page, start_app_server):
-
         start_page = start_app_server
 
         page.goto(start_page)
@@ -149,7 +138,6 @@ class TestSearchPageE2E:
         ).not_to_be_visible()
 
     def test_displayed_results_have_correct_elements(self, page, start_app_server):
-
         start_page = start_app_server
 
         page.goto(start_page)
@@ -167,7 +155,6 @@ class TestSearchPageE2E:
         expect(page.get_by_test_id("preview_content")).to_have_count(10)
 
     def test_magazine_link_will_open_a_different_tab(self, page, start_app_server):
-
         start_page = start_app_server
 
         page.goto(start_page)
@@ -185,9 +172,7 @@ class TestSearchPageE2E:
         ).to_have_attribute("target", "_blank")
 
     class TestNavigationBarE2E:
-
         def test_navigation_bar_has_correct_links(self, page, start_app_server):
-
             start_page = start_app_server
 
             page.goto(start_page)
@@ -198,7 +183,6 @@ class TestSearchPageE2E:
             expect(page.get_by_role("link", name="Contact")).to_be_visible()
 
         def test_navigation_bar_links_work(self, page, start_app_server):
-
             start_page = start_app_server
 
             page.goto(start_page)

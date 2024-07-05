@@ -28,7 +28,6 @@ def test_client():
 
 @pytest.fixture
 def test_cli_app():
-
     # Set the Testing configuration prior to creating the Flask application
     os.environ["CONFIG_TYPE"] = "config.TestingConfig"
 
@@ -87,7 +86,6 @@ def set_up_data_for_previews_for_page_id():
 
 @pytest.fixture
 def create_test_db(tmp_path):
-
     path_db = tmp_path / "test.db"
     conn = sqlite3.connect(path_db)
     conn.execute("PRAGMA foreign_keys = 1")  # to enable foreign keys
@@ -129,7 +127,6 @@ def create_test_db(tmp_path):
 
 @pytest.fixture
 def insert_data_in_magazines_table(create_test_db):
-
     database_path = create_test_db
     data = [
         (1, "magazine_name_1", "magazine_link_1"),
@@ -151,7 +148,6 @@ def insert_data_in_magazines_table(create_test_db):
 
 @pytest.fixture
 def insert_data_in_magazine_year_table(insert_data_in_magazines_table):
-
     database_path = insert_data_in_magazines_table
     data = [
         (1, 1, "year_1", "year_link_1"),
@@ -173,7 +169,6 @@ def insert_data_in_magazine_year_table(insert_data_in_magazines_table):
 
 @pytest.fixture
 def insert_data_in_magazine_number_table(insert_data_in_magazine_year_table):
-
     database_path = insert_data_in_magazine_year_table
     data = [
         (1, 1, "number_1", "number_link_1"),
@@ -195,7 +190,6 @@ def insert_data_in_magazine_number_table(insert_data_in_magazine_year_table):
 
 @pytest.fixture
 def insert_data_in_magazine_number_content_table(insert_data_in_magazine_number_table):
-
     database_path = insert_data_in_magazine_number_table
     data = [
         (1, 1, "magazine_content_1", 1),

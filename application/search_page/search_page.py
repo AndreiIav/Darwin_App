@@ -28,7 +28,6 @@ search_page_bp = Blueprint(
 
 @search_page_bp.route("/search", methods=["GET"])
 def search_for_term():
-
     session_s_word = session.get("s_word")
     request_s_word = request.args.get("search_box")
     current_app.logger.info(

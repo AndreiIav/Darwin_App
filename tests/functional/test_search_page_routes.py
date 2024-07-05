@@ -3,7 +3,6 @@ import pytest
 
 # Tests for /results/
 def test_results_page_get(test_client):
-
     s_word = "Bucuresti"
     response = test_client.get("/results/search", query_string={"search_box": s_word})
 
@@ -15,7 +14,6 @@ def test_results_page_get(test_client):
 def test_results_page_without_magazine_filter_go_back_to_all_results_button_not_displayed(
     test_client,
 ):
-
     s_word = "Victor+Babeș"
     response = test_client.get("/results/search", query_string={"search_box": s_word})
 
@@ -23,7 +21,6 @@ def test_results_page_without_magazine_filter_go_back_to_all_results_button_not_
 
 
 def test_results_page_post(test_client):
-
     s_word = "Victor+Babeș"
     response = test_client.post("/results/search", query_string={"search_box": s_word})
 
@@ -35,7 +32,6 @@ results_page_pages = [1, 2, 23]
 
 @pytest.mark.parametrize("pages", results_page_pages)
 def test_results_page_pagination_existent_page(test_client, pages):
-
     s_word = "Victor+Babeș"
     response = test_client.get(
         "/results/search",
@@ -46,7 +42,6 @@ def test_results_page_pagination_existent_page(test_client, pages):
 
 
 def test_results_page_pagination_not_existent_page(test_client):
-
     s_word = "Bucuresti"
     response = test_client.get(
         "/results/search", query_string={"search_box": s_word, "page": 2000}
@@ -56,7 +51,6 @@ def test_results_page_pagination_not_existent_page(test_client):
 
 
 def test_results_page_with_magazine_filter(test_client):
-
     s_word = "Victor+Babeș"
     magazine_filter = "Gazeta+de+Transilvania+(1838-1914)"
 
@@ -69,7 +63,6 @@ def test_results_page_with_magazine_filter(test_client):
 
 
 def test_results_page_with_magazine_filter_pagination(test_client):
-
     s_word = "Victor+Babeș"
     magazine_filter = "Gazeta+de+Transilvania+(1838-1914)"
     page = 2
@@ -87,7 +80,6 @@ def test_results_page_with_magazine_filter_pagination(test_client):
 
 
 def test_results_page_with_magazine_filter_go_back_buttons_displayed(test_client):
-
     s_word = "Bucuresti"
     magazine_filter = "Albina (1866-1876)"
     page = 2
@@ -106,7 +98,6 @@ def test_results_page_with_magazine_filter_go_back_buttons_displayed(test_client
 
 
 def test_results_page_with_accepted_special_characters(test_client):
-
     s_word = "-_.,„!?;:'"
     response = test_client.get("/results/search", query_string={"search_box": s_word})
 
@@ -115,7 +106,6 @@ def test_results_page_with_accepted_special_characters(test_client):
 
 
 def test_results_page_with_unaccepted_special_characters(test_client):
-
     s_word = r"()&/\|~{}[]+=<>"
 
     response = test_client.get("/results/search", query_string={"search_box": s_word})

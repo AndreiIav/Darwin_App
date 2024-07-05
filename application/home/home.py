@@ -16,7 +16,6 @@ home_bp = Blueprint(
 
 @home_bp.route("/", methods=["GET"])
 def search_form():
-
     current_app.logger.info("Calling the search_form() function")
 
     search_form = SearchForm()
@@ -36,7 +35,6 @@ def search_form():
 
 @home_bp.route("/magazine_details")
 def show_magazine_details():
-
     current_app.logger.info(
         "Calling the show_magazine_details() function"
         f" with parameter: {request.args.get('magazine_id')}"
