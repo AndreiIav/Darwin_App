@@ -4,7 +4,6 @@ import os
 
 from dotenv import load_dotenv
 
-
 # Determine the folder of the top-level directory of this project
 BASEDIR = os.path.abspath(os.path.dirname(__file__))
 

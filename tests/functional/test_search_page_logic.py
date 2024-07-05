@@ -1,13 +1,13 @@
-import pytest
-from flask import current_app
 import flask_sqlalchemy
+import pytest
 import werkzeug
+from flask import current_app
 
 from application.search_page.logic import (
     get_details_for_searched_term,
     get_details_for_searched_term_for_specific_magazine,
-    paginate_results,
     get_previews_for_page_id,
+    paginate_results,
 )
 
 

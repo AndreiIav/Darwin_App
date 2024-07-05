@@ -1,13 +1,11 @@
-import os
 import logging
+import os
 
 from concurrent_log_handler import ConcurrentTimedRotatingFileHandler
-
 from flask import Flask, render_template
 from flask.logging import default_handler
 from flask_sqlalchemy import SQLAlchemy
 from flask_wtf.csrf import CSRFProtect
-
 
 # -------------
 # Configuration
@@ -43,9 +41,9 @@ def init_app():
 
 def register_blueprints(app):
     # Import the blueprints
+    from application.cli_database.cli import cli_database_bp
     from application.home.home import home_bp
     from application.search_page.search_page import search_page_bp
-    from application.cli_database.cli import cli_database_bp
 
     # Register Blueprints
     app.register_blueprint(home_bp)

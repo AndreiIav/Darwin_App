@@ -1,6 +1,6 @@
 from application.models import (
-    Magazines,
     MagazineDetails,
+    Magazines,
     db,
 )
 

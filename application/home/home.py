@@ -1,4 +1,4 @@
-from flask import Blueprint, request, render_template, abort, current_app, jsonify
+from flask import Blueprint, abort, current_app, jsonify, render_template, request
 
 from application.forms import SearchForm
 from application.home.logic import (
@@ -6,7 +6,6 @@ from application.home.logic import (
     get_magazine_details,
     get_magazine_name,
 )
-
 
 # Blueprint Configuration
 home_bp = Blueprint(

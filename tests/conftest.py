@@ -7,9 +7,9 @@ import pytest
 
 from application import init_app
 from application.search_page.logic import (
-    store_s_word_in_session,
     get_details_for_searched_term,
     paginate_results,
+    store_s_word_in_session,
 )
 
 

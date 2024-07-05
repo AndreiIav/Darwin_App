@@ -1,20 +1,14 @@
-from flask import (
-    Blueprint,
-    render_template,
-    request,
-    session,
-    current_app,
-)
+from flask import Blueprint, current_app, render_template, request, session
+
 from application.search_page.logic import (
+    format_search_word,
     get_details_for_searched_term,
     get_details_for_searched_term_for_specific_magazine,
     get_distinct_magazine_names_and_count_for_searched_term,
-    paginate_results,
-    format_search_word,
-    store_s_word_in_session,
     get_previews_for_page_id,
+    paginate_results,
+    store_s_word_in_session,
 )
-
 
 # Blueprint configuration
 search_page_bp = Blueprint(

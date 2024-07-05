@@ -1,21 +1,21 @@
-import pytest
 import flask_sqlalchemy
+import pytest
 from flask import request
 
 from application.search_page.logic import (
-    format_search_word,
-    get_distinct_magazine_names_and_count_for_searched_term,
-    get_details_for_searched_term,
-    replace_multiple_extra_white_spaces_with_just_one,
-    get_magazine_content_details,
-    convert_diacritics_to_basic_latin_characters,
-    get_indexes_for_highlighting_s_word,
-    get_distinct_s_word_variants,
     add_html_mark_tags_to_the_searched_term,
-    get_all_start_and_end_indexes_for_preview_substrings,
-    merge_overlapping_preview_substrings,
-    get_preview_string,
     add_html_tags_around_preview_string_parantheses,
+    convert_diacritics_to_basic_latin_characters,
+    format_search_word,
+    get_all_start_and_end_indexes_for_preview_substrings,
+    get_details_for_searched_term,
+    get_distinct_magazine_names_and_count_for_searched_term,
+    get_distinct_s_word_variants,
+    get_indexes_for_highlighting_s_word,
+    get_magazine_content_details,
+    get_preview_string,
+    merge_overlapping_preview_substrings,
+    replace_multiple_extra_white_spaces_with_just_one,
 )
 
 

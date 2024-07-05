@@ -1,16 +1,15 @@
-from pathlib import Path
 import os
+from pathlib import Path
 
-from flask import Blueprint, current_app
 import click
+from flask import Blueprint, current_app
 
 from application.cli_database.logic import (
     create_database,
-    write_data_to_database,
-    create_magazine_details_table,
     create_fts_table,
+    create_magazine_details_table,
+    write_data_to_database,
 )
-
 
 # Blueprint Configuration
 cli_database_bp = Blueprint("cli_database_bp", __name__, cli_group="database")

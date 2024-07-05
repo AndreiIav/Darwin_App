@@ -1,15 +1,15 @@
 import re
 
-from sqlalchemy import func
 from flask import session
 from markupsafe import Markup
+from sqlalchemy import func
 
 from application.models import (
-    Magazines,
-    MagazineYear,
     MagazineNumber,
     MagazineNumberContent,
     MagazineNumberContentFTS,
+    Magazines,
+    MagazineYear,
     db,
 )
 

@@ -1,10 +1,10 @@
-import pytest
 import flask_sqlalchemy
+import pytest
 
 from application.home.logic import (
     get_existent_magazines,
-    get_magazine_name,
     get_magazine_details,
+    get_magazine_name,
 )
 
 

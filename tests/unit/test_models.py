@@ -1,10 +1,10 @@
 from application.models import (
-    Magazines,
-    MagazineYear,
+    MagazineDetails,
     MagazineNumber,
     MagazineNumberContent,
     MagazineNumberContentFTS,
-    MagazineDetails,
+    Magazines,
+    MagazineYear,
 )
 
 

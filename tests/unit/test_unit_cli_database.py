@@ -1,17 +1,17 @@
 import sqlite3
 from pathlib import Path
 
-import pytest
 import click
+import pytest
 from flask import current_app
 
 from application.cli_database.logic import (
     create_database,
-    get_data_from_csv_file,
-    write_to_database,
-    write_data_to_database,
-    create_magazine_details_table,
     create_fts_table,
+    create_magazine_details_table,
+    get_data_from_csv_file,
+    write_data_to_database,
+    write_to_database,
 )
 
 
