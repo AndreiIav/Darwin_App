@@ -26,7 +26,7 @@ def test_client():
             yield testing_client
 
 
-@pytest.fixture
+@pytest.fixture(scope="module")
 def test_cli_app():
     # Set the Testing configuration prior to creating the Flask application
     os.environ["CONFIG_TYPE"] = "config.TestingConfig"
