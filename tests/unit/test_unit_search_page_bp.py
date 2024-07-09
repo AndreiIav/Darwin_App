@@ -97,16 +97,23 @@ class TestFormatSearchWord:
 
     def test_format_search_word_with_accepted_special_characters(self):
         input = "Darwin-_.,„!?;:''"
+        accepted_special_characters = "-_.,„!?;:'' "
         expected_output = "Darwin-_.,„!?;:''"
 
-        formatted_s_word = format_search_word(input)
+        formatted_s_word = format_search_word(
+            input, accepted_special_characters=accepted_special_characters
+        )
         assert formatted_s_word == expected_output
 
     def test_format_search_word_with_not_accepted_special_characters(self):
         input = r'Darwin"()&/\|~{}[]+='
+        accepted_special_characters = "-_.,„!?;:'' "
         expected_output = "Darwin"
 
-        formatted_s_word = format_search_word(input)
+        formatted_s_word = format_search_word(
+            input, accepted_special_characters=accepted_special_characters
+        )
+
         assert formatted_s_word == expected_output
 
     @pytest.mark.parametrize(

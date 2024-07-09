@@ -28,10 +28,15 @@ def search_for_term():
         "Calling the search_for_term() function with search_box"
         f" parameter: {request.args.get('search_box')}"
     )
-    request_s_word = format_search_word(request_s_word)
-    current_app.logger.info(f"Formatted search_box parameter to: {request_s_word}")
-    s_word = store_s_word_in_session(session_s_word, request_s_word)
 
+    accepted_special_characters = current_app.config["ACCEPTED_FTS5_SPECIAL_CHARACTERS"]
+
+    request_s_word = format_search_word(
+        request_s_word, accepted_special_characters=accepted_special_characters
+    )
+    current_app.logger.info(f"Formatted search_box parameter to: {request_s_word}")
+
+    s_word = store_s_word_in_session(session_s_word, request_s_word)
     if len(s_word) < 4 or len(s_word) > 200:
         current_app.logger.info(
             "Displaying no_results_found page because s_word"
@@ -43,7 +48,9 @@ def search_for_term():
     page = request.args.get("page", 1, type=int)
     current_app.logger.info(f"Displaying /search page: {page}")
 
-    formatted_s_word = format_search_word(s_word, "+")
+    formatted_s_word = format_search_word(
+        s_word, separator="+", accepted_special_characters=accepted_special_characters
+    )
     current_app.logger.info(f"Formatted s_word to: {formatted_s_word}")
 
     distinct_magazines_and_count = (

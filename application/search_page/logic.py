@@ -153,7 +153,7 @@ def get_distinct_magazine_names_and_count_for_searched_term(formatted_s_word):
     return distinct_magazine_names_and_count_for_searched_term
 
 
-def format_search_word(s_word, separator=" "):
+def format_search_word(s_word, separator=" ", accepted_special_characters=""):
     """
     Format the search word for querying.
 
@@ -161,6 +161,8 @@ def format_search_word(s_word, separator=" "):
         s_word (str): The input search word.
         separator (str): The separator used in case there are multiple words.
         Default is " ".
+        accepted_special_characters (str): Accepted special characters that will
+        not be removed from the s_word. Default is "".
 
     Returns:
         formatted_s_word (str): The formatted search word.
@@ -168,16 +170,15 @@ def format_search_word(s_word, separator=" "):
     This function returns the inputted search word if it is a single word, or
     the inputted search word concatenated with the separator sign if there are
     more than one term in s_word. The function removes all leading and trailing
-    whitespaces of the input. The function removes all unaccepted special
-    characters of the input.
+    whitespaces of the input. The function removes all non-alphanumeric
+    characters except the ones passed in accepted_special_characters parameter.
     """
-
-    accepted_special_characters = "-_.,„!?;:'' "
 
     for character in s_word:
         if (
             character.isalnum() is False
             and character not in accepted_special_characters
+            and character != " "
         ):
             s_word = s_word.replace(character, "")
 
