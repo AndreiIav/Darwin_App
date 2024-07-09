@@ -148,7 +148,7 @@ def create_magazine_details_table(database_path):
         )
 
 
-def create_fts_table(database_path):
+def create_fts_table(database_path, accepted_special_characters=""):
     conn = sqlite3.connect(database_path)
     conn.execute("PRAGMA foreign_keys = 1")  # to enable foreign keys
     c = conn.cursor()
@@ -156,11 +156,11 @@ def create_fts_table(database_path):
     with conn:
         # create the magazine_number_content_fts fts5 contentless table
         c.execute(
-            """
+            f"""
             CREATE VIRTUAL TABLE magazine_number_content_fts USING fts5(
                 magazine_content,
                 content='',
-                tokenize = "unicode61 remove_diacritics 2 tokenchars '-_.,„!?;:'''"
+                tokenize = "unicode61 remove_diacritics 2 tokenchars '{accepted_special_characters}'"
                 )
             """
         )

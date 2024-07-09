@@ -26,6 +26,7 @@ def create_new_database(name):
     database_path = database_folder / database_name
     create_database_files_path = Path(current_app.config["DATABASE_FILES"])
     files_to_tables = current_app.config["FILES_TO_TABLES"]
+    accepted_special_characters = current_app.config["ACCEPTED_FTS5_SPECIAL_CHARACTERS"]
 
     # check if a database file with the requested name already exists
     if database_path.is_file():
@@ -41,7 +42,7 @@ def create_new_database(name):
     create_magazine_details_table(database_path)
 
     # create and populate the fts table
-    create_fts_table(database_path)
+    create_fts_table(database_path, accepted_special_characters)
 
     print(f"database {name} created in {database_folder}")
 
