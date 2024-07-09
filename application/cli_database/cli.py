@@ -42,7 +42,9 @@ def create_new_database(name):
     create_magazine_details_table(database_path)
 
     # create and populate the fts table
-    create_fts_table(database_path, accepted_special_characters)
+    create_fts_table(
+        database_path, accepted_special_characters=accepted_special_characters
+    )
 
     print(f"database {name} created in {database_folder}")
 
