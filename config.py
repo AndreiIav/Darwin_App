@@ -36,7 +36,8 @@ class Config(object):
     # Placeholder text for search bar
     PLACEHOLDER_TEXT_FOR_SEARCH_BAR = "you can enter between 4 and 200 characters"
 
-    # SQLITE FTS5 additional unicode characters considered token characters
+    # SQLITE FTS5 additional non alphanumeric unicode characters considered
+    # token characters
     ACCEPTED_FTS5_SPECIAL_CHARACTERS = "-_.,„!?;:'' "
 
     # Preview string
