@@ -38,7 +38,7 @@ class Config(object):
 
     # SQLITE FTS5 additional non alphanumeric unicode characters considered
     # token characters
-    ACCEPTED_FTS5_SPECIAL_CHARACTERS = "-_.,„!?;:'' "
+    ACCEPTED_FTS5_SPECIAL_CHARACTERS = "-_.,„!?;:''"
 
     # Preview string
     PREVIEW_SUBSTRING_LENGTH = 200
