@@ -24,10 +24,6 @@ class Config(object):
     FLASK_ENV = "development"
     DEBUG = False
     TESTING = False
-    SECRET_KEY = os.getenv(
-        "SECRET_KEY",
-        default=b"\xe7\xc86\x9c\x0c\x9a\xcbiw3#)1\xd0\xde\x95\xb8\x8a[Q\xf9\xc4\x81\xf9\xdc\x84\x14Qu\xf6\xdeu",
-    )
 
     # Pagination
     RESULTS_PER_PAGE = 10
@@ -59,10 +55,12 @@ class Config(object):
 
 class ProductionConfig(Config):
     FLASK_ENV = "production"
+    SECRET_KEY = os.getenv("SECRET_KEY")
 
 
 class DevelopmentConfig(Config):
     DEBUG = True
+    SECRET_KEY = "development_secret_key"
 
 
 class TestingConfig(Config):
@@ -73,6 +71,7 @@ class TestingConfig(Config):
     )
 
     # Environment variables
+    SECRET_KEY = "test_secret_key"
     TESTING = True
 
     # cli_database blueprint test
@@ -94,3 +93,5 @@ class DemoConfig(Config):
         "DEMO_SQLALCHEMY_DATABASE_URI",
         default=f"sqlite:///{os.path.join(BASEDIR,'instance','demo.db')}",
     )
+
+    SECRET_KEY = "demo_secret_key"
