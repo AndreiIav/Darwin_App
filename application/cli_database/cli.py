@@ -1,4 +1,5 @@
 import os
+import sqlite3
 from pathlib import Path
 
 import click
@@ -68,3 +69,24 @@ def remove_database_file(name):
     os.remove(database_path)
 
     print(f"{name} database was removed from {database_folder}")
+
+
+@cli_database_bp.cli.command("run_warm_up")
+def run_sql():
+    database_name = "app.db"
+    database_folder = Path(current_app.config["DATABASE_FOLDER"])
+    database_path = database_folder / database_name
+
+    conn = sqlite3.connect(database_path)
+    c = conn.cursor()
+
+    with conn:
+        c.execute(
+            """
+            SELECT mnc.id, mnc.magazine_number_id, mnc.magazine_page, mncf.rowid
+            FROM magazine_number_content mnc 
+            INNER JOIN magazine_number_content_fts mncf ON mnc.rowid = mncf.rowid
+            """
+        )
+
+    print("sql executed")
