@@ -9,7 +9,6 @@ from application.search_page.logic import (
     format_search_word,
     get_all_start_and_end_indexes_for_preview_substrings,
     get_details_for_searched_term,
-    get_distinct_magazine_names_and_count_for_searched_term,
     get_distinct_s_word_variants,
     get_indexes_for_highlighting_s_word,
     get_magazine_content_details,
@@ -173,33 +172,6 @@ class TestGetDetailsForSearchedTerm:
             assert isinstance(page, int)
             assert isinstance(link, str)
             assert isinstance(rowid, int)
-
-
-# Tests for get_distinct_magazine_names_and_count_for_searched_term
-class TestGetDistinctMagazineNamesAndCountForSearchedTerm:
-    def test_type_of_get_distinct_magazine_names_and_count_for_searched_term(
-        self, test_client
-    ):
-        s_word = "Bucuresti"
-        magazine_names_and_count = (
-            get_distinct_magazine_names_and_count_for_searched_term(s_word)
-        )
-
-        assert isinstance(magazine_names_and_count, flask_sqlalchemy.query.Query)
-
-    def test_get_distinct_magazine_names_and_count_for_searched_term_gets_correct_data(
-        self, test_client
-    ):
-        s_word = "Bucuresti"
-        magazine_names_and_count = (
-            get_distinct_magazine_names_and_count_for_searched_term(s_word)
-        )
-        expected_result = [
-            ("Albina (1866-1876)", 26),
-            ("Amicul Şcoalei (1925-1935)", 186),
-        ]
-
-        assert list(magazine_names_and_count) == expected_result
 
 
 # Tests for replace_multiple_extra_white_spaces_with_just_one

@@ -6,9 +6,49 @@ from flask import current_app
 from application.search_page.logic import (
     get_details_for_searched_term,
     get_details_for_searched_term_for_specific_magazine,
+    get_distinct_magazine_names_and_count_for_searched_term,
     get_previews_for_page_id,
     paginate_results,
 )
+
+
+# Tests for get_distinct_magazine_names_and_count_for_searched_term
+class TestGetDistinctMagazineNamesAndCountForSearchedTerm:
+    def test_type_of_get_distinct_magazine_names_and_count_for_searched_term(
+        self, test_client
+    ):
+        s_word = "Bucuresti"
+        # get a flask_sqlalchemy.query.Query object with all details for
+        # a searched term to be grouped and counted
+        details_for_searched_term = get_details_for_searched_term(s_word)
+
+        magazine_names_and_count = (
+            get_distinct_magazine_names_and_count_for_searched_term(
+                details_for_searched_term
+            )
+        )
+
+        assert isinstance(magazine_names_and_count, flask_sqlalchemy.query.Query)
+
+    def test_get_distinct_magazine_names_and_count_for_searched_term_gets_correct_data(
+        self, test_client
+    ):
+        s_word = "Bucuresti"
+        # get a flask_sqlalchemy.query.Query object with all details for
+        # a searched term to be grouped and counted
+        details_for_searched_term = get_details_for_searched_term(s_word)
+
+        magazine_names_and_count = (
+            get_distinct_magazine_names_and_count_for_searched_term(
+                details_for_searched_term
+            )
+        )
+        expected_result = [
+            ("Albina (1866-1876)", 26),
+            ("Amicul Şcoalei (1925-1935)", 186),
+        ]
+
+        assert list(magazine_names_and_count) == expected_result
 
 
 # Tests for get_details_for_searched_term_for_specific_magazine

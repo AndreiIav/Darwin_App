@@ -113,14 +113,13 @@ def paginate_results(details_for_searched_term, page, per_page, error_out):
     )
 
 
-def get_distinct_magazine_names_and_count_for_searched_term(formatted_s_word):
+def get_distinct_magazine_names_and_count_for_searched_term(details_for_searched_term):
     """
-    Retrieve distinct magazine names and search term counts based on the
-    formatted_s_word.
+    Retrieve distinct magazine names and search term counts.
 
     Args:
-        formatted_s_word (str): The formatted search word obtained from
-        format_search_word function.
+        details_for_searched_term (flask_sqlalchemy.query.Query): A Query object
+        containing all search results for a specific term.
 
     Returns:
         distinct_magazine_names_and_count_for_searched_term
@@ -131,22 +130,11 @@ def get_distinct_magazine_names_and_count_for_searched_term(formatted_s_word):
     respective search term counts.
     """
 
-    expression_to_search = '"' + formatted_s_word + '"' + "*"
-
+    subq = details_for_searched_term.subquery()
     distinct_magazine_names_and_count_for_searched_term = (
         db.session.query(Magazines.name, func.count(Magazines.name))
-        .join(MagazineYear, Magazines.id == MagazineYear.magazine_id)
-        .join(MagazineNumber, MagazineYear.id == MagazineNumber.magazine_year_id)
-        .join(
-            MagazineNumberContent,
-            MagazineNumber.id == MagazineNumberContent.magazine_number_id,
-        )
-        .join(
-            MagazineNumberContentFTS,
-            MagazineNumberContent.id == MagazineNumberContentFTS.rowid,
-        )
-        .filter(MagazineNumberContentFTS.magazine_content.match(expression_to_search))
-        .group_by(Magazines.name)
+        .join(subq, Magazines.name == subq.c.name)
+        .group_by(Magazines.id)
         .order_by(Magazines.name)
     )
 

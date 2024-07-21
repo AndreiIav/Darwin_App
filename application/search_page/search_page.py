@@ -53,22 +53,21 @@ def search_for_term():
     )
     current_app.logger.info(f"Formatted s_word to: {formatted_s_word}")
 
-    distinct_magazines_and_count = (
-        get_distinct_magazine_names_and_count_for_searched_term(
-            formatted_s_word=formatted_s_word
-        )
-    )
-
     details_for_searched_term = get_details_for_searched_term(
         formatted_s_word=formatted_s_word
     )
-
     if len(list(details_for_searched_term)) == 0:
         current_app.logger.info(
             "Displaying no_results_found page because s_word"
             f" was not found: {s_word}"
         )
         return render_template("no_results_found.html", searched_term=s_word)
+
+    distinct_magazines_and_count = (
+        get_distinct_magazine_names_and_count_for_searched_term(
+            details_for_searched_term=details_for_searched_term
+        )
+    )
 
     magazine_filter = request.args.get("magazine_filter")
 
