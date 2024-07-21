@@ -89,4 +89,7 @@ def run_sql():
             """
         )
 
+        res = c.fetchall()
+        print(len(res))
+
     print("sql executed")
