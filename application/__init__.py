@@ -1,5 +1,7 @@
 import logging
 import os
+import sqlite3
+from pathlib import Path
 
 from concurrent_log_handler import ConcurrentTimedRotatingFileHandler
 from flask import Flask, render_template
@@ -30,6 +32,9 @@ def init_app():
     register_blueprints(app)
     register_error_pages(app)
     configure_logging(app)
+
+    if config_type in ("config.DevelopmentConfig", "config.ProductionConfig"):
+        run_warm_up_queries(app)
 
     return app
 
@@ -88,3 +93,43 @@ def configure_logging(app):
 
     # Log that the Flask application is starting
     app.logger.info("Starting the Flask Darwin_App...")
+
+
+def run_warm_up_queries(app):
+    with app.app_context():
+        database_name = "app.db"
+        database_folder = Path(app.config["DATABASE_FOLDER"])
+        database_path = database_folder / database_name
+
+        try:
+            conn = sqlite3.connect(database_path)
+            c = conn.cursor()
+
+            with conn:
+                c.execute(
+                    """
+                    SELECT m.id, m.name, my.id , my.magazine_id , my.year, mn.id,
+                    mn.magazine_year_id, mn.magazine_number
+                    FROM magazines m 
+                    INNER JOIN magazine_year my ON m.id = my.magazine_id 
+                    INNER JOIN magazine_number mn ON my.id = mn.magazine_year_id 
+                    """
+                )
+                res = c.fetchall()
+                app.logger.info(f"warm_up query 1 executed: {len(res)} rows returned")
+
+                c.execute(
+                    """
+                    SELECT mnc.id, mnc.magazine_number_id, mnc.magazine_page, mncf.rowid
+                    FROM magazine_number_content mnc
+                    INNER JOIN magazine_number_content_fts mncf ON mnc.rowid = mncf.rowid
+                    """
+                )
+                res = c.fetchall()
+                app.logger.info(f"warm_up query 2 executed: {len(res)} rows returned")
+
+        except sqlite3.Error as err:
+            app.logger.error(
+                "warm_up queries not executed in run_warm_up_queries() because"
+                f" of sqlite3.Error: {err}"
+            )
