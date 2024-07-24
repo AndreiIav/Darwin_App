@@ -34,7 +34,7 @@ def init_app():
     configure_logging(app)
 
     if config_type in ("config.DevelopmentConfig", "config.ProductionConfig"):
-        run_warm_up_queries(app)
+        run_warm_up_queries(app, "app.db")
 
     return app
 
@@ -95,9 +95,9 @@ def configure_logging(app):
     app.logger.info("Starting the Flask Darwin_App...")
 
 
-def run_warm_up_queries(app):
+def run_warm_up_queries(app, database_name):
     with app.app_context():
-        database_name = "app.db"
+        database_name = database_name
         database_folder = Path(app.config["DATABASE_FOLDER"])
         database_path = database_folder / database_name
 
@@ -120,9 +120,11 @@ def run_warm_up_queries(app):
 
                 c.execute(
                     """
-                    SELECT mnc.id, mnc.magazine_number_id, mnc.magazine_page, mncf.rowid
+                    SELECT mnc.id, mnc.magazine_number_id, mnc.magazine_page,
+                    mncf.rowid
                     FROM magazine_number_content mnc
-                    INNER JOIN magazine_number_content_fts mncf ON mnc.rowid = mncf.rowid
+                    INNER JOIN magazine_number_content_fts mncf
+                    ON mnc.rowid = mncf.rowid
                     """
                 )
                 res = c.fetchall()
