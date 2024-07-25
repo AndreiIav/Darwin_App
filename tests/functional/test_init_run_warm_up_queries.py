@@ -14,17 +14,18 @@ def test_run_warm_up_queries_runs(test_client, caplog):
 
     run_warm_up_queries(current_app, "test.db")
 
+    assert "INFO" in caplog.text
     assert "warm_up query 1 executed" in caplog.text
     assert "warm_up query 2 executed" in caplog.text
 
 
 def test_run_warm_up_queries_error(test_client, monkeypatch, tmp_path, caplog):
-    caplog.set_level(logging.INFO)
     # Set the DATABASE_FOLDER to use tmp_path
     monkeypatch.setitem(current_app.config, "DATABASE_FOLDER", tmp_path)
 
     run_warm_up_queries(current_app, "not_existing.db")
 
+    assert "Error" in caplog.text
     assert (
         "warm_up queries not executed in run_warm_up_queries() because of sqlite3.Error:"
         in caplog.text
