@@ -6,7 +6,7 @@ class TestHomePageE2E:
         go_to_page = start_app_server
         page.goto(go_to_page)
 
-        expect(page).to_have_title("BCU-Search")
+        expect(page).to_have_title("Home")
 
     def test_home_locate_important_elements(self, page, start_app_server):
         go_to_page = start_app_server
@@ -43,7 +43,7 @@ class TestHomePageE2E:
         page.get_by_placeholder("you can enter between 4 and").fill("bucuresti")
         page.get_by_placeholder("you can enter between 4 and").press("Enter")
 
-        expect(page).to_have_title("Search Results-BCU-Search")
+        expect(page).to_have_title("Search Results")
 
 
 class TestSearchPageE2E:
@@ -76,11 +76,11 @@ class TestSearchPageE2E:
         page.get_by_placeholder("you can enter between 4 and").fill("bucuresti")
         page.get_by_placeholder("you can enter between 4 and").press("Enter")
 
-        expect(page).to_have_title(" Search Results-BCU-Search ")
+        expect(page).to_have_title("Search Results")
 
         page.get_by_test_id("go_back_home").click()
 
-        expect(page).to_have_title("BCU-Search")
+        expect(page).to_have_title("Home")
 
     def test_display_count_results_per_magazine_button(self, page, start_app_server):
         start_page = start_app_server
@@ -187,10 +187,10 @@ class TestSearchPageE2E:
             page.goto(start_page)
 
             page.get_by_role("link", name="About").click()
-            expect(page).to_have_title("About Page")
+            expect(page).to_have_title("About")
 
             page.get_by_role("link", name="Contact").click()
-            expect(page).to_have_title("Contact Page")
+            expect(page).to_have_title("Contact")
 
             page.get_by_role("link", name="Home").click()
-            expect(page).to_have_title("BCU-Search")
+            expect(page).to_have_title("Home")
