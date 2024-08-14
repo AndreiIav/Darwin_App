@@ -1,183 +1,80 @@
 import re
 
-from flask import session
 from markupsafe import Markup
-from sqlalchemy import func
 
-from application.models import (
-    MagazineNumber,
-    MagazineNumberContent,
-    MagazineNumberContentFTS,
-    Magazines,
-    MagazineYear,
-    db,
-)
+from application.models import MagazineNumberContent, db
 
 
-def get_details_for_searched_term(formatted_s_word):
-    """
-    Retrieve specific columns from multiple tables based on a provided search
-    term.
-
-    Args:
-        formatted_s_word (str): The search term used for retrieval.
-
-    Returns:
-        all_details_for_searched_term (flask_sqlalchemy.query.Query): A Query
-        object containing the retrieved results.
-
-    This function returns a SQLAlchemy Query object that retrieves specific
-    columns (Magazines.name, MagazineYear.year, MagazineNumber.magazine_number,
-    MagazineNumberContent.magazine_page, MagazineNumber.magazine_number_link,
-    and MagazineNumberContent.id) from multiple tables based on a provided
-    search term.
-    The search is performed on an FTS5 table, which enables fast text search
-    capabilities.
-    The Query object can be iterated to access the results.
-    """
-
-    expression_to_search = '"' + formatted_s_word + '"' + "*"
-
-    all_details_for_searched_term = (
-        db.session.query(
-            Magazines.name,
-            MagazineYear.year,
-            MagazineNumber.magazine_number,
-            MagazineNumberContent.magazine_page,
-            MagazineNumber.magazine_number_link,
-            MagazineNumberContent.id,
-        )
-        .join(MagazineYear, Magazines.id == MagazineYear.magazine_id)
-        .join(MagazineNumber, MagazineYear.id == MagazineNumber.magazine_year_id)
-        .join(
-            MagazineNumberContent,
-            MagazineNumber.id == MagazineNumberContent.magazine_number_id,
-        )
-        .join(
-            MagazineNumberContentFTS,
-            MagazineNumberContent.id == MagazineNumberContentFTS.rowid,
-        )
-        .filter(MagazineNumberContentFTS.magazine_content.match(expression_to_search))
-        .order_by(
-            Magazines.name,
-            MagazineYear.year,
-            MagazineNumber.magazine_number,
-            MagazineNumberContent.magazine_page,
-        )
-    )
-
-    return all_details_for_searched_term
-
-
-def get_details_for_searched_term_for_specific_magazine(
-    details_for_searched_term, magazine_filter
+def get_previews_for_page_id(
+    paginated_details_for_searched_term, s_word, preview_length
 ):
     """
-    Filter a SQLAlchemy Query object based on a provided filter term.
+    Generate preview texts for page IDs based on provided search term.
 
     Args:
-        details_for_searched_term (flask_sqlalchemy.query.Query): The Query
-        object returned by the get_details_for_searched_term function.
-        magazine_filter (str): The filter term representing Magazines.name.
+        paginated_details_for_searched_term
+        (flask_sqlalchemy.pagination.QueryPagination): A flask_sqlalchemy
+        Pagination object containing search results.
+        s_word (str): The term to generate preview text around.
+        preview_length (int) : The length of the preview before and after the
+        search term.
 
-    Returns:
-        details_for_specific_magazine (flask_sqlalchemy.query.Query): A new
-        Query object containing the filtered results.
+    Returns: previews_for_page_id (list): A list containing pairs of
+    page IDs (int) and their corresponding preview texts (str).
+
+    This function generates preview texts for page IDs using a provided
+    Flask-SQLAlchemy Pagination object (paginated_details_for_searched_term)
+    and a search term (s_word).
+    The generated previews are centered around the search term with the
+    specified preview length.
+
+    The function employs a series of helper functions to create these previews,
+    including text processing and formatting operations.
     """
 
-    details_for_specific_magazine = details_for_searched_term.filter(
-        Magazines.name == magazine_filter
-    )
+    previews_for_page_id = []
 
-    return details_for_specific_magazine
+    for result in paginated_details_for_searched_term:
+        page_id = result[-1]
 
+        content = get_magazine_content_details(page_id)
+        content = replace_multiple_extra_white_spaces_with_just_one(content)
 
-def paginate_results(details_for_searched_term, page, per_page, error_out):
-    """
-    Generate a SQLAlchemy Pagination object for the provided Query.
+        s_word_string_length = len(s_word)
 
-    Args:
-        details_for_searched_term (flask_sqlalchemy.query.Query): The SQLAlchemy
-        Query object to paginate.
-        page (int): The page number to retrieve.
-        per_page (int): The number of results to be displayed on a page.
-        error_out (bool): The error flag for the error_out argument for the
-        pagination object.
+        indexes_for_highlighting_s_word = get_indexes_for_highlighting_s_word(
+            s_word, content
+        )
+        distinct_s_word_variants = get_distinct_s_word_variants(
+            indexes_for_highlighting_s_word, content, s_word_string_length
+        )
 
-    Returns:
-        flask_sqlalchemy.pagination.QueryPagination: A Pagination object
-        representing the subset of query results for the requested page.
-    """
-    return details_for_searched_term.paginate(
-        page=page, per_page=per_page, error_out=error_out
-    )
+        preview_substrings_start_end_indexes = (
+            get_all_start_and_end_indexes_for_preview_substrings(
+                content,
+                preview_length,
+                s_word_string_length,
+                indexes_for_highlighting_s_word,
+            )
+        )
+        preview_substring_indexes = merge_overlapping_preview_substrings(
+            preview_substrings_start_end_indexes
+        )
+        preview_string = get_preview_string(preview_substring_indexes, content)
 
+        preview_string_with_highlighted_s_word = Markup(
+            (
+                add_html_tags_around_preview_string_parantheses(
+                    add_html_mark_tags_to_the_searched_term(
+                        distinct_s_word_variants, preview_string
+                    )
+                )
+            )
+        )
 
-def get_distinct_magazine_names_and_count_for_searched_term(details_for_searched_term):
-    """
-    Retrieve distinct magazine names and search term counts.
+        previews_for_page_id.append([page_id, preview_string_with_highlighted_s_word])
 
-    Args:
-        details_for_searched_term (flask_sqlalchemy.query.Query): A Query object
-        containing all search results for a specific term.
-
-    Returns:
-        distinct_magazine_names_and_count_for_searched_term
-        (flask_sqlalchemy.query.Query): A Query object containing tuples of
-        magazine names and search term counts.
-
-    The Query object can be iterated to access the magazine names and their
-    respective search term counts.
-    """
-
-    subq = details_for_searched_term.subquery()
-    distinct_magazine_names_and_count_for_searched_term = (
-        db.session.query(Magazines.name, func.count(Magazines.name))
-        .join(subq, Magazines.name == subq.c.name)
-        .group_by(Magazines.id)
-        .order_by(Magazines.name)
-    )
-
-    return distinct_magazine_names_and_count_for_searched_term
-
-
-def format_search_word(s_word, separator=" ", accepted_special_characters=""):
-    """
-    Format the search word for querying.
-
-    Args:
-        s_word (str): The input search word.
-        separator (str): The separator used in case there are multiple words.
-        Default is " ".
-        accepted_special_characters (str): Accepted special characters that will
-        not be removed from the s_word. Default is "".
-
-    Returns:
-        formatted_s_word (str): The formatted search word.
-
-    This function returns the inputted search word if it is a single word, or
-    the inputted search word concatenated with the separator sign if there are
-    more than one term in s_word. The function removes all leading and trailing
-    whitespaces of the input. The function removes all non-alphanumeric
-    characters except the ones passed in accepted_special_characters parameter.
-    """
-
-    for character in s_word:
-        if (
-            character.isalnum() is False
-            and character not in accepted_special_characters
-            and character != " "
-        ):
-            s_word = s_word.replace(character, "")
-
-    s_word_list = s_word.split()
-
-    if len(s_word_list) == 1:
-        formatted_s_word = s_word.strip()
-    else:
-        formatted_s_word = separator.join(s_word_list)
-
-    return formatted_s_word
+    return previews_for_page_id
 
 
 def get_magazine_content_details(page_id=0):
@@ -555,101 +452,3 @@ def get_preview_string(preview_substrings_indexes, content):
                 preview_string = "[...] " + preview_string + " [...]"
 
     return preview_string
-
-
-def get_previews_for_page_id(
-    paginated_details_for_searched_term, s_word, preview_length
-):
-    """
-    Generate preview texts for page IDs based on provided search term.
-
-    Args:
-        paginated_details_for_searched_term
-        (flask_sqlalchemy.pagination.QueryPagination): A flask_sqlalchemy
-        Pagination object containing search results.
-        s_word (str): The term to generate preview text around.
-        preview_length (int) : The length of the preview before and after the
-        search term.
-
-    Returns: previews_for_page_id (list): A list containing pairs of
-    page IDs (int) and their corresponding preview texts (str).
-
-    This function generates preview texts for page IDs using a provided
-    Flask-SQLAlchemy Pagination object (paginated_details_for_searched_term)
-    and a search term (s_word).
-    The generated previews are centered around the search term with the
-    specified preview length.
-
-    The function employs a series of helper functions to create these previews,
-    including text processing and formatting operations.
-    """
-
-    previews_for_page_id = []
-
-    for result in paginated_details_for_searched_term:
-        page_id = result[-1]
-
-        content = get_magazine_content_details(page_id)
-        content = replace_multiple_extra_white_spaces_with_just_one(content)
-
-        s_word_string_length = len(s_word)
-
-        indexes_for_highlighting_s_word = get_indexes_for_highlighting_s_word(
-            s_word, content
-        )
-        distinct_s_word_variants = get_distinct_s_word_variants(
-            indexes_for_highlighting_s_word, content, s_word_string_length
-        )
-
-        preview_substrings_start_end_indexes = (
-            get_all_start_and_end_indexes_for_preview_substrings(
-                content,
-                preview_length,
-                s_word_string_length,
-                indexes_for_highlighting_s_word,
-            )
-        )
-        preview_substring_indexes = merge_overlapping_preview_substrings(
-            preview_substrings_start_end_indexes
-        )
-        preview_string = get_preview_string(preview_substring_indexes, content)
-
-        preview_string_with_highlighted_s_word = Markup(
-            (
-                add_html_tags_around_preview_string_parantheses(
-                    add_html_mark_tags_to_the_searched_term(
-                        distinct_s_word_variants, preview_string
-                    )
-                )
-            )
-        )
-
-        previews_for_page_id.append([page_id, preview_string_with_highlighted_s_word])
-
-    return previews_for_page_id
-
-
-def store_s_word_in_session(session_s_word, request_s_word):
-    """
-    Update the value of s_word in the session with the value from the current
-    request.
-
-    Args:
-        session_s_word (str): The current value of s_word stored in the session.
-        request_s_word (str): The value of s_word from the current request.
-
-    Returns:
-        str or None: The updated value of s_word in the session, or None if no
-        current or request value is provided.
-
-    This function replaces the current value of s_word in the session with the
-    value from the current request. It returns the updated value of s_word in
-    the session, or None if no current value or request value is provided.
-    """
-
-    if session_s_word is None or (
-        request_s_word is not None and request_s_word != session_s_word
-    ):
-        session["s_word"] = request_s_word
-
-    return session.get("s_word")

@@ -6,10 +6,10 @@ import time
 import pytest
 
 from application import init_app
-from application.search_page.logic import (
+from application.search_page.helpers import store_s_word_in_session
+from application.search_page.search_page_data_repository import (
     get_details_for_searched_term,
     paginate_results,
-    store_s_word_in_session,
 )
 
 

@@ -1,14 +1,10 @@
-import flask_sqlalchemy
 import pytest
-from flask import request
 
-from application.search_page.logic import (
+from application.search_page.previews import (
     add_html_mark_tags_to_the_searched_term,
     add_html_tags_around_preview_string_parantheses,
     convert_diacritics_to_basic_latin_characters,
-    format_search_word,
     get_all_start_and_end_indexes_for_preview_substrings,
-    get_details_for_searched_term,
     get_distinct_s_word_variants,
     get_indexes_for_highlighting_s_word,
     get_magazine_content_details,
@@ -16,162 +12,6 @@ from application.search_page.logic import (
     merge_overlapping_preview_substrings,
     replace_multiple_extra_white_spaces_with_just_one,
 )
-
-
-# Tests for store_s_word_in_session()
-class TestStoreSWordInSession:
-    def test_store_s_word_in_session_when_s_word_not_in_session_and_a_request_s_word_is_provided(
-        self,
-        s_word_in_session,
-    ):
-        session_s_word = None
-        request_s_word = request.args.get("search_box")
-        s_word = s_word_in_session(session_s_word, request_s_word)
-
-        assert s_word == "fotbal"
-
-    def test_store_s_word_in_session_when_s_word_not_in_session_and_a_request_s_word_is_not_provided(
-        self,
-        s_word_in_session,
-    ):
-        session_s_word = None
-        request_s_word = None
-        s_word = s_word_in_session(session_s_word, request_s_word)
-
-        assert s_word is None
-
-    def test_store_s_word_in_session_with_s_word_alredy_stored_in_session_and_same_request_s_word_provided(
-        self,
-        s_word_in_session,
-    ):
-        request_s_word = request.args.get("search_box")
-        session_s_word = s_word_in_session(None, request_s_word)
-        s_word = s_word_in_session(session_s_word, request_s_word)
-
-        assert s_word == "fotbal"
-
-    def test_store_s_word_in_session_with_s_word_alredy_stored_in_session_and_diferent_request_s_word_provided(
-        self,
-        s_word_in_session,
-    ):
-        request_s_word = request.args.get("search_box")
-        session_s_word = s_word_in_session(None, request_s_word)
-        request_s_word = "tennis"
-        s_word = s_word_in_session(session_s_word, request_s_word)
-
-        assert s_word == "tennis"
-
-
-# Tests for format_search_word
-class TestFormatSearchWord:
-    def test_format_search_word_with_one_word_as_input(self):
-        formatted_s_word = format_search_word("darwin")
-        assert formatted_s_word == "darwin"
-
-    def test_format_search_word_with_one_word_as_input_and_extra_spaces_around(self):
-        formatted_s_word = format_search_word("  darwin ")
-        assert formatted_s_word == "darwin"
-
-    def test_format_search_word_with_multiple_words_as_input_and_default_separator(
-        self,
-    ):
-        formatted_s_word = format_search_word("Victor Babeș")
-        assert formatted_s_word == "Victor Babeș"
-
-        formatted_s_word = format_search_word("ala bala portocala")
-        assert formatted_s_word == "ala bala portocala"
-
-    def test_format_search_word_with_multiple_words_as_input_and_passed_separator(self):
-        formatted_s_word = format_search_word("Victor Babeș", "+")
-        assert formatted_s_word == "Victor+Babeș"
-
-        formatted_s_word = format_search_word("ala bala portocala", "+")
-        assert formatted_s_word == "ala+bala+portocala"
-
-    def test_format_search_word_with_multiple_words_as_input_and_extra_spaces_around(
-        self,
-    ):
-        formatted_s_word = format_search_word(" ala bala portocala ")
-        assert formatted_s_word == "ala bala portocala"
-
-    def test_format_search_word_with_accepted_special_characters(self):
-        input = "Darwin-_.,„!?;:''"
-        accepted_special_characters = "-_.,„!?;:'' "
-        expected_output = "Darwin-_.,„!?;:''"
-
-        formatted_s_word = format_search_word(
-            input, accepted_special_characters=accepted_special_characters
-        )
-        assert formatted_s_word == expected_output
-
-    def test_format_search_word_with_not_accepted_special_characters(self):
-        input = r'Darwin"()&/\|~{}[]+='
-        accepted_special_characters = "-_.,„!?;:'' "
-        expected_output = "Darwin"
-
-        formatted_s_word = format_search_word(
-            input, accepted_special_characters=accepted_special_characters
-        )
-
-        assert formatted_s_word == expected_output
-
-    @pytest.mark.parametrize(
-        "input, expected",
-        [
-            (r'Victor<"()&/\|~{}[]+=Babes', "VictorBabes"),
-            (r'Victor<"()&/\|~{}[]+= Babes', "Victor Babes"),
-        ],
-    )
-    def test_format_search_word_with_multiple_words_with_not_accepted_special_characters(
-        self, input, expected
-    ):
-        formatted_s_word = format_search_word(input)
-        assert formatted_s_word == expected
-
-
-# Tests for get_details_for_searched_term
-class TestGetDetailsForSearchedTerm:
-    def test_get_details_for_searched_term_gets_correct_data(self, test_client):
-        s_word = "fotbal"
-        expected_magazine_name = "Amicul Şcoalei (1925-1935)"
-        expected_year = "ANUL 1930"
-        expected_number = "Nr.23-24"
-        expected_page = 8
-        expected_link = "https://documente.bcucluj.ro/web/bibdigit/periodice/amiculscoalei/1930/BCUCLUJ_FP_279091_1930_006_023_024.pdf"
-        expected_rowid = 10708
-
-        details_for_searched_term = get_details_for_searched_term(s_word)
-
-        for name, year, number, page, link, rowid in details_for_searched_term:
-            assert name == expected_magazine_name
-            assert year == expected_year
-            assert number == expected_number
-            assert page == expected_page
-            assert link == expected_link
-            assert rowid == expected_rowid
-
-    def test_type_of_get_details_for_searched_term(self, test_client):
-        s_word = "fotbal"
-        details_for_searched_term = get_details_for_searched_term(s_word)
-
-        assert isinstance(details_for_searched_term, flask_sqlalchemy.query.Query)
-
-    def test_response_details_of_get_details_for_searched_term(self, test_client):
-        s_word = "fotbal"
-        details_for_searched_term = get_details_for_searched_term(s_word)
-
-        assert len(list(details_for_searched_term)) == 1
-
-        for row in details_for_searched_term:
-            assert len(row) == 6
-
-        for name, year, number, page, link, rowid in details_for_searched_term:
-            assert isinstance(name, str)
-            assert isinstance(year, str)
-            assert isinstance(number, str)
-            assert isinstance(page, int)
-            assert isinstance(link, str)
-            assert isinstance(rowid, int)
 
 
 # Tests for replace_multiple_extra_white_spaces_with_just_one
