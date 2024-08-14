@@ -7,9 +7,53 @@ from application.search_page.search_page_data_repository import (
     get_details_for_searched_term,
     get_details_for_searched_term_for_specific_magazine,
     get_distinct_magazine_names_and_count_for_searched_term,
-    get_previews_for_page_id,
     paginate_results,
 )
+
+
+# Tests for get_details_for_searched_term
+class TestGetDetailsForSearchedTerm:
+    def test_get_details_for_searched_term_gets_correct_data(self, test_client):
+        s_word = "fotbal"
+        expected_magazine_name = "Amicul Şcoalei (1925-1935)"
+        expected_year = "ANUL 1930"
+        expected_number = "Nr.23-24"
+        expected_page = 8
+        expected_link = "https://documente.bcucluj.ro/web/bibdigit/periodice/amiculscoalei/1930/BCUCLUJ_FP_279091_1930_006_023_024.pdf"
+        expected_rowid = 10708
+
+        details_for_searched_term = get_details_for_searched_term(s_word)
+
+        for name, year, number, page, link, rowid in details_for_searched_term:
+            assert name == expected_magazine_name
+            assert year == expected_year
+            assert number == expected_number
+            assert page == expected_page
+            assert link == expected_link
+            assert rowid == expected_rowid
+
+    def test_type_of_get_details_for_searched_term(self, test_client):
+        s_word = "fotbal"
+        details_for_searched_term = get_details_for_searched_term(s_word)
+
+        assert isinstance(details_for_searched_term, flask_sqlalchemy.query.Query)
+
+    def test_response_details_of_get_details_for_searched_term(self, test_client):
+        s_word = "fotbal"
+        details_for_searched_term = get_details_for_searched_term(s_word)
+
+        assert len(list(details_for_searched_term)) == 1
+
+        for row in details_for_searched_term:
+            assert len(row) == 6
+
+        for name, year, number, page, link, rowid in details_for_searched_term:
+            assert isinstance(name, str)
+            assert isinstance(year, str)
+            assert isinstance(number, str)
+            assert isinstance(page, int)
+            assert isinstance(link, str)
+            assert isinstance(rowid, int)
 
 
 # Tests for get_distinct_magazine_names_and_count_for_searched_term
@@ -169,62 +213,3 @@ class TestPaginateResults:
         error_out = False
 
         paginate_results(details_for_searched_term, page, per_page, error_out)
-
-
-# Tests for get_previews_for_page_id
-class TestGetPreviewsForPageId:
-    def test_get_previews_for_page_id_length_of_response_is_correct(
-        self, test_client, set_up_data_for_previews_for_page_id
-    ):
-        s_word, paginated_details_for_searched_term = (
-            set_up_data_for_previews_for_page_id[0],
-            set_up_data_for_previews_for_page_id[2],
-        )
-
-        res = get_previews_for_page_id(
-            paginated_details_for_searched_term, s_word=s_word, preview_length=100
-        )
-
-        print(res)
-        assert len(res) == 1
-
-    def test_get_previews_for_page_id_response_type_is_correct(
-        self, test_client, set_up_data_for_previews_for_page_id
-    ):
-        s_word, paginated_details_for_searched_term = (
-            set_up_data_for_previews_for_page_id[0],
-            set_up_data_for_previews_for_page_id[2],
-        )
-
-        res = get_previews_for_page_id(
-            paginated_details_for_searched_term, s_word=s_word, preview_length=100
-        )
-
-        assert isinstance(res, list)
-        assert isinstance(res[0][0], int)
-        assert isinstance(res[0][1], str)
-
-    def test_get_previews_for_page_id_response_content_is_correct(
-        self, test_client, set_up_data_for_previews_for_page_id
-    ):
-        (
-            s_word,
-            page_id,
-            paginated_details_for_searched_term,
-        ) = set_up_data_for_previews_for_page_id
-
-        expected_page_id = page_id
-        expected_preview_text = (
-            "<b><i>[...]</i></b> unchiu Andrei; la ce mulţimea anca prorupse in"
-            + " se traiésca entusiastice pentru fostulu loru ablegatu"
-            + " <mark>Andrei Mocioni</mark>. In satulu Silha bravulu"
-            + " invetiatoriu co-munalu Constantinu Torna, cu tenerimea"
-            + " sco-láfra, enca intona <b><i>[...]</i></b>"
-        )
-
-        res = get_previews_for_page_id(
-            paginated_details_for_searched_term, s_word=s_word, preview_length=100
-        )
-
-        assert res[0][0] == expected_page_id
-        assert res[0][1] == expected_preview_text

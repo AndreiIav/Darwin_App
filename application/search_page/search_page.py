@@ -1,13 +1,12 @@
 from flask import Blueprint, current_app, render_template, request, session
 
+from application.search_page.helpers import format_search_word, store_s_word_in_session
+from application.search_page.previews import get_previews_for_page_id
 from application.search_page.search_page_data_repository import (
-    format_search_word,
     get_details_for_searched_term,
     get_details_for_searched_term_for_specific_magazine,
     get_distinct_magazine_names_and_count_for_searched_term,
-    get_previews_for_page_id,
     paginate_results,
-    store_s_word_in_session,
 )
 
 # Blueprint configuration
