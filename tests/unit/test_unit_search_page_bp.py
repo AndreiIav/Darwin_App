@@ -2,7 +2,7 @@ import flask_sqlalchemy
 import pytest
 from flask import request
 
-from application.search_page.logic import (
+from application.search_page.search_page_data_repository import (
     add_html_mark_tags_to_the_searched_term,
     add_html_tags_around_preview_string_parantheses,
     convert_diacritics_to_basic_latin_characters,

@@ -3,7 +3,7 @@ import pytest
 import werkzeug
 from flask import current_app
 
-from application.search_page.logic import (
+from application.search_page.search_page_data_repository import (
     get_details_for_searched_term,
     get_details_for_searched_term_for_specific_magazine,
     get_distinct_magazine_names_and_count_for_searched_term,
