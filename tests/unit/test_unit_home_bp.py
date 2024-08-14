@@ -1,7 +1,7 @@
 import flask_sqlalchemy
 import pytest
 
-from application.home.logic import (
+from application.home.home_data_repository import (
     get_existent_magazines,
     get_magazine_details,
     get_magazine_name,

@@ -1,7 +1,7 @@
 from flask import Blueprint, abort, current_app, jsonify, render_template, request
 
 from application.forms import SearchForm
-from application.home.logic import (
+from application.home.home_data_repository import (
     get_existent_magazines,
     get_magazine_details,
     get_magazine_name,
