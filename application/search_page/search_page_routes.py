@@ -23,16 +23,17 @@ search_page_bp = Blueprint(
 def search_for_term():
     session_s_word = session.get("s_word")
     request_s_word = request.args.get("search_box")
+
     current_app.logger.info(
         "Calling the search_for_term() function with search_box"
         f" parameter: {request.args.get('search_box')}"
     )
 
     accepted_special_characters = current_app.config["ACCEPTED_FTS5_SPECIAL_CHARACTERS"]
-
     request_s_word = format_search_word(
         request_s_word, accepted_special_characters=accepted_special_characters
     )
+
     current_app.logger.info(f"Formatted search_box parameter to: {request_s_word}")
 
     s_word = store_s_word_in_session(session_s_word, request_s_word)
@@ -45,25 +46,32 @@ def search_for_term():
 
     preview_length = current_app.config["PREVIEW_SUBSTRING_LENGTH"]
     page = request.args.get("page", 1, type=int)
+
     current_app.logger.info(f"Displaying /search page: {page}")
 
     formatted_s_word = format_search_word(
         s_word, separator="+", accepted_special_characters=accepted_special_characters
     )
+
     current_app.logger.info(f"Formatted s_word to: {formatted_s_word}")
+
+    magazine_filter = request.args.get("magazine_filter")
 
     details_for_searched_term = get_details_for_searched_term(
         formatted_s_word=formatted_s_word
     )
 
-    details_for_searched_term_length = details_for_searched_term.count()
+    # count the lenght of the entire result set only if a magazine_filter
+    # doesn't exists
+    if not magazine_filter:
+        details_for_searched_term_length = details_for_searched_term.count()
 
-    if details_for_searched_term_length == 0:
-        current_app.logger.info(
-            "Displaying no_results_found page because s_word"
-            f" was not found: {s_word}"
-        )
-        return render_template("no_results_found.html", searched_term=s_word)
+        if details_for_searched_term_length == 0:
+            current_app.logger.info(
+                "Displaying no_results_found page because s_word"
+                f" was not found: {s_word}"
+            )
+            return render_template("no_results_found.html", searched_term=s_word)
 
     distinct_magazines_and_count = (
         get_distinct_magazine_names_and_count_for_searched_term(
@@ -71,10 +79,9 @@ def search_for_term():
         )
     )
 
-    magazine_filter = request.args.get("magazine_filter")
-
     if magazine_filter:
         current_app.logger.info(f"magazine_filter set to: {magazine_filter}")
+
         details_for_searched_term = get_details_for_searched_term_for_specific_magazine(
             details_for_searched_term, magazine_filter
         )
