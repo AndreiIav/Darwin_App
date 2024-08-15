@@ -55,7 +55,10 @@ def search_for_term():
     details_for_searched_term = get_details_for_searched_term(
         formatted_s_word=formatted_s_word
     )
-    if len(list(details_for_searched_term)) == 0:
+
+    details_for_searched_term_length = details_for_searched_term.count()
+
+    if details_for_searched_term_length == 0:
         current_app.logger.info(
             "Displaying no_results_found page because s_word"
             f" was not found: {s_word}"
@@ -75,6 +78,7 @@ def search_for_term():
         details_for_searched_term = get_details_for_searched_term_for_specific_magazine(
             details_for_searched_term, magazine_filter
         )
+        details_for_searched_term_length = details_for_searched_term.count()
 
     details_for_searched_term = paginate_results(
         details_for_searched_term,
@@ -90,6 +94,7 @@ def search_for_term():
     return render_template(
         "search_page.html",
         details_for_searched_term=details_for_searched_term,
+        details_for_searched_term_length=details_for_searched_term_length,
         searched_term=s_word,
         distinct_magazines_and_count=distinct_magazines_and_count,
         magazine_filter=magazine_filter,
