@@ -62,6 +62,11 @@ class DevelopmentConfig(Config):
     DEBUG = True
     SECRET_KEY = "development_secret_key"
 
+    # Flask-Caching
+    CACHE_TYPE = "SimpleCache"
+    CACHE_DEFAULT_TIMEOUT = 300
+    TRESHOLD = 500
+
 
 class TestingConfig(Config):
     # Database
@@ -86,6 +91,11 @@ class TestingConfig(Config):
     # WTF_CSFR
     WTF_CSRF_ENABLED = False
 
+    # Flask-Caching
+    CACHE_TYPE = "SimpleCache"
+    CACHE_DEFAULT_TIMEOUT = 300
+    TRESHOLD = 500
+
 
 class DemoConfig(Config):
     # Database
@@ -95,3 +105,8 @@ class DemoConfig(Config):
     )
 
     SECRET_KEY = "demo_secret_key"
+
+    # Flask-Caching
+    CACHE_TYPE = "SimpleCache"
+    CACHE_DEFAULT_TIMEOUT = 300
+    TRESHOLD = 500

@@ -1,5 +1,6 @@
 from flask import Blueprint, current_app, render_template, request, session
 
+from application import cache
 from application.search_page.helpers import format_search_word, store_s_word_in_session
 from application.search_page.previews import get_previews_for_page_id
 from application.search_page.search_page_data_repository import (
@@ -64,7 +65,11 @@ def search_for_term():
     # count the lenght of the entire result set only if a magazine_filter
     # doesn't exists
     if not magazine_filter:
-        details_for_searched_term_length = details_for_searched_term.count()
+        details_for_searched_term_length = (
+            cache.get(formatted_s_word) or details_for_searched_term.count()
+        )
+        if not cache.has(formatted_s_word):
+            cache.add(formatted_s_word, details_for_searched_term_length)
 
         if details_for_searched_term_length == 0:
             current_app.logger.info(
@@ -81,11 +86,17 @@ def search_for_term():
 
     if magazine_filter:
         current_app.logger.info(f"magazine_filter set to: {magazine_filter}")
-
         details_for_searched_term = get_details_for_searched_term_for_specific_magazine(
             details_for_searched_term, magazine_filter
         )
-        details_for_searched_term_length = details_for_searched_term.count()
+
+        magazine_filter_cache_key = f"{magazine_filter}_{request_s_word}"
+        details_for_searched_term_length = (
+            cache.get(magazine_filter_cache_key) or details_for_searched_term.count()
+        )
+
+        if not cache.has(magazine_filter_cache_key):
+            cache.add(magazine_filter_cache_key, details_for_searched_term_length)
 
     details_for_searched_term = paginate_results(
         details_for_searched_term,
