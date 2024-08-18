@@ -52,20 +52,29 @@ class Config(object):
         ("magazine_content.csv", "magazine_number_content"),
     ]
 
+    # Flask-Caching SimpleCache backend
+    CACHE_TYPE = "SimpleCache"
+    CACHE_DEFAULT_TIMEOUT = 300
+    TRESHOLD = 500
+
 
 class ProductionConfig(Config):
     FLASK_ENV = "production"
     SECRET_KEY = os.getenv("SECRET_KEY")
 
+    # Flask-Caching Redis backend
+    CACHE_TYPE = "RedisCache"
+    HOST = "localhost"
+    PORT = 6379
+    PASSWORD = os.getenv("REDIS_PASSWORD", None)
+    DB = 0
+    DEFAULT_TIMEOUT = 300
+    KEY_PREFIX = None
+
 
 class DevelopmentConfig(Config):
     DEBUG = True
     SECRET_KEY = "development_secret_key"
-
-    # Flask-Caching
-    CACHE_TYPE = "SimpleCache"
-    CACHE_DEFAULT_TIMEOUT = 300
-    TRESHOLD = 500
 
 
 class TestingConfig(Config):
@@ -91,11 +100,6 @@ class TestingConfig(Config):
     # WTF_CSFR
     WTF_CSRF_ENABLED = False
 
-    # Flask-Caching
-    CACHE_TYPE = "SimpleCache"
-    CACHE_DEFAULT_TIMEOUT = 300
-    TRESHOLD = 500
-
 
 class DemoConfig(Config):
     # Database
@@ -105,8 +109,3 @@ class DemoConfig(Config):
     )
 
     SECRET_KEY = "demo_secret_key"
-
-    # Flask-Caching
-    CACHE_TYPE = "SimpleCache"
-    CACHE_DEFAULT_TIMEOUT = 300
-    TRESHOLD = 500
