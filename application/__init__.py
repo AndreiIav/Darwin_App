@@ -6,6 +6,7 @@ from pathlib import Path
 from concurrent_log_handler import ConcurrentTimedRotatingFileHandler
 from flask import Flask, render_template
 from flask.logging import default_handler
+from flask_caching import Cache
 from flask_sqlalchemy import SQLAlchemy
 from flask_wtf.csrf import CSRFProtect
 
@@ -15,6 +16,7 @@ from flask_wtf.csrf import CSRFProtect
 
 db = SQLAlchemy()
 csrf = CSRFProtect()
+cache = Cache()
 
 # ----------------------------
 # Application Factory Function
@@ -59,6 +61,7 @@ def register_blueprints(app):
 def initialize_extensions(app):
     db.init_app(app)
     csrf.init_app(app)
+    cache.init_app(app)
 
 
 def register_error_pages(app):
