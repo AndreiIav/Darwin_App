@@ -54,12 +54,6 @@ def get_details_for_searched_term(formatted_s_word):
             MagazineNumberContent.id == MagazineNumberContentFTS.rowid,
         )
         .filter(MagazineNumberContentFTS.magazine_content.match(expression_to_search))
-        .order_by(
-            Magazines.name,
-            MagazineYear.year,
-            MagazineNumber.magazine_number,
-            MagazineNumberContent.magazine_page,
-        )
     )
 
     return all_details_for_searched_term
@@ -83,6 +77,10 @@ def get_details_for_searched_term_for_specific_magazine(
 
     details_for_specific_magazine = details_for_searched_term.filter(
         Magazines.name == magazine_filter
+    ).order_by(
+        MagazineYear.year,
+        MagazineNumber.magazine_number,
+        MagazineNumberContent.magazine_page,
     )
 
     return details_for_specific_magazine
