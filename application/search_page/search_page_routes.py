@@ -65,10 +65,10 @@ def search_for_term():
     # count the lenght of the entire result set only if a magazine_filter
     # doesn't exists
     if not magazine_filter:
-        details_for_searched_term_length = (
-            cache.get(formatted_s_word) or details_for_searched_term.count()
-        )
-        if not cache.has(formatted_s_word):
+        if cache.has(formatted_s_word):
+            details_for_searched_term_length = cache.get(formatted_s_word)
+        else:
+            details_for_searched_term_length = details_for_searched_term.count()
             cache.add(formatted_s_word, details_for_searched_term_length)
 
         if details_for_searched_term_length == 0:
@@ -91,11 +91,10 @@ def search_for_term():
         )
 
         magazine_filter_cache_key = f"{magazine_filter}_{request_s_word}"
-        details_for_searched_term_length = (
-            cache.get(magazine_filter_cache_key) or details_for_searched_term.count()
-        )
-
-        if not cache.has(magazine_filter_cache_key):
+        if cache.has(magazine_filter_cache_key):
+            details_for_searched_term_length = cache.get(magazine_filter_cache_key)
+        else:
+            details_for_searched_term_length = details_for_searched_term.count()
             cache.add(magazine_filter_cache_key, details_for_searched_term_length)
 
     details_for_searched_term = paginate_results(
