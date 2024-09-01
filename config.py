@@ -55,7 +55,6 @@ class Config(object):
     # Flask-Caching SimpleCache backend
     CACHE_TYPE = "SimpleCache"
     CACHE_DEFAULT_TIMEOUT = 300
-    TRESHOLD = 500
 
 
 class ProductionConfig(Config):
@@ -64,12 +63,12 @@ class ProductionConfig(Config):
 
     # Flask-Caching Redis backend
     CACHE_TYPE = "RedisCache"
-    HOST = "localhost"
-    PORT = 6379
-    PASSWORD = os.getenv("REDIS_PASSWORD", None)
-    DB = 0
-    DEFAULT_TIMEOUT = 300
-    KEY_PREFIX = None
+    CACHE_REDIS_HOST = "localhost"
+    CACHE_REDIS_PORT = 6379
+    CACHE_REDIS_PASSWORD = os.getenv("REDIS_PASSWORD", None)
+    CACHE_REDIS_DB = 0
+    CACHE_DEFAULT_TIMEOUT = 300
+    CACHE_KEY_PREFIX = "darwin_app_cache_"
 
 
 class DevelopmentConfig(Config):
