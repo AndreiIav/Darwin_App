@@ -35,6 +35,15 @@ def init_app():
     register_error_pages(app)
     configure_logging(app)
 
+    app.logger.info(
+        "App created with the following settings: "
+        f" FLASK_ENV={app.config['FLASK_ENV']}"
+        f" DEBUG={app.config['DEBUG']}"
+        f" TESTING={app.config['TESTING']}"
+        f" SQLALCHEMY_DATABASE_URI={app.config['SQLALCHEMY_DATABASE_URI']}"
+        f" CACHE_TYPE={app.config['CACHE_TYPE']}"
+    )
+
     if config_type in ("config.DevelopmentConfig", "config.ProductionConfig"):
         run_warm_up_queries(app, "app.db")
 
