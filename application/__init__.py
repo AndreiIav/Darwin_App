@@ -107,11 +107,11 @@ def configure_logging(app):
         file_handler.setLevel(logging.INFO)
         app.logger.addHandler(file_handler)
 
-        # Remove the default logger configured by Flask
-        app.logger.removeHandler(default_handler)
+    # Remove the default logger configured by Flask
+    app.logger.removeHandler(default_handler)
 
-        # Log that the Flask application is starting
-        app.logger.info("Starting the Flask Darwin_App...")
+    # Log that the Flask application is starting
+    app.logger.info("Starting the Flask Darwin_App...")
 
 
 def run_warm_up_queries(app, database_name):
