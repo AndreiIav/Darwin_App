@@ -56,6 +56,9 @@ class Config(object):
     CACHE_TYPE = "SimpleCache"
     CACHE_DEFAULT_TIMEOUT = 300
 
+    # Logging
+    LOG_WITH_GUNICORN = os.getenv("LOG_WITH_GUNICORN", default=False)
+
 
 class ProductionConfig(Config):
     FLASK_ENV = "production"
