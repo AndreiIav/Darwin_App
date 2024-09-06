@@ -35,6 +35,15 @@ def init_app():
     register_error_pages(app)
     configure_logging(app)
 
+    app.logger.info(
+        "App created with the following settings: "
+        f" FLASK_ENV={app.config['FLASK_ENV']}"
+        f" DEBUG={app.config['DEBUG']}"
+        f" TESTING={app.config['TESTING']}"
+        f" SQLALCHEMY_DATABASE_URI={app.config['SQLALCHEMY_DATABASE_URI']}"
+        f" CACHE_TYPE={app.config['CACHE_TYPE']}"
+    )
+
     if config_type in ("config.DevelopmentConfig", "config.ProductionConfig"):
         run_warm_up_queries(app, "app.db")
 
@@ -78,26 +87,31 @@ def register_error_pages(app):
 
 def configure_logging(app):
     # Logging Configuration
-    file_handler = ConcurrentTimedRotatingFileHandler(
-        "instance/Darwin_App.log",
-        when="D",
-        interval=1,
-        backupCount=20,
-        maxBytes=1048576,  # 10 MB
-        encoding="utf-8",
-    )
-    file_formatter = logging.Formatter(
-        "%(asctime)s %(levelname)s: %(message)s [in %(filename)s:%(lineno)d]"
-    )
-    file_handler.setFormatter(file_formatter)
-    file_handler.setLevel(logging.INFO)
-    app.logger.addHandler(file_handler)
+    if app.config["LOG_WITH_GUNICORN"]:
+        gunicorn_error_logger = logging.getLogger("gunicorn.error")
+        app.logger.handlers.extend(gunicorn_error_logger.handlers)
+        app.logger.setLevel(logging.INFO)
+    else:
+        file_handler = ConcurrentTimedRotatingFileHandler(
+            "instance/Darwin_App.log",
+            when="D",
+            interval=1,
+            backupCount=20,
+            maxBytes=1048576,  # 10 MB
+            encoding="utf-8",
+        )
+        file_formatter = logging.Formatter(
+            "%(asctime)s %(levelname)s: %(message)s [in %(filename)s:%(lineno)d]"
+        )
+        file_handler.setFormatter(file_formatter)
+        file_handler.setLevel(logging.INFO)
+        app.logger.addHandler(file_handler)
 
-    # Remove the default logger configured by Flask
-    app.logger.removeHandler(default_handler)
+        # Remove the default logger configured by Flask
+        app.logger.removeHandler(default_handler)
 
-    # Log that the Flask application is starting
-    app.logger.info("Starting the Flask Darwin_App...")
+        # Log that the Flask application is starting
+        app.logger.info("Starting the Flask Darwin_App...")
 
 
 def run_warm_up_queries(app, database_name):
