@@ -6,7 +6,7 @@ def test_get_home_page(test_client):
     response = test_client.get("/")
 
     assert response.status_code == 200
-    assert b"Please introduce a search term in the box" in response.data
+    assert b"Please enter a search term" in response.data
 
 
 # Tests for "/magazine_details" page
