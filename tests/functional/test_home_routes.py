@@ -31,14 +31,6 @@ def test_get_magazine_details_page_with_invalid_magazine_id_parameter(
     assert response.status_code == 404
 
 
-# Tests for "/contact" page
-def test_get_contact_page(test_client):
-    response = test_client.get("/contact")
-
-    assert response.status_code == 200
-    assert b"Contact" in response.data
-
-
 # Tests for "/about" page
 def test_get_about_page(test_client):
     response = test_client.get("/about")

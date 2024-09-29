@@ -75,12 +75,6 @@ def show_magazine_details():
     )
 
 
-@home_bp.route("/contact")
-def show_contact_page():
-    current_app.logger.info("Calling the show_contact_page() function")
-    return render_template("contact.html")
-
-
 @home_bp.route("/about")
 def show_about_page():
     current_app.logger.info("Calling the show_about_page() function")
