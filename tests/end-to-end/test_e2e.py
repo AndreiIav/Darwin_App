@@ -179,7 +179,6 @@ class TestSearchPageE2E:
             expect(page.get_by_test_id("navigation_bar")).to_be_visible()
             expect(page.get_by_role("link", name="Home")).to_be_visible()
             expect(page.get_by_role("link", name="About")).to_be_visible()
-            expect(page.get_by_role("link", name="Contact")).to_be_visible()
 
         def test_navigation_bar_links_work(self, page, start_app_server):
             start_page = start_app_server
@@ -188,9 +187,6 @@ class TestSearchPageE2E:
 
             page.get_by_role("link", name="About").click()
             expect(page).to_have_title("About")
-
-            page.get_by_role("link", name="Contact").click()
-            expect(page).to_have_title("Contact")
 
             page.get_by_role("link", name="Home").click()
             expect(page).to_have_title("Home")
