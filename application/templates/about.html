@@ -3,7 +3,49 @@
 {% block title %}About{% endblock %}
 
 {% block content %}
-<div>
-    <h1>About</h1>
+
+<div class="container-fluid text-center border-bottom border-secondary-subtle py-4">
+    <p1 class="fs-5 fst-italic">This site provides a search tool for exploring the
+        contents of magazines digitized at <a href="https://documente.bcucluj.ro/periodice.html"
+            target="_blank">https://documente.bcucluj.ro/periodice.html</a>.<br> Its sole purpose is to
+        enhance access to the magazines.
+    </p1><br>
 </div>
+<div class="row mt-5">
+    <div class="col-sm-3">
+    </div>
+    <div class="col-sm-6">
+        <div class="py-1">
+            <p1 class="fs-5 lead"><span class="fw-bold">How Search Works</span>: The search function is both
+                case-insensitive and
+                diacritic-insensitive. For example, "Victor Babes", "victor babes" and "Victor Babeş" are treated as
+                equivalent and will return the same results.
+                You can search using multiple words, but the search engine will look for the exact phrase as entered.
+                For
+                instance, a search for "Victor Babeş" will only return results containing the entire phrase,
+                and not individual results for "Victor" or "Babeş" separately.
+            </p1>
+        </div>
+        <div class="py-1">
+            <p1 class="fs-5 lead"><span class="fw-bold">Disclaimer About Search And Previews</span>: The quality and
+                formatting
+                of
+                some documents may affect the search functionality.
+                In certain cases, the search term may not be found, or the content preview may display incorrect or
+                unintelligible characters due to poor file quality or encoding issues.
+            </p1>
+        </div>
+        <div class="py-1">
+            <p1 class="fs-5 lead"><span class="fw-bold">User Data</span>: This site does not collect or track any
+                personal
+                information from users. However, certain non-personal user activity is logged solely for the purposes of
+                site maintenance and debugging.
+                This data is anonymized and cannot be used to identify or link back to any individual user.
+            </p1>
+        </div>
+    </div>
+    <div class="col-sm-3">
+    </div>
+</div>
+
 {% endblock %}
