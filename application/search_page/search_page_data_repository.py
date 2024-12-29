@@ -133,3 +133,29 @@ def get_distinct_magazine_names_and_count_for_searched_term(details_for_searched
     )
 
     return distinct_magazine_names_and_count_for_searched_term
+
+
+def get_magazine_content_details(page_id=0):
+    """
+    Retrieve the content of a magazine page from the MagazineNumberContent table
+    based on the provided page_id.
+
+    Args:
+        page_id (int): The rowid of the page to retrieve the content for.
+        Defaults to 0.
+
+    Returns:
+        magazine_content_details (str): The content of the magazine page if
+        found. If not found or if the parameter is of an invalid data type the
+        string will be empty.
+    """
+
+    magazine_content_details = db.session.query(
+        MagazineNumberContent.magazine_content
+    ).filter(MagazineNumberContent.id == page_id)
+
+    # Check that the Query object is not empty
+    if magazine_content_details.first():
+        return magazine_content_details[0][0]
+
+    return ""

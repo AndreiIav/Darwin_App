@@ -7,7 +7,6 @@ from application.search_page.previews import (
     get_all_start_and_end_indexes_for_preview_substrings,
     get_distinct_s_word_variants,
     get_indexes_for_highlighting_s_word,
-    get_magazine_content_details,
     get_preview_string,
     merge_overlapping_preview_substrings,
     replace_multiple_extra_white_spaces_with_just_one,
@@ -30,32 +29,6 @@ class TestReplaceMultipleExtraWhiteSpacesWithJustOne:
         self,
     ):
         assert replace_multiple_extra_white_spaces_with_just_one() == ""
-
-
-# Tests for get_magazine_content_details
-class TestGetMagazineContentDetails:
-    def test_get_magazine_content_details_with_no_parameter_passed(self, test_client):
-        assert get_magazine_content_details() == ""
-
-    invalid_parameters = ["a", False, 3.14]
-
-    @pytest.mark.parametrize("invalid_parameters", invalid_parameters)
-    def test_get_magazine_content_details_with_invalid_parameters_type(
-        self,
-        test_client,
-        invalid_parameters,
-    ):
-        assert get_magazine_content_details(invalid_parameters) == ""
-
-    def test_get_magazine_content_details_with_inexistent_rowid(self, test_client):
-        assert get_magazine_content_details(0) == ""
-
-    def test_get_magazine_content_details_with_existent_rowid(self, test_client):
-        page_id = 1989
-        content_details = get_magazine_content_details(page_id)
-
-        assert len(content_details) == 11544
-        assert " si romanii remanu espusi fatalităţilor!" in content_details
 
 
 # Tests for convert_diacritics_to_basic_latin_characters

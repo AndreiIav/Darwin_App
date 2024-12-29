@@ -7,6 +7,7 @@ from application.search_page.search_page_data_repository import (
     get_details_for_searched_term,
     get_details_for_searched_term_for_specific_magazine,
     get_distinct_magazine_names_and_count_for_searched_term,
+    get_magazine_content_details,
     paginate_results,
 )
 
@@ -213,3 +214,29 @@ class TestPaginateResults:
         error_out = False
 
         paginate_results(details_for_searched_term, page, per_page, error_out)
+
+
+# Tests for get_magazine_content_details
+class TestGetMagazineContentDetails:
+    def test_get_magazine_content_details_with_no_parameter_passed(self, test_client):
+        assert get_magazine_content_details() == ""
+
+    invalid_parameters = ["a", False, 3.14]
+
+    @pytest.mark.parametrize("invalid_parameters", invalid_parameters)
+    def test_get_magazine_content_details_with_invalid_parameters_type(
+        self,
+        test_client,
+        invalid_parameters,
+    ):
+        assert get_magazine_content_details(invalid_parameters) == ""
+
+    def test_get_magazine_content_details_with_inexistent_rowid(self, test_client):
+        assert get_magazine_content_details(0) == ""
+
+    def test_get_magazine_content_details_with_existent_rowid(self, test_client):
+        page_id = 1989
+        content_details = get_magazine_content_details(page_id)
+
+        assert len(content_details) == 11544
+        assert " si romanii remanu espusi fatalităţilor!" in content_details
