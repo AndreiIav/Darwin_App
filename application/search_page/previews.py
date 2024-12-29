@@ -238,7 +238,7 @@ def get_distinct_s_word_variants(
 
 def add_html_mark_tags_to_the_searched_term(distinct_s_word_variants, content):
     """
-    Add HTML <mark> tags around every variant of a term in the content.
+    Add HTML 'mark' tags around every variant of a term in the content.
 
     Args:
         distinct_s_word_variants (list of str): A list of distinct variants for
@@ -246,7 +246,7 @@ def add_html_mark_tags_to_the_searched_term(distinct_s_word_variants, content):
         content (str): The content string to modify.
 
     Returns:
-        content (str): The modified content with HTML <mark> tags around each
+        content (str): The modified content with HTML 'mark' tags around each
         variant of the term.
     """
 
@@ -259,13 +259,13 @@ def add_html_mark_tags_to_the_searched_term(distinct_s_word_variants, content):
 
 def add_html_tags_around_preview_string_parantheses(content):
     """
-    Add HTML <b> and <i> tags around every occurrance of "[...]" in the content.
+    Add HTML 'b' and 'i' tags around every occurrance of "[...]" in the content.
 
     Args:
         content (str): The content string to modify.
 
     Returns:
-        content (str): The modified content with HTML <b> and <i> tags around
+        content (str): The modified content with HTML 'b' and 'i' tags around
         every occurrance of "[...]" in the content.
     """
 
