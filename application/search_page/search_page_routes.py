@@ -19,6 +19,11 @@ search_page_bp = Blueprint(
     url_prefix="/results",
 )
 
+"""
+Blueprint: search_page_bp
+This blueprint handles the display of the search results.
+"""
+
 
 @search_page_bp.route("/search", methods=["GET"])
 def search_for_term():
