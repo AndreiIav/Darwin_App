@@ -1,3 +1,8 @@
+"""search_page_data_repository module
+
+This module contains functions that extract data from database.
+"""
+
 from sqlalchemy import func
 
 from application.models import (
