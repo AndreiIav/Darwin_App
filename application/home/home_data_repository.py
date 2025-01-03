@@ -54,6 +54,13 @@ def get_magazine_details(magazine_id=0):
     """
     Retrieve MagazineDetails instances for a given magazine_id.
 
+    This function returns a SQLAlchemy Query object that retrieves
+    MagazineDetails instances for a given magazine_id. Each MagazineDetails
+    instance includes the distinct count of magazine numbers and pages
+    associated with that year. The Query object can be iterated to access the
+    results. If the magazine_id is not found or is of an invalid data type, the
+    Query object will be empty.
+
     Args:
         magazine_id (int, optional): The ID of the magazine to retrieve details
         for. Defaults to 0.
@@ -62,12 +69,6 @@ def get_magazine_details(magazine_id=0):
         magazine_details (flask_sqlalchemy.query.Query): A Query object
         containing MagazineDetails instances with associated counts.
 
-    This function returns a SQLAlchemy Query object that retrieves
-    MagazineDetails instances for a given magazine_id. Each MagazineDetails
-    instance includes the distinct count of magazine numbers and pages
-    associated with that year. The Query object can be iterated to access the
-    results. If the magazine_id is not found or is of an invalid data type, the
-    Query object will be empty.
     """
 
     magazine_details = db.session.query(

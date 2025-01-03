@@ -14,8 +14,7 @@ home_bp = Blueprint(
 """
 Blueprint: home_bp
 This blueprint provides access to the search form and home page data
-(magazine_details and about page). 
-and
+(magazine_details and about page).
 """
 
 
