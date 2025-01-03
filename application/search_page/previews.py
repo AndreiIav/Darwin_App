@@ -1,3 +1,9 @@
+"""previews module
+
+This module handles the functionality to create and format the text previews
+that are displayed for the search results.
+"""
+
 import re
 
 from markupsafe import Markup

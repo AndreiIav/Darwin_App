@@ -1,3 +1,9 @@
+"""helpers module
+
+This module contains helper functions for formatting text and storing data in
+flask.session.
+"""
+
 from flask import session
 
 
