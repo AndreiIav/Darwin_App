@@ -5,7 +5,7 @@ import click
 import pytest
 from flask import current_app
 
-from application.cli_database.logic import (
+from application.cli_database.cli_data_repository import (
     create_database,
     create_fts_table,
     create_magazine_details_table,

@@ -1,3 +1,9 @@
+"""previews module
+
+This module handles the functionality to create and format the text previews
+that are displayed for the search results.
+"""
+
 import re
 
 from markupsafe import Markup
@@ -13,6 +19,14 @@ def get_previews_for_page_id(
     """
     Generate preview texts for page IDs based on provided search term.
 
+    This function generates preview texts for page IDs using a provided
+    Flask-SQLAlchemy Pagination object (paginated_details_for_searched_term)
+    and a search term (s_word).
+    The generated previews are centered around the search term with the
+    specified preview length.
+    The function employs a series of helper functions to create these previews,
+    including text processing and formatting operations.
+
     Args:
         paginated_details_for_searched_term
         (flask_sqlalchemy.pagination.QueryPagination): A flask_sqlalchemy
@@ -21,17 +35,9 @@ def get_previews_for_page_id(
         preview_length (int) : The length of the preview before and after the
         search term.
 
-    Returns: previews_for_page_id (list): A list containing pairs of
-    page IDs (int) and their corresponding preview texts (str).
-
-    This function generates preview texts for page IDs using a provided
-    Flask-SQLAlchemy Pagination object (paginated_details_for_searched_term)
-    and a search term (s_word).
-    The generated previews are centered around the search term with the
-    specified preview length.
-
-    The function employs a series of helper functions to create these previews,
-    including text processing and formatting operations.
+    Returns:
+        previews_for_page_id (list): A list containing pairs of
+        page IDs (int) and their corresponding preview texts (str).
     """
 
     previews_for_page_id = []
@@ -107,9 +113,8 @@ def convert_diacritics_to_basic_latin_characters(string_to_convert=""):
 
     Returns:
         converted_string (str): The input string with Romanian and Hungarian
-        diacritics replaced by basic Latin
-        characters, or an empty string if no argument is provided or an argument
-        of invalid type is given.
+        diacritics replaced by basic Latin characters, or an empty string if no
+        argument is provided or an argument of invalid type is given.
     """
 
     if not isinstance(string_to_convert, str):
@@ -212,6 +217,9 @@ def get_distinct_s_word_variants(
     """
     Find distinct versions of the searched term in the given content.
 
+    The function returns variations caused by different case letters or the use
+    of diacritics for a term (i, e.: "Darwin", "darwin" or "Babeș","Babes").
+
     Args:
         indexes_for_highlighting_s_word (list of int): A list of integers
         representing string indexes.
@@ -221,9 +229,6 @@ def get_distinct_s_word_variants(
     Returns:
         distinct_s_words_variants (list of str): A list of distinct variants of
         the searched term.
-
-    The function returns variations caused by different case letters or the use
-    of diacritics for a term (i, e.: "Darwin", "darwin" or "Babeș","Babes").
     """
 
     distinct_s_word_variants = []
@@ -238,7 +243,7 @@ def get_distinct_s_word_variants(
 
 def add_html_mark_tags_to_the_searched_term(distinct_s_word_variants, content):
     """
-    Add HTML <mark> tags around every variant of a term in the content.
+    Add HTML 'mark' tags around every variant of a term in the content.
 
     Args:
         distinct_s_word_variants (list of str): A list of distinct variants for
@@ -246,7 +251,7 @@ def add_html_mark_tags_to_the_searched_term(distinct_s_word_variants, content):
         content (str): The content string to modify.
 
     Returns:
-        content (str): The modified content with HTML <mark> tags around each
+        content (str): The modified content with HTML 'mark' tags around each
         variant of the term.
     """
 
@@ -259,13 +264,13 @@ def add_html_mark_tags_to_the_searched_term(distinct_s_word_variants, content):
 
 def add_html_tags_around_preview_string_parantheses(content):
     """
-    Add HTML <b> and <i> tags around every occurrance of "[...]" in the content.
+    Add HTML 'b' and 'i' tags around every occurrance of "[...]" in the content.
 
     Args:
         content (str): The content string to modify.
 
     Returns:
-        content (str): The modified content with HTML <b> and <i> tags around
+        content (str): The modified content with HTML 'b' and 'i' tags around
         every occurrance of "[...]" in the content.
     """
 
@@ -279,18 +284,6 @@ def get_all_start_and_end_indexes_for_preview_substrings(
     """
     Get start and end indexes for substrings around searched term occurrences.
 
-    Args:
-        content (str): The content string to process.
-        preview_length (int): The length before and after a searched term for
-        the needed substring.
-        s_word_string_length (int): The length of the searched term.
-        indexes (list): A list with the start indexes of searched term
-        occurrences.
-
-    Returns:
-        preview_substrings_start_end_indexes (list): A list containing lists
-        with start and end indexes for the substrings.
-
     This function accepts a content string (content) and retrieves start and end
     indexes for substrings around searched term occurrences.
     The length of each substring is determined by the provided preview_length,
@@ -303,6 +296,18 @@ def get_all_start_and_end_indexes_for_preview_substrings(
         is set to 10 characters, the function will ensure that the returned
         substring includes full words and may extend beyond 10 characters if
         necessary.
+
+    Args:
+        content (str): The content string to process.
+        preview_length (int): The length before and after a searched term for
+        the needed substring.
+        s_word_string_length (int): The length of the searched term.
+        indexes (list): A list with the start indexes of searched term
+        occurrences.
+
+    Returns:
+        preview_substrings_start_end_indexes (list): A list containing lists
+        with start and end indexes for the substrings.
     """
 
     preview_substrings_start_end_indexes = []
@@ -337,6 +342,12 @@ def merge_overlapping_preview_substrings(preview_substrings_start_end_indexes):
     """
     Merge overlapping intervals in a list of start and end indexes pairs.
 
+    This function accepts a list (preview_substrings_start_end_indexes)
+    containing lists of start and end indexes pairs. It merges overlapping
+    intervals within the lists and returns a list containing the merged start
+    and end index pairs. If there are no overlapping intervals, the function
+    returns a list with the original lists passed.
+
     Args:
         preview_substrings_start_end_indexes (list): A list containing lists of
         start and end indexes pairs.
@@ -344,12 +355,6 @@ def merge_overlapping_preview_substrings(preview_substrings_start_end_indexes):
     Returns:
         preview_substrings_indexes (list): A list containing merged lists of
         start and end indexes.
-
-    This function accepts a list (preview_substrings_start_end_indexes)
-    containing lists of start and end indexes pairs. It merges overlapping
-    intervals within the lists and returns a list containing the merged start
-    and end index pairs. If there are no overlapping intervals, the function
-    returns a list with the original lists passed.
     """
 
     preview_substrings_indexes = []
@@ -381,20 +386,20 @@ def get_preview_string(preview_substrings_indexes, content):
     Create a concatenated string with substrings based on provided indexes and
     delimited by " [...] ".
 
+    If the start index of the first element in preview_substrings_indexes is
+    zero, "[...] " is added to the beginning of the preview_string.
+    If the end index of the last element in preview_substrings_indexes is equal
+    to or greater than the length of the content, " [...]" is added to the end
+    of the preview_string.
+
     Args:
         preview_substrings_indexes (list): A list containg lists of start and
         end indexes pairs.
         content (str): The text to extract the substrings from.
     Returns:
         preview_string (str): A concatenated string of substrings delimited by
-        " [...] ". If preview_substrings_indexes is an empty lits,
+        " [...] ". If preview_substrings_indexes is an empty list,
         "preview not available" is returned.
-
-    If the start index of the first element in preview_substrings_indexes is
-    zero, "[...] " is added to the beginning of the preview_string.
-    If the end index of the last element in preview_substrings_indexes is equal
-    to or greater than the length of the content, " [...]" is added to the end
-    of the preview_string.
     """
 
     content_length = len(content)

@@ -1,9 +1,21 @@
+"""helpers module
+
+This module contains helper functions for formatting text and storing data in
+flask.session.
+"""
+
 from flask import session
 
 
 def format_search_word(s_word, separator=" ", accepted_special_characters=""):
     """
     Format the search word for querying.
+
+    This function returns the inputted search word if it is a single word, or
+    the inputted search word concatenated with the separator sign if there are
+    more than one term in s_word. The function removes all leading and trailing
+    whitespaces of the input. The function removes all non-alphanumeric
+    characters except the ones passed in accepted_special_characters parameter.
 
     Args:
         s_word (str): The input search word.
@@ -14,12 +26,6 @@ def format_search_word(s_word, separator=" ", accepted_special_characters=""):
 
     Returns:
         formatted_s_word (str): The formatted search word.
-
-    This function returns the inputted search word if it is a single word, or
-    the inputted search word concatenated with the separator sign if there are
-    more than one term in s_word. The function removes all leading and trailing
-    whitespaces of the input. The function removes all non-alphanumeric
-    characters except the ones passed in accepted_special_characters parameter.
     """
 
     for character in s_word:
@@ -45,6 +51,10 @@ def store_s_word_in_session(session_s_word, request_s_word):
     Update the value of s_word in the session with the value from the current
     request.
 
+    This function replaces the current value of s_word in the session with the
+    value from the current request. It returns the updated value of s_word in
+    the session, or None if no current value or request value is provided.
+
     Args:
         session_s_word (str): The current value of s_word stored in the session.
         request_s_word (str): The value of s_word from the current request.
@@ -52,10 +62,6 @@ def store_s_word_in_session(session_s_word, request_s_word):
     Returns:
         str or None: The updated value of s_word in the session, or None if no
         current or request value is provided.
-
-    This function replaces the current value of s_word in the session with the
-    value from the current request. It returns the updated value of s_word in
-    the session, or None if no current value or request value is provided.
     """
 
     if session_s_word is None or (

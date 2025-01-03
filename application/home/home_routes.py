@@ -11,6 +11,11 @@ from application.home.home_data_repository import (
 home_bp = Blueprint(
     "home_bp", __name__, template_folder="templates", static_folder="static"
 )
+"""
+Blueprint: home_bp
+This blueprint provides access to the search form and home page data
+(magazine_details and about page).
+"""
 
 
 @home_bp.route("/", methods=["GET"])
