@@ -1,8 +1,9 @@
-from application.models import (
-    MagazineDetails,
-    Magazines,
-    db,
-)
+"""home_data_repository module
+
+This module contains functions that extract data from database.
+"""
+
+from application.models import MagazineDetails, Magazines, db
 
 
 def get_existent_magazines():
