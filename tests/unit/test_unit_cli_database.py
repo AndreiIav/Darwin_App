@@ -1,7 +1,6 @@
 import sqlite3
 from pathlib import Path
 
-import click
 import pytest
 from flask import current_app
 
@@ -178,7 +177,7 @@ class TestWriteDataToDatabase:
             (2, 1, "magazine_content_2", 2),
         ]
 
-    def test_write_data_to_database_with_missing_file(
+    def test_write_data_to_database_with_missing_file_raises_error(
         self, test_client, create_test_db
     ):
         files_path = Path(current_app.config["DATABASE_FILES"])
@@ -188,17 +187,10 @@ class TestWriteDataToDatabase:
             (f"{missing_file}", "magazines"),
         ]
 
-        with pytest.raises(click.exceptions.FileError) as err:
+        with pytest.raises(FileNotFoundError) as err:
             write_data_to_database(files_path, database_path, files_to_tables)
 
-        assert (
-            f"The {missing_file} file needed to create the"
-            " database was not found.\n"
-            "Check the csv files and try again.\n"
-            "If a database file was already created use"
-            " 'flask database remove <name_of_database>'"
-            " command to delete it."
-        ) in str(err.value)
+        assert "FileNotFoundError" and missing_file in str(err)
 
 
 class TestCreateMagazineDetailsTable:
