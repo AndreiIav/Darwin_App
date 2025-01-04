@@ -2,8 +2,10 @@ import sqlite3
 
 import pytest
 
+import application
+
 # -------------------------------
-# create_new_database route tests
+# create_new_database command tests
 # -------------------------------
 
 
@@ -117,8 +119,39 @@ def test_cli_create_database_with_missing_database_name_argument(test_cli_app):
     assert "Error: Missing argument 'NAME'." in res.output
 
 
+def test_cli_create_database_handles_FileNotFoundError(
+    test_cli_app, monkeypatch, tmp_path
+):
+    # Set the DATABASE_FOLDER to use tmp_path
+    monkeypatch.setitem(test_cli_app.config, "DATABASE_FOLDER", tmp_path)
+    missing_file = "missing_file.csv"
+
+    def fake_write_data_to_database(a, b, c):
+        raise FileNotFoundError(f"{missing_file}")
+
+    # Monkeypatch write_data_to_database() to one that
+    # raises FileNotFoundError error
+    monkeypatch.setattr(
+        application.cli_database.cli,
+        "write_data_to_database",
+        fake_write_data_to_database,
+    )
+
+    runner = test_cli_app.test_cli_runner()
+    res = runner.invoke(args=["database", "create", "demo"])
+
+    assert (
+        "The file needed to create the"
+        " database was not found.\n"
+        "Check the csv files and try again.\n"
+        "If a database file was already created use"
+        " 'flask database remove <name_of_database>'"
+        " command to delete it."
+    ) in res.output
+
+
 # --------------------------------
-# remove_database_file route tests
+# remove_database_file command tests
 # --------------------------------
 
 

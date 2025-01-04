@@ -39,9 +39,11 @@ def create_new_database(name):
         None
 
     Raises:
-        click.BadParameter: If the provided name is not valid.
+        click.BadParameter: If the provided database name is not valid.
         click.UsageError: If a SQLite file with the provided name already
             exists.
+        click.FileError: If a CSV file needed to populate the database is
+            missing.
     """
     if name not in ("test", "demo"):
         raise click.BadParameter(name)
@@ -61,7 +63,21 @@ def create_new_database(name):
     create_database(database_path)
 
     # populate database
-    write_data_to_database(create_database_files_path, database_path, files_to_tables)
+    try:
+        write_data_to_database(
+            create_database_files_path, database_path, files_to_tables
+        )
+    except FileNotFoundError as e:
+        error_message = str(e)
+        raise click.FileError(
+            error_message,
+            hint="The file needed to create the"
+            " database was not found.\n"
+            "Check the csv files and try again.\n"
+            "If a database file was already created use"
+            " 'flask database remove <name_of_database>'"
+            " command to delete it.",
+        )
 
     # create and populate magazine_details table
     create_magazine_details_table(database_path)
