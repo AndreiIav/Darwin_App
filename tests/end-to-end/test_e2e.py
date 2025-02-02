@@ -111,7 +111,7 @@ class TestSearchPageE2E:
         page.get_by_placeholder("you can enter between 4 and").fill("bucuresti")
         page.get_by_placeholder("you can enter between 4 and").press("Enter")
         page.get_by_test_id("display_count_results_per_magazine").click()
-        page.get_by_role("button", name="Albina (1866-1876) (26").click()
+        page.get_by_role("button", name="Albina (1866-1876): 26").click()
 
         expect(page.get_by_test_id("go_back_to_all_results")).to_be_visible()
         expect(
@@ -126,7 +126,7 @@ class TestSearchPageE2E:
         page.get_by_placeholder("you can enter between 4 and").fill("bucuresti")
         page.get_by_placeholder("you can enter between 4 and").press("Enter")
         page.get_by_test_id("display_count_results_per_magazine").click()
-        page.get_by_role("button", name="Albina (1866-1876) (26").click()
+        page.get_by_role("button", name="Albina (1866-1876): 26").click()
         page.get_by_test_id("go_back_to_all_results").click()
 
         # the go_back_to_all_results and count_results_with_magazine_filter
