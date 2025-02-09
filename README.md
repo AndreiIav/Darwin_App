@@ -77,8 +77,14 @@ In order for the tests to run, a SQLite test database with correct data is neede
 A test database can be created using this command:\
 `flask database create test`
 
-To run all the tests:\
-`pytest`
+To run all unit and functional tests:\
+`pytest -k "not end-to-end"`
+
+To run end-to-end tests, first install Playwright browsers and dependencies:\
+`playwright install --with-deps`
+
+Run end-to-end tests:\
+`pytest -k end-to-end`
 
 To check the code coverage of the tests:\
 `pytest --cov-report term-missing --cov=application`
@@ -96,4 +102,3 @@ The test SQLite database can be deleted using this command:\
 - **pytest-playwright**:  a Pytest plugin to write end-to-end tests
 - **python-dotenv**: a Python library for reading .env files
 
-This application is written using Python 3.11.
